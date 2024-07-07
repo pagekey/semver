@@ -9,4 +9,10 @@ authors = [
 ]
 
 [tool.poetry.scripts]
-pagekey-semver = "pagekey_semver.cli:cli_entrypoint"
+pagekey-semver = "pagekey_semver.main:cli_entrypoint"
+
+[tool.poetry.dependencies]
+python = ">=3"
+
+[tool.poetry.groups.dev.dependencies]
+pytest = "*"
