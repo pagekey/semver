@@ -1,0 +1,12 @@
+# TODO Build tools
+
+[tool.poetry]
+name = "pagekey-semver"
+description = "Simple, opinionated semantic versioning package."
+version = "0.1.0"
+authors = [
+    "steve"
+]
+
+[tool.poetry.scripts]
+pagekey-semver = "pagekey_semver.cli:cli_entrypoint"
