@@ -17,6 +17,7 @@ def cli_entrypoint(args=sys.argv[1:]):
     commits = get_commit_messages_since(max_tag)
     release_type = compute_release_type(commits)
     next_version = compute_next_version(release_type, tags)
+    print("Next version:", next_version)
     if not dry_run:
         apply_tag(tags, next_version)
     else:
