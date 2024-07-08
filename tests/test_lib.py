@@ -119,6 +119,7 @@ def test_compute_next_version_with_no_existing_tags_returns_default_value():
     # Assert.
     assert result == "v0.1.0"
 
+
 def test_compute_next_version_with_no_release_returns_greatest_tag():
     # Arrange.
     release_type = ReleaseType.NO_RELEASE
@@ -127,6 +128,7 @@ def test_compute_next_version_with_no_release_returns_greatest_tag():
     result = compute_next_version(release_type, tags)
     # Assert.
     assert result == "v0.3.0"
+
 
 def test_compute_next_version_with_patch_bumps_patch_value():
     # Arrange.
@@ -137,6 +139,7 @@ def test_compute_next_version_with_patch_bumps_patch_value():
     # Assert.
     assert result == "v0.3.3"
 
+
 def test_compute_next_version_with_minor_bumps_minor_value():
     # Arrange.
     release_type = ReleaseType.MINOR
@@ -146,6 +149,7 @@ def test_compute_next_version_with_minor_bumps_minor_value():
     # Assert.
     assert result == "v0.4.0"
 
+
 def test_compute_next_version_with_major_bumps_major_value():
     # Arrange.
     release_type = ReleaseType.MAJOR
@@ -154,6 +158,7 @@ def test_compute_next_version_with_major_bumps_major_value():
     result = compute_next_version(release_type, tags)
     # Assert.
     assert result == "v1.0.0"
+
 
 @patch("subprocess.run")
 def test_apply_tag_with_existing_tag_does_nothing(mock_run):
@@ -166,6 +171,7 @@ def test_apply_tag_with_existing_tag_does_nothing(mock_run):
 
     # Assert.
     mock_run.assert_not_called()
+
 
 @patch("subprocess.run")
 def test_apply_tag_with_new_tag_tags_and_pushes(mock_run):
@@ -180,19 +186,21 @@ def test_apply_tag_with_new_tag_tags_and_pushes(mock_run):
     # Assert.
     commands = [
         f"sed -i 's/^version = \"[0-9]\\+.[0-9]\\+.[0-9]\\+\"/{new_tag_stripped}' cargo.toml",
-        f"sed -i 's/^\"version\": \"[0-9]\\+.[0-9]\\+.[0-9]\\+\"/{new_tag_stripped}' package.json",
+        f'sed -i \'s/^"version": "[0-9]\\+.[0-9]\\+.[0-9]\\+"/{new_tag_stripped}\' package.json',
         f"git add --all",
         f"git commit -m '{new_tag}'",
         f"git tag {new_tag}",
-        f"git push origin {new_tag}"
+        f"git push origin {new_tag}",
     ]
-    mock_run.assert_has_calls([
-        call(
-            command.split(),
-            check=True,
-            stdout=-1,
-            stderr=-1,
-            text=True,
-        )
-        for command in commands
-    ])
+    mock_run.assert_has_calls(
+        [
+            call(
+                command.split(),
+                check=True,
+                stdout=-1,
+                stderr=-1,
+                text=True,
+            )
+            for command in commands
+        ]
+    )

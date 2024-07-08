@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """."""
+
 import enum
 import re
 import sys
@@ -70,7 +71,7 @@ def compute_release_type(commits: List[str]) -> ReleaseType:
 
 
 def get_biggest_tag(tags: List[str]):
-    pattern = r'^v\d+\.\d+\.\d+$'
+    pattern = r"^v\d+\.\d+\.\d+$"
     max_version = (0, 1, 0)
     for tag in tags:
         if re.match(pattern, tag):
@@ -79,9 +80,15 @@ def get_biggest_tag(tags: List[str]):
             major = int(major)
             minor = int(minor)
             patch = int(patch)
-            if major > max_version[0] \
-                or (major == max_version[0] and minor > max_version[1]) \
-                    or (major == max_version[0] and minor == max_version[1] and patch > max_version[2]):
+            if (
+                major > max_version[0]
+                or (major == max_version[0] and minor > max_version[1])
+                or (
+                    major == max_version[0]
+                    and minor == max_version[1]
+                    and patch > max_version[2]
+                )
+            ):
                 max_version = (major, minor, patch)
     return f"v{max_version[0]}.{max_version[1]}.{max_version[2]}"
 
@@ -99,9 +106,10 @@ def compute_next_version(release_type: ReleaseType, tags: List[str]) -> str:
     elif release_type == ReleaseType.PATCH:
         max_version = (max_version[0], max_version[1], max_version[2] + 1)
     else:
-        pass # NO_RELEASE
+        pass  # NO_RELEASE
 
     return f"v{max_version[0]}.{max_version[1]}.{max_version[2]}"
+
 
 def apply_tag(existing_tags: List[str], new_tag: str):
     if new_tag not in existing_tags:
@@ -109,11 +117,11 @@ def apply_tag(existing_tags: List[str], new_tag: str):
         new_tag_stripped = new_tag.replace("v", "")
         commands = [
             f"sed -i 's/^version = \"[0-9]\+.[0-9]\+.[0-9]\+\"/{new_tag_stripped}' cargo.toml",
-            f"sed -i 's/^\"version\": \"[0-9]\+.[0-9]\+.[0-9]\+\"/{new_tag_stripped}' package.json",
+            f'sed -i \'s/^"version": "[0-9]\+.[0-9]\+.[0-9]\+"/{new_tag_stripped}\' package.json',
             f"git add --all",
             f"git commit -m '{new_tag}'",
             f"git tag {new_tag}",
-            f"git push origin {new_tag}"
+            f"git push origin {new_tag}",
         ]
         for command in commands:
             subprocess.run(
@@ -121,7 +129,7 @@ def apply_tag(existing_tags: List[str], new_tag: str):
                 check=True,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
-                text=True, 
+                text=True,
             )
     else:
         print(f"Tag {new_tag} already exists - skipping tag/push.")

@@ -3,7 +3,8 @@ from pagekey_semver.lib import ReleaseType
 from pagekey_semver.main import cli_entrypoint
 
 
-MODULE_UNDER_TEST = "pagekey_semver.cli"
+MODULE_UNDER_TEST = "pagekey_semver.main"
+
 
 @patch(f"{MODULE_UNDER_TEST}.apply_tag")
 @patch(f"{MODULE_UNDER_TEST}.compute_next_version")

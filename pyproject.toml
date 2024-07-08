@@ -1,4 +1,6 @@
-# TODO Build tools
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "pagekey-semver"
@@ -12,7 +14,7 @@ authors = [
 pagekey-semver = "pagekey_semver.main:cli_entrypoint"
 
 [tool.poetry.dependencies]
-python = ">=3"
+python = ">=3.8"
 
-[tool.poetry.groups.dev.dependencies]
-pytest = "*"
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.2.2"
