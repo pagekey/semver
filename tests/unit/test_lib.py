@@ -173,15 +173,15 @@ def test_apply_tag_with_existing_tag_does_nothing(mock_run):
     mock_run.assert_not_called()
 
 
-@patch("subprocess.run")
-def test_apply_tag_with_new_tag_tags_and_pushes(mock_run):
+@patch("os.system")
+def test_apply_tag_with_new_tag_tags_and_pushes(mock_system):
     # Arrange.
     existing_tags = ["v0.1.0", "v3.0.0", "v2.0.0"]
     new_tag = "v4.0.0"
     new_tag_stripped = new_tag.replace("v", "")
 
     # Act.
-    result = apply_tag(existing_tags, new_tag)
+    apply_tag(existing_tags, new_tag)
 
     # Assert.
     commands = [
@@ -192,15 +192,9 @@ def test_apply_tag_with_new_tag_tags_and_pushes(mock_run):
         f"git tag {new_tag}",
         f"git push origin {new_tag}",
     ]
-    mock_run.assert_has_calls(
+    mock_system.assert_has_calls(
         [
-            call(
-                command.split(),
-                check=True,
-                stdout=-1,
-                stderr=-1,
-                text=True,
-            )
+            call(command)
             for command in commands
         ]
     )

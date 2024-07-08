@@ -2,8 +2,8 @@
 """."""
 
 import enum
+import os
 import re
-import sys
 import subprocess
 from typing import List
 
@@ -124,12 +124,6 @@ def apply_tag(existing_tags: List[str], new_tag: str):
             f"git push origin {new_tag}",
         ]
         for command in commands:
-            subprocess.run(
-                command.split(),
-                check=True,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-            )
+            os.system(command)
     else:
         print(f"Tag {new_tag} already exists - skipping tag/push.")
