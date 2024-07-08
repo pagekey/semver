@@ -116,14 +116,17 @@ def apply_tag(existing_tags: List[str], new_tag: str):
         print(f"Tagging/pushing new tag: {new_tag}")
         new_tag_stripped = new_tag.replace("v", "")
         commands = [
-            f"sed -i 's/^version = \"[0-9]\+.[0-9]\+.[0-9]\+\"/{new_tag_stripped}' cargo.toml",
-            f'sed -i \'s/^"version": "[0-9]\+.[0-9]\+.[0-9]\+"/{new_tag_stripped}\' package.json',
+            f"sed -i 's/^version = \"[0-9]\\+.[0-9]\\+.[0-9]\\+\"/{new_tag_stripped}' cargo.toml",
+            f'sed -i \'s/^"version": "[0-9]\\+.[0-9]\\+.[0-9]\\+"/{new_tag_stripped}\' package.json',
+            f"git config --global user.email semver@pagekey.io",
+            f'git config --global user.name "PageKey Semver"',
             f"git add --all",
             f"git commit -m '{new_tag}'",
             f"git tag {new_tag}",
             f"git push origin {new_tag}",
         ]
         for command in commands:
+            print("Running:", command)
             os.system(command)
     else:
         print(f"Tag {new_tag} already exists - skipping tag/push.")
