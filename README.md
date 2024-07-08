@@ -13,7 +13,7 @@ pip install pagekey-semver
 2. Run the dry run to see what will happen.
 
 ```bash
-pagekey-semvTODOer --dry-run
+pagekey-semver --dry-run
 ```
 
 3. Run it for real to tag and push!

@@ -18,7 +18,7 @@ def cli_entrypoint(args=sys.argv[1:]):
     release_type = compute_release_type(commits)
     next_version = compute_next_version(release_type, tags)
     if not dry_run:
-        apply_tag(next_version)
+        apply_tag(tags, next_version)
     else:
         print("Dry run mode - not applying version.")
 
