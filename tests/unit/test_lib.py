@@ -185,7 +185,7 @@ def test_apply_tag_with_new_tag_tags_and_pushes(mock_system):
 
     # Assert.
     commands = [
-        f'sed "s/^version = \\"[0-9]\\+\\.[0-9]\\+\\.[0-9]\\"/version = \\"{new_tag_stripped}\\"/" cargo.toml',
+        f'sed "s/^version = \\"[0-9]\\+\\.[0-9]\\+\\.[0-9]\\"/version = \\"{new_tag_stripped}\\"/" Cargo.toml',
         f'sed -i "s/\\"version\\": \\"[0-9]\\+\\.[0-9]\\+\\.[0-9]\\"/\\"version\\": \\"{new_tag_stripped}\\"/" package.json',
         f"git config --global user.email semver@pagekey.io",
         f'git config --global user.name "PageKey Semver"',

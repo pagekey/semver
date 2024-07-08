@@ -116,7 +116,7 @@ def apply_tag(existing_tags: List[str], new_tag: str):
         print(f"Tagging/pushing new tag: {new_tag}")
         new_tag_stripped = new_tag.replace("v", "")
         commands = [
-            f'sed "s/^version = \\"[0-9]\\+\\.[0-9]\\+\\.[0-9]\\"/version = \\"{new_tag_stripped}\\"/" cargo.toml',
+            f'sed "s/^version = \\"[0-9]\\+\\.[0-9]\\+\\.[0-9]\\"/version = \\"{new_tag_stripped}\\"/" Cargo.toml',
             f'sed -i "s/\\"version\\": \\"[0-9]\\+\\.[0-9]\\+\\.[0-9]\\"/\\"version\\": \\"{new_tag_stripped}\\"/" package.json',
             f"git config --global user.email semver@pagekey.io",
             f'git config --global user.name "PageKey Semver"',
