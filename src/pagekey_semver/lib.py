@@ -124,6 +124,7 @@ def apply_tag(existing_tags: List[str], new_tag: str):
             f"git commit -m '{new_tag}'",
             f"git tag {new_tag}",
             f"git push origin {new_tag}",
+            f"git push origin HEAD",
         ]
         for command in commands:
             print("Running:", command)
