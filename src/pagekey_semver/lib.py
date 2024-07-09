@@ -128,6 +128,8 @@ def apply_tag(existing_tags: List[str], new_tag: str):
         ]
         for command in commands:
             print("Running:", command)
-            os.system(command)
+            exit_code = os.system(command)
+            if exit_code != 0:
+                raise ValueError(f"Command failed: {command}")
     else:
         print(f"Tag {new_tag} already exists - skipping tag/push.")
