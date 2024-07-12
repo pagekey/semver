@@ -116,8 +116,8 @@ def apply_tag(existing_tags: List[str], new_tag: str):
         print(f"Tagging/pushing new tag: {new_tag}")
         new_tag_stripped = new_tag.replace("v", "")
         commands = [
-            f'sed -iE "s/^version = \\"[0-9]+\\.[0-9]+\\.[0-9]+\\"/version = \\"{new_tag_stripped}\\"/" Cargo.toml',
-            f'sed -iE "s/\\"version\\": \\"[0-9]+\\.[0-9]+\\.[0-9]+\\"/\\"version\\": \\"{new_tag_stripped}\\"/" package.json',
+            f'sed -i -E "s/^version = \\"[0-9]+\\.[0-9]+\\.[0-9]+\\"/version = \\"{new_tag_stripped}\\"/" Cargo.toml',
+            f'sed -i -E "s/\\"version\\": \\"[0-9]+\\.[0-9]+\\.[0-9]+\\"/\\"version\\": \\"{new_tag_stripped}\\"/" package.json',
             f"git config --global user.email semver@pagekey.io",
             f'git config --global user.name "PageKey Semver"',
             f"git add --all",
@@ -140,4 +140,4 @@ def update_changelog(version: str, commits: List[str]):
         for commit in commits:
             if commit.startswith("fix: ") or commit.startswith("feat: ") or commit.startswith("major: "):
                 changelog_file.write(f"- {commit} ()\n")
-        changelog_file.write("\n\n")
+        changelog_file.write("\n")

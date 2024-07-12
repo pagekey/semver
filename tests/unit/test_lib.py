@@ -187,8 +187,8 @@ def test_apply_tag_with_new_tag_tags_and_pushes(mock_system):
 
     # Assert.
     commands = [
-        f'sed -iE "s/^version = \\"[0-9]+\\.[0-9]+\\.[0-9]+\\"/version = \\"{new_tag_stripped}\\"/" Cargo.toml',
-        f'sed -iE "s/\\"version\\": \\"[0-9]+\\.[0-9]+\\.[0-9]+\\"/\\"version\\": \\"{new_tag_stripped}\\"/" package.json',
+        f'sed -i -E "s/^version = \\"[0-9]+\\.[0-9]+\\.[0-9]+\\"/version = \\"{new_tag_stripped}\\"/" Cargo.toml',
+        f'sed -i -E "s/\\"version\\": \\"[0-9]+\\.[0-9]+\\.[0-9]+\\"/\\"version\\": \\"{new_tag_stripped}\\"/" package.json',
         f"git config --global user.email semver@pagekey.io",
         f'git config --global user.name "PageKey Semver"',
         f"git add --all",
@@ -228,5 +228,5 @@ def test_update_changelog_with_commits_updates_changelog_file(mock_open):
         call("- fix: Do something somewhat important ()\n"),
         call("- feat: Add something ()\n"),
         call("- major: Wow this is a big deal ()\n"),
-        call("\n\n"),
+        call("\n"),
     ])
