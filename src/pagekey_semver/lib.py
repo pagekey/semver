@@ -138,5 +138,6 @@ def update_changelog(version: str, commits: List[str]):
     with open("CHANGELOG.md", "a") as changelog_file:
         changelog_file.write(f"## {version}\n\n")
         for commit in commits:
-            changelog_file.write(f"- {commit} ()\n")
+            if commit.startswith("fix: ") or commit.startswith("feat: ") or commit.startswith("major: "):
+                changelog_file.write(f"- {commit} ()\n")
         changelog_file.write("\n\n")

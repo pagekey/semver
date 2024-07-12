@@ -209,9 +209,12 @@ def test_update_changelog_with_commits_updates_changelog_file(mock_open):
     # Arrange.
     version = "v1.0.0"
     commits = [
+        "my commit",
         "fix: Do something somewhat important",
         "feat: Add something",
+        "random commit",
         "major: Wow this is a big deal",
+        "some other commit",
     ]
     mock_file = mock_open.return_value
 
@@ -222,6 +225,8 @@ def test_update_changelog_with_commits_updates_changelog_file(mock_open):
     mock_open.assert_called_with("CHANGELOG.md", "a")
     mock_file.write.assert_has_calls([
         call(f"## {version}\n\n"),
-        *[call(f"- {commit} ()\n") for commit in commits],
+        call("- fix: Do something somewhat important ()\n"),
+        call("- feat: Add something ()\n"),
+        call("- major: Wow this is a big deal ()\n"),
         call("\n\n"),
     ])
