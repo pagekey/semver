@@ -179,14 +179,15 @@ def test_apply_tag_with_new_tag_tags_and_pushes(mock_system):
     existing_tags = ["v0.1.0", "v3.0.0", "v2.0.0"]
     new_tag = "v4.0.0"
     new_tag_stripped = new_tag.replace("v", "")
+    mock_system.return_value = 0  # exit code
 
     # Act.
     apply_tag(existing_tags, new_tag)
 
     # Assert.
     commands = [
-        f'sed "s/^version = \\"[0-9]\\+\\.[0-9]\\+\\.[0-9]\\"/version = \\"{new_tag_stripped}\\"/" Cargo.toml',
-        f'sed -i "s/\\"version\\": \\"[0-9]\\+\\.[0-9]\\+\\.[0-9]\\"/\\"version\\": \\"{new_tag_stripped}\\"/" package.json',
+        f'sed -iE "s/^version = \\"[0-9]+\\.[0-9]+\\.[0-9]+\\"/version = \\"{new_tag_stripped}\\"/" Cargo.toml',
+        f'sed -iE "s/\\"version\\": \\"[0-9]+\\.[0-9]+\\.[0-9]+\\"/\\"version\\": \\"{new_tag_stripped}\\"/" package.json',
         f"git config --global user.email semver@pagekey.io",
         f'git config --global user.name "PageKey Semver"',
         f"git add --all",
