@@ -1,4 +1,4 @@
-from unittest.mock import call, patch, MagicMock
+from unittest.mock import call, patch, MagicMock, mock_open
 
 from pagekey_semver.lib import (
     get_git_tags,
@@ -8,6 +8,7 @@ from pagekey_semver.lib import (
     compute_next_version,
     apply_tag,
     get_biggest_tag,
+    update_changelog,
 )
 
 
@@ -201,3 +202,26 @@ def test_apply_tag_with_new_tag_tags_and_pushes(mock_system):
             for command in commands
         ]
     )
+
+
+@patch('builtins.open', new_callable=mock_open)
+def test_update_changelog_with_commits_updates_changelog_file(mock_open):
+    # Arrange.
+    version = "v1.0.0"
+    commits = [
+        "fix: Do something somewhat important",
+        "feat: Add something",
+        "major: Wow this is a big deal",
+    ]
+    mock_file = mock_open.return_value
+
+    # Act.
+    update_changelog(version, commits)
+
+    # Assert.
+    mock_open.assert_called_with("CHANGELOG.md", "a")
+    mock_file.write.assert_has_calls([
+        call(f"## {version}\n\n"),
+        *[call(f"- {commit} ()\n") for commit in commits],
+        call("\n\n"),
+    ])

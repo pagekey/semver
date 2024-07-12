@@ -7,6 +7,7 @@ from pagekey_semver.lib import (
     get_biggest_tag,
     get_commit_messages_since,
     get_git_tags,
+    update_changelog,
 )
 
 
@@ -17,6 +18,7 @@ def cli_entrypoint(args=sys.argv[1:]):
     commits = get_commit_messages_since(max_tag)
     release_type = compute_release_type(commits)
     next_version = compute_next_version(release_type, tags)
+    update_changelog(next_version, commits)
     print("Next version:", next_version)
     if not dry_run:
         apply_tag(tags, next_version)

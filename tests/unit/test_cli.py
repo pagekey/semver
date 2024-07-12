@@ -7,6 +7,7 @@ MODULE_UNDER_TEST = "pagekey_semver.main"
 
 
 @patch(f"{MODULE_UNDER_TEST}.apply_tag")
+@patch(f"{MODULE_UNDER_TEST}.update_changelog")
 @patch(f"{MODULE_UNDER_TEST}.compute_next_version")
 @patch(f"{MODULE_UNDER_TEST}.compute_release_type")
 @patch(f"{MODULE_UNDER_TEST}.get_commit_messages_since")
@@ -18,6 +19,7 @@ def test_cli_entrypoint_with_no_args_calls_all_functions(
     mock_get_commit_messages_since,
     mock_compute_release_type,
     mock_compute_next_version,
+    mock_update_changelog,
     mock_apply_tag,
 ):
     # Arrange.
@@ -39,10 +41,12 @@ def test_cli_entrypoint_with_no_args_calls_all_functions(
     mock_get_commit_messages_since.assert_called_with("v3.0.0")
     mock_compute_release_type.assert_called_with(commits)
     mock_compute_next_version.assert_called_with(release_type, tags)
+    mock_update_changelog.assert_called_with(next_version, commits)
     mock_apply_tag.assert_called_with(tags, next_version)
 
 
 @patch(f"{MODULE_UNDER_TEST}.apply_tag")
+@patch(f"{MODULE_UNDER_TEST}.update_changelog")
 @patch(f"{MODULE_UNDER_TEST}.compute_next_version")
 @patch(f"{MODULE_UNDER_TEST}.compute_release_type")
 @patch(f"{MODULE_UNDER_TEST}.get_commit_messages_since")
@@ -54,6 +58,7 @@ def test_cli_entrypoint_with_dry_run_does_not_push(
     mock_get_commit_messages_since,
     mock_compute_release_type,
     mock_compute_next_version,
+    mock_update_changelog,
     mock_apply_tag,
 ):
     # Arrange.
@@ -75,4 +80,5 @@ def test_cli_entrypoint_with_dry_run_does_not_push(
     mock_get_commit_messages_since.assert_called_with("v3.0.0")
     mock_compute_release_type.assert_called_with(commits)
     mock_compute_next_version.assert_called_with(release_type, tags)
+    mock_update_changelog.assert_called_with(next_version, commits)
     mock_apply_tag.assert_not_called()
