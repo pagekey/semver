@@ -1,11 +1,18 @@
 #!/usr/bin/env python3
 """."""
 
+from dataclasses import dataclass
 import enum
 import os
 import re
 import subprocess
 from typing import List
+
+
+@dataclass
+class Commit:
+    hash: str
+    message: str
 
 
 class ReleaseType(enum.Enum):
@@ -40,7 +47,7 @@ def get_git_tags() -> List[str]:
         return []
 
 
-def get_commit_messages_since(commit_hash) -> List[str]:
+def get_commit_messages_since(commit_hash) -> List[Commit]:
     """."""
     try:
         result = subprocess.run(
@@ -58,7 +65,7 @@ def get_commit_messages_since(commit_hash) -> List[str]:
         return []
 
 
-def compute_release_type(commits: List[str]) -> ReleaseType:
+def compute_release_type(commits: List[Commit]) -> ReleaseType:
     """."""
     release_type = ReleaseType.NO_RELEASE
     for commit in commits:
@@ -134,10 +141,10 @@ def apply_tag(existing_tags: List[str], new_tag: str):
     else:
         print(f"Tag {new_tag} already exists - skipping tag/push.", flush=True)
 
-def update_changelog(version: str, commits: List[str]):
+def update_changelog(version: str, commits: List[Commit]):
     with open("CHANGELOG.md", "a") as changelog_file:
         changelog_file.write(f"## {version}\n\n")
         for commit in commits:
-            if commit.startswith("fix: ") or commit.startswith("feat: ") or commit.startswith("major: "):
-                changelog_file.write(f"- {commit} ()\n")
+            if commit.message.startswith("fix: ") or commit.message.startswith("feat: ") or commit.message.startswith("major: "):
+                changelog_file.write(f"- {commit.message} ({commit.hash})\n")
         changelog_file.write("\n")

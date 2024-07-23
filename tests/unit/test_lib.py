@@ -1,6 +1,7 @@
 from unittest.mock import call, patch, MagicMock, mock_open
 
 from pagekey_semver.lib import (
+    Commit,
     get_git_tags,
     get_commit_messages_since,
     ReleaseType,
@@ -55,13 +56,18 @@ def test_get_commit_messages_since_with_valid_hash_returns_list_of_messages(mock
         stderr=-1,
         text=True,
     )
-    assert result[0] == "Do something"
-    assert result[1] == "Do something else"
+    assert result[0].hash == "aaaaa1"
+    assert result[0].message == "Do something"
+    assert result[1].hash == "aaaaa2"
+    assert result[1].message == "Do something else"
 
 
 def test_compute_release_type_with_no_prefixes_returns_no_release():
     # Arrange.
-    commits = ["nothing important", "another poorly formatted commit message"]
+    commits = [
+        Commit(hash="aaaaa1", message="nothing important"),
+        Commit(hash="aaaaa2", message="another poorly formatted commit message"),
+    ]
     # Act.
     result = compute_release_type(commits)
     # Assert.
@@ -70,7 +76,10 @@ def test_compute_release_type_with_no_prefixes_returns_no_release():
 
 def test_compute_release_type_with_only_fix_returns_patch():
     # Arrange.
-    commits = ["fix: Somewhat important", "another poorly formatted commit message"]
+    commits = [
+        Commit(hash="aaaaa1", message="fix: Somewhat important"),
+        Commit(hash="aaaaa2", message="another poorly formatted commit message"),
+    ]
     # Act.
     result = compute_release_type(commits)
     # Assert.
@@ -80,8 +89,8 @@ def test_compute_release_type_with_only_fix_returns_patch():
 def test_compute_release_type_with_fix_and_feat_returns_minor():
     # Arrange.
     commits = [
-        "fix: Somewhat important",
-        "feat: another poorly formatted commit message",
+        Commit(hash="aaaaa1", message="fix: Somewhat important"),
+        Commit(hash="aaaaa2", message="feat: another poorly formatted commit message"),
     ]
     # Act.
     result = compute_release_type(commits)
@@ -92,9 +101,9 @@ def test_compute_release_type_with_fix_and_feat_returns_minor():
 def test_compute_release_type_with_major_returns_major():
     # Arrange.
     commits = [
-        "fix: Do something somewhat important",
-        "feat: Add something",
-        "major: Wow this is a big deal",
+        Commit(hash="aaaaa1", message="fix: Somewhat important"),
+        Commit(hash="aaaaa2", message="feat: Add something"),
+        Commit(hash="aaaaa2", message="major: Wow this is a big deal"),
     ]
     # Act.
     result = compute_release_type(commits)
@@ -209,12 +218,12 @@ def test_update_changelog_with_commits_updates_changelog_file(mock_open):
     # Arrange.
     version = "v1.0.0"
     commits = [
-        "my commit",
-        "fix: Do something somewhat important",
-        "feat: Add something",
-        "random commit",
-        "major: Wow this is a big deal",
-        "some other commit",
+        Commit(hash="aaaaa1", message="my commit"),
+        Commit(hash="aaaaa2", message="fix: Do something somewhat important"),
+        Commit(hash="aaaaa3", message="feat: Add something"),
+        Commit(hash="aaaaa4", message="random commit"),
+        Commit(hash="aaaaa5", message="major: Wow this is a big deal"),
+        Commit(hash="aaaaa6", message="some other commit"),
     ]
     mock_file = mock_open.return_value
 
@@ -225,8 +234,8 @@ def test_update_changelog_with_commits_updates_changelog_file(mock_open):
     mock_open.assert_called_with("CHANGELOG.md", "a")
     mock_file.write.assert_has_calls([
         call(f"## {version}\n\n"),
-        call("- fix: Do something somewhat important ()\n"),
-        call("- feat: Add something ()\n"),
-        call("- major: Wow this is a big deal ()\n"),
+        call("- fix: Do something somewhat important (aaaaa2)\n"),
+        call("- feat: Add something (aaaaa3)\n"),
+        call("- major: Wow this is a big deal (aaaaa5)\n"),
         call("\n"),
     ])
