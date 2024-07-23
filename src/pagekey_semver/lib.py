@@ -51,7 +51,7 @@ def get_commit_messages_since(commit_hash) -> List[Commit]:
     """."""
     try:
         result = subprocess.run(
-            ["git", "log", f"{commit_hash}..HEAD", "--pretty=format:\"%h %s\""],
+            ["git", "log", f"{commit_hash}..HEAD", "--pretty=format:%H %s"],
             check=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,

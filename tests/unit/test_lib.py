@@ -54,7 +54,7 @@ def test_get_commit_messages_since_with_valid_hash_returns_list_of_messages(mock
             "git",
             "log",
             "HEAD~2..HEAD",
-            "--pretty=format:\"%h %s\"",
+            "--pretty=format:%H %s",
         ],
         check=True,
         stdout=-1,
