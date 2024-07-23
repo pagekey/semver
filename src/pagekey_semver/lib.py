@@ -51,15 +51,20 @@ def get_commit_messages_since(commit_hash) -> List[Commit]:
     """."""
     try:
         result = subprocess.run(
-            ["git", "log", f"{commit_hash}..HEAD", "--pretty=format:%s"],
+            ["git", "log", f"{commit_hash}..HEAD", "--pretty=format:\"%h %s\""],
             check=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
         )
         # Split the output into lines (each line is a commit message)
-        commit_messages = result.stdout.strip().split("\n")
-        return commit_messages
+        commit_lines = result.stdout.strip().split("\n")
+        commits = []
+        for line in commit_lines:
+            hash = line.split()[0]
+            message = line.replace(hash + ' ', '')
+            commits.append(Commit(hash, message))
+        return commits
     except subprocess.CalledProcessError as e:
         print(f"Error getting commit messages: {e.stderr}", flush=True)
         return []
@@ -70,7 +75,7 @@ def compute_release_type(commits: List[Commit]) -> ReleaseType:
     release_type = ReleaseType.NO_RELEASE
     for commit in commits:
         for prefix, prefix_release_type in PREFIXES.items():
-            if commit.startswith(f"{prefix}: "):
+            if commit.message.startswith(f"{prefix}: "):
                 # Check whether this is greater than the existing value
                 if release_type.value < prefix_release_type.value:
                     release_type = prefix_release_type

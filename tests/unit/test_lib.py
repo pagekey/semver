@@ -42,7 +42,7 @@ def test_get_git_tags_with_no_fail_returns_list_of_tags(mock_run):
 def test_get_commit_messages_since_with_valid_hash_returns_list_of_messages(mock_run):
     # Arrange.
     mock_result = MagicMock()
-    mock_result.stdout = "Do something\nDo something else"
+    mock_result.stdout = "aaaaa1 Do something\naaaaa2 Do something else"
     mock_run.return_value = mock_result
 
     # Act.
@@ -50,7 +50,12 @@ def test_get_commit_messages_since_with_valid_hash_returns_list_of_messages(mock
 
     # Assert.
     mock_run.assert_called_with(
-        "git log HEAD~2..HEAD --pretty=format:%s".split(),
+        [
+            "git",
+            "log",
+            "HEAD~2..HEAD",
+            "--pretty=format:\"%h %s\"",
+        ],
         check=True,
         stdout=-1,
         stderr=-1,
