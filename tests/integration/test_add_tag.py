@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 from pagekey_semver.main import cli_entrypoint
 
@@ -30,4 +31,12 @@ def test_add_tag_with_existing_project_works(tmp_path):
     cli_entrypoint()
 
     # Assert.
-    breakpoint()
+    assert os.path.exists("CHANGELOG.md")
+    result = subprocess.run(
+        ["git", "tag"],
+        check=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    assert result.stdout.strip() == "v0.1.0"
