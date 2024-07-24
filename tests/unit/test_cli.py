@@ -1,9 +1,10 @@
+"""Test CLI module."""
 from unittest.mock import patch
-from pagekey_semver.lib import ReleaseType
-from pagekey_semver.main import cli_entrypoint
+from pagekey_semver.cli import cli_entrypoint
+from pagekey_semver.release import ReleaseType
 
 
-MODULE_UNDER_TEST = "pagekey_semver.main"
+MODULE_UNDER_TEST = "pagekey_semver.cli"
 
 
 @patch(f"{MODULE_UNDER_TEST}.apply_tag")

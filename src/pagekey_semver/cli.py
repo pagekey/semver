@@ -1,14 +1,8 @@
 import sys
 
-from pagekey_semver.lib import (
-    apply_tag,
-    compute_next_version,
-    compute_release_type,
-    get_biggest_tag,
-    get_commit_messages_since,
-    get_git_tags,
-    update_changelog,
-)
+from pagekey_semver.changelog import update_changelog
+from pagekey_semver.git import apply_tag, get_commit_messages_since, get_git_tags
+from pagekey_semver.release import compute_next_version, compute_release_type, get_biggest_tag
 
 
 def cli_entrypoint(args=sys.argv[1:]):

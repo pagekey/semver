@@ -1,7 +1,7 @@
 import os
 import subprocess
 
-from pagekey_semver.main import cli_entrypoint
+from pagekey_semver.cli import cli_entrypoint
 
 
 def test_add_tag_with_existing_project_works(tmp_path):
