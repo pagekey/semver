@@ -5,13 +5,24 @@ from typing import List
 
 from pydantic import BaseModel
 
+from pagekey_semver.release import ReleaseType
+
 
 DEFAULT_CONFIG_DICT = {
-    "prefixes": ["something"],
+    "prefixes": [
+        {
+            "label": "minor",
+            "type": "minor",
+        }
+    ],
 }
 
+class Prefix(BaseModel):
+    label: str
+    type: ReleaseType
+
 class SemverConfig(BaseModel):
-    prefixes: List[str]
+    prefixes: List[Prefix]
 
 
 def load_config(config_path: Path) -> None:

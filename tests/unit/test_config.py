@@ -1,10 +1,12 @@
 """Test config module."""
 
 
+import json
 from pathlib import Path
 from unittest.mock import MagicMock, mock_open, patch
 
 from pagekey_semver.config import DEFAULT_CONFIG_DICT, SemverConfig, load_config
+from pagekey_semver.release import ReleaseType
 
 MODULE_UNDER_TEST = "pagekey_semver.config"
 
@@ -30,7 +32,14 @@ def test_load_config_with_existing_file_parses_and_merges_configs(mock_builtin_o
     mock_path = MagicMock()
     mock_path.is_file.return_value = True
     mock_file = mock_builtin_open.return_value
-    mock_file.read.return_value = '{"prefixes": []}'
+    mock_file.read.return_value = json.dumps({
+        "prefixes": [
+            {
+                "label": "fix",
+                "type": "patch",
+            }
+        ]
+    })
 
     # Act.
     config = load_config(mock_path)
@@ -39,4 +48,6 @@ def test_load_config_with_existing_file_parses_and_merges_configs(mock_builtin_o
     mock_path.is_file.assert_called()
     mock_builtin_open.assert_called_with(mock_path, "r")
     mock_file.read.assert_called()
-    assert len(config.prefixes) == 0
+    assert len(config.prefixes) == 1
+    assert config.prefixes[0].label == "fix"
+    assert config.prefixes[0].type == ReleaseType.PATCH

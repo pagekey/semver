@@ -1,6 +1,35 @@
 """Test release module."""
-from pagekey_semver.release import Commit, ReleaseType, compute_next_version, compute_release_type, get_biggest_tag
+import pytest
+from pagekey_semver.release import Commit, ReleaseType, compute_next_version, compute_release_type, get_biggest_tag, release_greater
 
+
+@pytest.mark.parametrize("a, b, expected", [
+    (ReleaseType.NO_RELEASE, ReleaseType.NO_RELEASE, False),
+    (ReleaseType.NO_RELEASE, ReleaseType.PATCH, True),
+    (ReleaseType.NO_RELEASE, ReleaseType.MINOR, True),
+    (ReleaseType.NO_RELEASE, ReleaseType.MAJOR, True),
+    
+    (ReleaseType.PATCH, ReleaseType.NO_RELEASE, False),
+    (ReleaseType.PATCH, ReleaseType.PATCH, False),
+    (ReleaseType.PATCH, ReleaseType.MINOR, True),
+    (ReleaseType.PATCH, ReleaseType.MAJOR, True),
+
+    (ReleaseType.MINOR, ReleaseType.NO_RELEASE, False),
+    (ReleaseType.MINOR, ReleaseType.PATCH, False),
+    (ReleaseType.MINOR, ReleaseType.MINOR, False),
+    (ReleaseType.MINOR, ReleaseType.MAJOR, True),
+
+    (ReleaseType.MAJOR, ReleaseType.NO_RELEASE, False),
+    (ReleaseType.MAJOR, ReleaseType.PATCH, False),
+    (ReleaseType.MAJOR, ReleaseType.MINOR, False),
+    (ReleaseType.MAJOR, ReleaseType.MAJOR, False),
+])
+def test_release_greater_with_releasetype_returns_valid_result(a, b, expected):
+    # Act.
+    result = release_greater(a, b)
+    
+    # Assert.
+    assert result == expected
 
 def test_compute_release_type_with_only_fix_returns_patch():
     # Arrange.

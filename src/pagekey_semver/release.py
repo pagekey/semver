@@ -14,10 +14,17 @@ class Commit:
 
 
 class ReleaseType(enum.Enum):
-    NO_RELEASE = 0
-    PATCH = 1
-    MINOR = 2
-    MAJOR = 3
+    NO_RELEASE = "no release"
+    PATCH = "patch"
+    MINOR = "minor"
+    MAJOR = "major"
+
+RELEASE_TYPE_PRIORITIES = {
+    ReleaseType.NO_RELEASE: 0,
+    ReleaseType.PATCH: 1,
+    ReleaseType.MINOR: 2,
+    ReleaseType.MAJOR: 3,
+}
 
 
 PREFIXES = {
@@ -27,6 +34,12 @@ PREFIXES = {
 }
 
 
+def release_greater(a: ReleaseType, b: ReleaseType) -> bool:
+    pri1 = RELEASE_TYPE_PRIORITIES[a]
+    pri2 = RELEASE_TYPE_PRIORITIES[b]
+    return pri1 < pri2
+
+
 def compute_release_type(commits: List[Commit]) -> ReleaseType:
     """."""
     release_type = ReleaseType.NO_RELEASE
@@ -34,7 +47,7 @@ def compute_release_type(commits: List[Commit]) -> ReleaseType:
         for prefix, prefix_release_type in PREFIXES.items():
             if commit.message.startswith(f"{prefix}: "):
                 # Check whether this is greater than the existing value
-                if release_type.value < prefix_release_type.value:
+                if release_greater(release_type, prefix_release_type):
                     release_type = prefix_release_type
     return release_type
 
