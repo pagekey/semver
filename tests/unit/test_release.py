@@ -1,5 +1,6 @@
 """Test release module."""
 import pytest
+from pagekey_semver.config import DEFAULT_CONFIG
 from pagekey_semver.release import Commit, ReleaseType, compute_next_version, compute_release_type, get_biggest_tag, release_greater
 
 
@@ -31,6 +32,19 @@ def test_release_greater_with_releasetype_returns_valid_result(a, b, expected):
     # Assert.
     assert result == expected
 
+
+def test_compute_release_type_with_no_prefixes_returns_no_release():
+    # Arrange.
+    commits = [
+        Commit(hash="aaaaa1", message="nothing important"),
+        Commit(hash="aaaaa2", message="another poorly formatted commit message"),
+    ]
+    # Act.
+    result = compute_release_type(commits, DEFAULT_CONFIG)
+    # Assert.
+    assert result == ReleaseType.NO_RELEASE
+
+
 def test_compute_release_type_with_only_fix_returns_patch():
     # Arrange.
     commits = [
@@ -38,7 +52,7 @@ def test_compute_release_type_with_only_fix_returns_patch():
         Commit(hash="aaaaa2", message="another poorly formatted commit message"),
     ]
     # Act.
-    result = compute_release_type(commits)
+    result = compute_release_type(commits, DEFAULT_CONFIG)
     # Assert.
     assert result == ReleaseType.PATCH
 
@@ -50,7 +64,7 @@ def test_compute_release_type_with_fix_and_feat_returns_minor():
         Commit(hash="aaaaa2", message="feat: another poorly formatted commit message"),
     ]
     # Act.
-    result = compute_release_type(commits)
+    result = compute_release_type(commits, DEFAULT_CONFIG)
     # Assert.
     assert result == ReleaseType.MINOR
 
@@ -63,7 +77,7 @@ def test_compute_release_type_with_major_returns_major():
         Commit(hash="aaaaa2", message="major: Wow this is a big deal"),
     ]
     # Act.
-    result = compute_release_type(commits)
+    result = compute_release_type(commits, DEFAULT_CONFIG)
     # Assert.
     assert result == ReleaseType.MAJOR
 

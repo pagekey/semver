@@ -1,6 +1,7 @@
 """Test Git module."""
 from unittest.mock import MagicMock, call, patch
 
+from pagekey_semver.config import DEFAULT_CONFIG
 from pagekey_semver.git import apply_tag, get_commit_messages_since, get_git_tags
 from pagekey_semver.release import Commit, ReleaseType, compute_release_type
 
@@ -57,19 +58,6 @@ def test_get_commit_messages_since_with_valid_hash_returns_list_of_messages(mock
     assert result[0].message == "Do something"
     assert result[1].hash == "aaaaa2"
     assert result[1].message == "Do something else"
-
-
-def test_compute_release_type_with_no_prefixes_returns_no_release():
-    # Arrange.
-    commits = [
-        Commit(hash="aaaaa1", message="nothing important"),
-        Commit(hash="aaaaa2", message="another poorly formatted commit message"),
-    ]
-    # Act.
-    result = compute_release_type(commits)
-    # Assert.
-    assert result == ReleaseType.NO_RELEASE
-
 
 
 @patch("subprocess.run")

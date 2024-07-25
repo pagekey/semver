@@ -1,4 +1,5 @@
 """Test CLI module."""
+from pathlib import Path
 from unittest.mock import patch
 from pagekey_semver.cli import cli_entrypoint
 from pagekey_semver.release import ReleaseType
@@ -14,7 +15,9 @@ MODULE_UNDER_TEST = "pagekey_semver.cli"
 @patch(f"{MODULE_UNDER_TEST}.get_commit_messages_since")
 @patch(f"{MODULE_UNDER_TEST}.get_biggest_tag")
 @patch(f"{MODULE_UNDER_TEST}.get_git_tags")
+@patch(f"{MODULE_UNDER_TEST}.load_config")
 def test_cli_entrypoint_with_no_args_calls_all_functions(
+    mock_load_config,
     mock_get_git_tags,
     mock_get_biggest_tag,
     mock_get_commit_messages_since,
@@ -24,6 +27,7 @@ def test_cli_entrypoint_with_no_args_calls_all_functions(
     mock_apply_tag,
 ):
     # Arrange.
+    config = mock_load_config.return_value
     tags = ["v1.0.0", "v3.0.0", "v2.0.0"]
     mock_get_git_tags.return_value = tags
     biggest_tag = "v3.0.0"
@@ -34,13 +38,16 @@ def test_cli_entrypoint_with_no_args_calls_all_functions(
     mock_compute_release_type.return_value = release_type
     next_version = "v3.1.0"
     mock_compute_next_version.return_value = next_version
+    
     # Act.
     cli_entrypoint()
+    
     # Assert.
+    mock_load_config.assert_called_with(Path(".semver"))
     mock_get_git_tags.assert_called_once()
     mock_get_biggest_tag.assert_called_with(tags)
     mock_get_commit_messages_since.assert_called_with("v3.0.0")
-    mock_compute_release_type.assert_called_with(commits)
+    mock_compute_release_type.assert_called_with(commits, config)
     mock_compute_next_version.assert_called_with(release_type, tags)
     mock_update_changelog.assert_called_with(next_version, commits)
     mock_apply_tag.assert_called_with(tags, next_version)
@@ -53,7 +60,9 @@ def test_cli_entrypoint_with_no_args_calls_all_functions(
 @patch(f"{MODULE_UNDER_TEST}.get_commit_messages_since")
 @patch(f"{MODULE_UNDER_TEST}.get_biggest_tag")
 @patch(f"{MODULE_UNDER_TEST}.get_git_tags")
+@patch(f"{MODULE_UNDER_TEST}.load_config")
 def test_cli_entrypoint_with_dry_run_does_not_push(
+    mock_load_config,
     mock_get_git_tags,
     mock_get_biggest_tag,
     mock_get_commit_messages_since,
@@ -63,6 +72,7 @@ def test_cli_entrypoint_with_dry_run_does_not_push(
     mock_apply_tag,
 ):
     # Arrange.
+    config = mock_load_config.return_value
     tags = ["v1.0.0", "v3.0.0", "v2.0.0"]
     mock_get_git_tags.return_value = tags
     biggest_tag = "v3.0.0"
@@ -73,13 +83,16 @@ def test_cli_entrypoint_with_dry_run_does_not_push(
     mock_compute_release_type.return_value = release_type
     next_version = "v3.1.0"
     mock_compute_next_version.return_value = next_version
+    
     # Act.
     cli_entrypoint(["--dry-run"])
+
     # Assert.
+    mock_load_config.assert_called_with(Path(".semver"))
     mock_get_git_tags.assert_called_once()
     mock_get_biggest_tag.assert_called_with(tags)
     mock_get_commit_messages_since.assert_called_with("v3.0.0")
-    mock_compute_release_type.assert_called_with(commits)
+    mock_compute_release_type.assert_called_with(commits, config)
     mock_compute_next_version.assert_called_with(release_type, tags)
     mock_update_changelog.assert_called_with(next_version, commits)
     mock_apply_tag.assert_not_called()

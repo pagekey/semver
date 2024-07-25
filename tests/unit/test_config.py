@@ -5,6 +5,8 @@ import json
 from pathlib import Path
 from unittest.mock import MagicMock, mock_open, patch
 
+import yaml
+
 from pagekey_semver.config import DEFAULT_CONFIG_DICT, SemverConfig, load_config
 from pagekey_semver.release import ReleaseType
 
@@ -32,7 +34,7 @@ def test_load_config_with_existing_file_parses_and_merges_configs(mock_builtin_o
     mock_path = MagicMock()
     mock_path.is_file.return_value = True
     mock_file = mock_builtin_open.return_value
-    mock_file.read.return_value = json.dumps({
+    mock_file.read.return_value = yaml.safe_dump({
         "prefixes": [
             {
                 "label": "fix",

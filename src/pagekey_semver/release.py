@@ -2,22 +2,16 @@
 
 
 from dataclasses import dataclass
-import enum
 import re
 from typing import List
+
+from pagekey_semver.config import ReleaseType, SemverConfig
 
 
 @dataclass
 class Commit:
     hash: str
     message: str
-
-
-class ReleaseType(enum.Enum):
-    NO_RELEASE = "no release"
-    PATCH = "patch"
-    MINOR = "minor"
-    MAJOR = "major"
 
 RELEASE_TYPE_PRIORITIES = {
     ReleaseType.NO_RELEASE: 0,
@@ -40,15 +34,15 @@ def release_greater(a: ReleaseType, b: ReleaseType) -> bool:
     return pri1 < pri2
 
 
-def compute_release_type(commits: List[Commit]) -> ReleaseType:
+def compute_release_type(commits: List[Commit], config: SemverConfig) -> ReleaseType:
     """."""
     release_type = ReleaseType.NO_RELEASE
     for commit in commits:
-        for prefix, prefix_release_type in PREFIXES.items():
-            if commit.message.startswith(f"{prefix}: "):
+        for prefix in config.prefixes:
+            if commit.message.startswith(f"{prefix.label}: "):
                 # Check whether this is greater than the existing value
-                if release_greater(release_type, prefix_release_type):
-                    release_type = prefix_release_type
+                if release_greater(release_type, prefix.type):
+                    release_type = prefix.type
     return release_type
 
 

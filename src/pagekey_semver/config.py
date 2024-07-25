@@ -1,12 +1,17 @@
 """Module related to config files."""
-import json
+import enum
 from pathlib import Path
 from typing import List
 
 from pydantic import BaseModel
+import yaml
 
-from pagekey_semver.release import ReleaseType
 
+class ReleaseType(enum.Enum):
+    NO_RELEASE = "no release"
+    PATCH = "patch"
+    MINOR = "minor"
+    MAJOR = "major"
 
 class Prefix(BaseModel):
     label: str
@@ -35,6 +40,6 @@ def load_config(config_path: Path) -> None:
         return SemverConfig(**DEFAULT_CONFIG_DICT)
     with open(config_path, "r") as config_file:
         config_raw = config_file.read()
-    config_dict = json.loads(config_raw)
+    config_dict = yaml.safe_load(config_raw)
     config_merged = {**DEFAULT_CONFIG_DICT, **config_dict}
     return SemverConfig(**config_merged)
