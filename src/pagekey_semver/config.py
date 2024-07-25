@@ -13,14 +13,23 @@ class ReleaseType(enum.Enum):
     MINOR = "minor"
     MAJOR = "major"
 
+class GitConfig(BaseModel):
+    name: str
+    email: str
+
 class Prefix(BaseModel):
     label: str
     type: ReleaseType
 
 class SemverConfig(BaseModel):
+    git: GitConfig
     prefixes: List[Prefix]
 
 DEFAULT_CONFIG = SemverConfig(
+    git=GitConfig(
+        name="PageKey Semver",
+        email="semver@pagekey.io",
+    ),
     prefixes=[
         Prefix(label="major", type="major"),
         
