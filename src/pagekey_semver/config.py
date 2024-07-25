@@ -8,21 +8,26 @@ from pydantic import BaseModel
 from pagekey_semver.release import ReleaseType
 
 
-DEFAULT_CONFIG_DICT = {
-    "prefixes": [
-        {
-            "label": "minor",
-            "type": "minor",
-        }
-    ],
-}
-
 class Prefix(BaseModel):
     label: str
     type: ReleaseType
 
 class SemverConfig(BaseModel):
     prefixes: List[Prefix]
+
+DEFAULT_CONFIG = SemverConfig(
+    prefixes=[
+        Prefix(label="major", type="major"),
+        
+        Prefix(label="minor", type="minor"),
+        Prefix(label="feat", type="minor"),
+        
+        Prefix(label="patch", type="patch"),
+        Prefix(label="fix", type="patch"),
+    ]
+)
+DEFAULT_CONFIG_DICT = DEFAULT_CONFIG.model_dump()
+
 
 
 def load_config(config_path: Path) -> None:
