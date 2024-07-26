@@ -1,7 +1,7 @@
 """Test Git module."""
 from unittest.mock import MagicMock, call, patch
 
-from pagekey_semver.config import DEFAULT_CONFIG
+from pagekey_semver.config import DEFAULT_CONFIG, GitConfig, SemverConfig
 from pagekey_semver.git import apply_tag, get_commit_messages_since, get_git_tags
 from pagekey_semver.release import Commit, ReleaseType, compute_release_type
 
@@ -101,3 +101,27 @@ def test_apply_tag_with_new_tag_tags_and_pushes(mock_system):
             for command in commands
         ]
     )
+
+
+@patch("os.system")
+def test_apply_tag_with_config_applies_config_name_email(mock_system):
+    existing_tags = ["v0.1.0", "v3.0.0", "v2.0.0"]
+    new_tag = "v4.0.0"
+    new_tag_stripped = new_tag.replace("v", "")
+    mock_system.return_value = 0  # exit code
+    config = SemverConfig(
+        git=GitConfig(
+            name="some name",
+            email="some@email.com",
+        ),
+        prefixes=[]
+    )
+
+    # Act.
+    apply_tag(existing_tags, new_tag, config)
+
+    # Assert.
+    mock_system.assert_has_calls([
+        call("git config --global user.email some@email.com"),
+        call('git config --global user.name "some name"'),
+    ])
