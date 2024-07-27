@@ -5,6 +5,7 @@ import subprocess
 import yaml
 
 from pagekey_semver.cli import cli_entrypoint
+from pagekey_semver.config import GitConfig, Prefix, SemverConfig
 
 
 def test_add_tag_with_existing_project_works(tmp_path):
@@ -45,15 +46,17 @@ def test_add_tag_with_existing_project_works(tmp_path):
     assert result.stdout.strip() == "v0.1.0"
 
     # Set up custom config file.
+    config = SemverConfig(
+        git=GitConfig(
+            name="my name",
+            email="my@email.com"
+        ),
+        prefixes=[
+            Prefix(label="custom", type="major"),
+        ],
+    )
     with open('.semver', 'w') as semver_file:
-        semver_file.write(yaml.safe_dump({
-            "prefixes": [
-                {
-                    "label": "custom",
-                    "type": "major",
-                }
-            ]
-        }))
+        semver_file.write(yaml.safe_dump(config.model_dump()))
     os.system("git add .semver")
     os.system("git commit -m 'custom: Add .semver'")
     
@@ -71,3 +74,19 @@ def test_add_tag_with_existing_project_works(tmp_path):
         text=True,
     )
     assert result.stdout.strip() == "v0.1.0\nv1.0.0"
+    result = subprocess.run(
+        ["git", "show", "-s", "--format=%an", "HEAD"],
+        check=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    assert result.stdout.strip() == "my name"
+    result = subprocess.run(
+        ["git", "show", "-s", "--format=%ae", "HEAD"],
+        check=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    assert result.stdout.strip() == "my@email.com"

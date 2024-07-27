@@ -18,7 +18,7 @@ def cli_entrypoint(args=sys.argv[1:]):
     update_changelog(next_version, commits)
     print("Next version:", next_version, flush=True)
     if not dry_run:
-        apply_tag(tags, next_version)
+        apply_tag(tags, next_version, config=config)
     else:
         print("Dry run mode - not applying version.", flush=True)
 

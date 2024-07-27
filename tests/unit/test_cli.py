@@ -50,7 +50,7 @@ def test_cli_entrypoint_with_no_args_calls_all_functions(
     mock_compute_release_type.assert_called_with(commits, config)
     mock_compute_next_version.assert_called_with(release_type, tags)
     mock_update_changelog.assert_called_with(next_version, commits)
-    mock_apply_tag.assert_called_with(tags, next_version)
+    mock_apply_tag.assert_called_with(tags, next_version, config=config)
 
 
 @patch(f"{MODULE_UNDER_TEST}.apply_tag")

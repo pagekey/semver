@@ -88,8 +88,8 @@ def test_apply_tag_with_new_tag_tags_and_pushes(mock_system):
     commands = [
         f'sed -i -E "s/^version = \\"[0-9]+\\.[0-9]+\\.[0-9]+\\"/version = \\"{new_tag_stripped}\\"/" Cargo.toml',
         f'sed -i -E "s/\\"version\\": \\"[0-9]+\\.[0-9]+\\.[0-9]+\\"/\\"version\\": \\"{new_tag_stripped}\\"/" package.json',
-        f"git config --global user.email semver@pagekey.io",
-        f'git config --global user.name "PageKey Semver"',
+        f"git config user.email semver@pagekey.io",
+        f'git config user.name "PageKey Semver"',
         f"git add --all",
         f"git commit -m '{new_tag}'",
         f"git tag {new_tag}",
@@ -122,6 +122,6 @@ def test_apply_tag_with_config_applies_config_name_email(mock_system):
 
     # Assert.
     mock_system.assert_has_calls([
-        call("git config --global user.email some@email.com"),
-        call('git config --global user.name "some name"'),
+        call("git config user.email some@email.com"),
+        call('git config user.name "some name"'),
     ])

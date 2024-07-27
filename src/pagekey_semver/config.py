@@ -1,9 +1,10 @@
 """Module related to config files."""
 import enum
+import json
 from pathlib import Path
 from typing import List
 
-from pydantic import BaseModel
+from pydantic import BaseModel, field_serializer
 import yaml
 
 
@@ -20,6 +21,10 @@ class GitConfig(BaseModel):
 class Prefix(BaseModel):
     label: str
     type: ReleaseType
+
+    @field_serializer('type')
+    def serialize_type(self, type: ReleaseType, _info):
+        return type.value
 
 class SemverConfig(BaseModel):
     git: GitConfig
@@ -51,4 +56,5 @@ def load_config(config_path: Path) -> None:
         config_raw = config_file.read()
     config_dict = yaml.safe_load(config_raw)
     config_merged = {**DEFAULT_CONFIG_DICT, **config_dict}
+    print(f"Loaded config:", json.dumps(config_merged))
     return SemverConfig(**config_merged)

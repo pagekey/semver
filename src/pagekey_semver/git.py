@@ -54,8 +54,8 @@ def apply_tag(existing_tags: List[str], new_tag: str, config: SemverConfig = DEF
         commands = [
             f'sed -i -E "s/^version = \\"[0-9]+\\.[0-9]+\\.[0-9]+\\"/version = \\"{new_tag_stripped}\\"/" Cargo.toml',
             f'sed -i -E "s/\\"version\\": \\"[0-9]+\\.[0-9]+\\.[0-9]+\\"/\\"version\\": \\"{new_tag_stripped}\\"/" package.json',
-            f"git config --global user.email {config.git.email}",
-            f'git config --global user.name "{config.git.name}"',
+            f"git config user.email {config.git.email}",
+            f'git config user.name "{config.git.name}"',
             f"git add --all",
             f"git commit -m '{new_tag}'",
             f"git tag {new_tag}",
