@@ -5,7 +5,7 @@ from dataclasses import dataclass
 import re
 from typing import List
 
-from pagekey_semver.config import ReleaseType, SemverConfig
+from pagekey_semver.config import DEFAULT_CONFIG, ReleaseType, SemverConfig
 
 
 @dataclass
@@ -46,7 +46,7 @@ def compute_release_type(commits: List[Commit], config: SemverConfig) -> Release
     return release_type
 
 
-def get_biggest_tag(tags: List[str]):
+def get_biggest_tag(tags: List[str], config: SemverConfig = DEFAULT_CONFIG):
     pattern = r"^v\d+\.\d+\.\d+$"
     max_version = (0, 1, 0)
     for tag in tags:
@@ -69,7 +69,7 @@ def get_biggest_tag(tags: List[str]):
     return f"v{max_version[0]}.{max_version[1]}.{max_version[2]}"
 
 
-def compute_next_version(release_type: ReleaseType, tags: List[str]) -> str:
+def compute_next_version(release_type: ReleaseType, tags: List[str], config: SemverConfig = DEFAULT_CONFIG) -> str:
     """."""
     if len(tags) < 1:
         return "v0.1.0"

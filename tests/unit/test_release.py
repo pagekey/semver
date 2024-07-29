@@ -1,6 +1,6 @@
 """Test release module."""
 import pytest
-from pagekey_semver.config import DEFAULT_CONFIG
+from pagekey_semver.config import DEFAULT_CONFIG, DEFAULT_CONFIG_DICT, SemverConfig
 from pagekey_semver.release import Commit, ReleaseType, compute_next_version, compute_release_type, get_biggest_tag, release_greater
 
 
@@ -91,6 +91,18 @@ def test_get_biggest_tag_with_list_of_tags_returns_biggest_tag():
     assert result == "v1.2.3"
 
 
+def test_get_biggest_tag_with_custom_tag_format_returns_biggest_tag():
+    # Arrange.
+    tags = ["v0.2.0", "v0.3.0", "v1.2.3", "v1.0.0"]
+    tags = ["ver_0-2-0", "ver_0-3-0", "ver_1-2-3", "ver_1-0-0", "unrelated"]
+    format = "ver_%M-%m-%p"
+    config = SemverConfig(**{**DEFAULT_CONFIG_DICT, "format": format})
+    # Act.
+    result = get_biggest_tag(tags, config)
+    # Assert.
+    assert result == "ver_1-2-3"
+
+
 def test_compute_next_version_with_no_existing_tags_returns_default_value():
     # Arrange.
     release_type = ReleaseType.MAJOR
@@ -139,3 +151,14 @@ def test_compute_next_version_with_major_bumps_major_value():
     result = compute_next_version(release_type, tags)
     # Assert.
     assert result == "v1.0.0"
+
+def test_compute_next_version_with_custom_tag_works():
+    # Arrange.
+    release_type = ReleaseType.MAJOR
+    tags = ["ver_0-1-0", "ver_0-3-2", "ver_0-2-0", "unrelated-tag"]
+    format = "ver_%M-%m-%p"
+    config = SemverConfig(**{**DEFAULT_CONFIG_DICT, "format": format})
+    # Act.
+    result = compute_next_version(release_type, tags, config)
+    # Assert.
+    assert result == "ver_1-0-0"
