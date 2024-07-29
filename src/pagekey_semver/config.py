@@ -50,7 +50,6 @@ DEFAULT_CONFIG = SemverConfig(
 DEFAULT_CONFIG_DICT = DEFAULT_CONFIG.model_dump()
 
 
-
 def load_config(config_path: Path) -> None:
     if not config_path.is_file():
         return SemverConfig(**DEFAULT_CONFIG_DICT)

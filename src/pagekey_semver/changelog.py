@@ -3,6 +3,9 @@ from typing import List
 from pagekey_semver.release import Commit
 
 
+class ChangelogWriter:
+    pass
+
 def update_changelog(version: str, commits: List[Commit]):
     with open("CHANGELOG.md", "a") as changelog_file:
         changelog_file.write(f"## {version}\n\n")

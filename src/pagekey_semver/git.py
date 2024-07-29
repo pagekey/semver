@@ -6,6 +6,9 @@ from pagekey_semver.config import DEFAULT_CONFIG, SemverConfig
 from pagekey_semver.release import Commit
 
 
+class GitManager:
+    pass
+
 def get_git_tags() -> List[str]:
     """."""
     try:

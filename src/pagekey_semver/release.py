@@ -13,6 +13,12 @@ class Commit:
     hash: str
     message: str
 
+class Tag:
+    name: str
+    major: int
+    minor: int
+    patch: int
+
 RELEASE_TYPE_PRIORITIES = {
     ReleaseType.NO_RELEASE: 0,
     ReleaseType.PATCH: 1,
@@ -34,6 +40,9 @@ def release_greater(a: ReleaseType, b: ReleaseType) -> bool:
     return pri1 < pri2
 
 
+class SemverRelease:
+    pass
+
 def compute_release_type(commits: List[Commit], config: SemverConfig) -> ReleaseType:
     """."""
     release_type = ReleaseType.NO_RELEASE
@@ -46,13 +55,20 @@ def compute_release_type(commits: List[Commit], config: SemverConfig) -> Release
     return release_type
 
 
+def get_matching_tags(config: SemverConfig) -> List[Tag]:
+    pass # TODO
+
+
 def get_biggest_tag(tags: List[str], config: SemverConfig = DEFAULT_CONFIG):
-    pattern = r"^v\d+\.\d+\.\d+$"
+    pattern = r"^v(\d+)\.(\d+)\.(\d+)$"
+    # pattern = config.format.replace("%M", "(\d+)").replace("%m", "(\d+)").replace("%p", "(\d+)").replace(".", "\.")
+    # pattern = f"^v{pattern}$"
     max_version = (0, 1, 0)
     for tag in tags:
-        if re.match(pattern, tag):
-            # This tag has valid format (vX.Y.Z)
-            major, minor, patch = tag.replace("v", "").split(".")
+        match = re.match(pattern, tag)
+        if match:
+            # This tag has format
+            major, minor, patch = match.groups()
             major = int(major)
             minor = int(minor)
             patch = int(patch)
@@ -67,12 +83,13 @@ def get_biggest_tag(tags: List[str], config: SemverConfig = DEFAULT_CONFIG):
             ):
                 max_version = (major, minor, patch)
     return f"v{max_version[0]}.{max_version[1]}.{max_version[2]}"
+    # return config.format.replace("%M", str(max_version[0])).replace("%m", str(max_version[1])).replace("%p", str(max_version[2]))
 
 
 def compute_next_version(release_type: ReleaseType, tags: List[str], config: SemverConfig = DEFAULT_CONFIG) -> str:
     """."""
     if len(tags) < 1:
-        return "v0.1.0"
+        return config.format.replace("%M", "0").replace("%m", "1").replace("%p", "0")
     major, minor, patch = get_biggest_tag(tags).replace("v", "").split(".")
     max_version = (int(major), int(minor), int(patch))
     if release_type == ReleaseType.MAJOR:
@@ -84,4 +101,4 @@ def compute_next_version(release_type: ReleaseType, tags: List[str], config: Sem
     else:
         pass  # NO_RELEASE
 
-    return f"v{max_version[0]}.{max_version[1]}.{max_version[2]}"
+    return config.format.replace("%M", str(max_version[0])).replace("%m", str(max_version[1])).replace("%p", str(max_version[2]))
