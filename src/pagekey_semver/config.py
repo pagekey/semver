@@ -27,10 +27,12 @@ class Prefix(BaseModel):
         return type.value
 
 class SemverConfig(BaseModel):
+    format: str
     git: GitConfig
     prefixes: List[Prefix]
 
 DEFAULT_CONFIG = SemverConfig(
+    format="v%M.%m.%p",
     git=GitConfig(
         name="PageKey Semver",
         email="semver@pagekey.io",

@@ -110,6 +110,7 @@ def test_apply_tag_with_config_applies_config_name_email(mock_system):
     new_tag_stripped = new_tag.replace("v", "")
     mock_system.return_value = 0  # exit code
     config = SemverConfig(
+        format="v%M.%m.%p",
         git=GitConfig(
             name="some name",
             email="some@email.com",
