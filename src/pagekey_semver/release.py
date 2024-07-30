@@ -3,7 +3,7 @@
 
 from dataclasses import dataclass
 import re
-from typing import List
+from typing import List, Optional
 
 from pagekey_semver.config import ReleaseType, SemverConfig
 
@@ -77,44 +77,44 @@ class SemverRelease:
         return matches
 
 
-    def get_biggest_tag(self, tags: List[str]):
-        pattern = r"^v(\d+)\.(\d+)\.(\d+)$"
-        max_version = (0, 1, 0)
+    def get_biggest_tag(self, tags: List[str]) -> Optional[Tag]:
+        tags = self.get_matching_tags(tags)
+        max_tag = None
         for tag in tags:
-            match = re.match(pattern, tag)
-            if match:
-                # This tag has format
-                major, minor, patch = match.groups()
-                major = int(major)
-                minor = int(minor)
-                patch = int(patch)
                 if (
-                    major > max_version[0]
-                    or (major == max_version[0] and minor > max_version[1])
+                    max_tag is None
+                    or tag.major > max_tag.major
+                    or (tag.major == max_tag.major and tag.minor > max_tag.minor)
                     or (
-                        major == max_version[0]
-                        and minor == max_version[1]
-                        and patch > max_version[2]
+                        tag.major == max_tag.major
+                        and tag.minor == max_tag.minor
+                        and tag.patch > max_tag.patch
                     )
                 ):
-                    max_version = (major, minor, patch)
-        return f"v{max_version[0]}.{max_version[1]}.{max_version[2]}"
-        # return config.format.replace("%M", str(max_version[0])).replace("%m", str(max_version[1])).replace("%p", str(max_version[2]))
+                    max_tag = tag
+        return max_tag
 
 
-    def compute_next_version(self, release_type: ReleaseType, tags: List[str]) -> str:
+    def compute_next_version(self, release_type: ReleaseType, tags: List[Tag]) -> Optional[Tag]:
         """."""
         if len(tags) < 1:
-            return self._config.format.replace("%M", "0").replace("%m", "1").replace("%p", "0")
-        major, minor, patch = self.get_biggest_tag(tags).replace("v", "").split(".")
-        max_version = (int(major), int(minor), int(patch))
+            name = self._config.format \
+                .replace("%M", "0") \
+                .replace("%m", "1") \
+                .replace("%p", "0")
+            return Tag(name, 0, 1, 0)
+        biggest_tag = self.get_biggest_tag(tags)
         if release_type == ReleaseType.MAJOR:
-            max_version = (max_version[0] + 1, 0, 0)
+            max_version = (biggest_tag.major + 1, 0, 0)
         elif release_type == ReleaseType.MINOR:
-            max_version = (max_version[0], max_version[1] + 1, 0)
+            max_version = (biggest_tag.major, biggest_tag.minor + 1, 0)
         elif release_type == ReleaseType.PATCH:
-            max_version = (max_version[0], max_version[1], max_version[2] + 1)
+            max_version = (biggest_tag.major, biggest_tag.minor, biggest_tag.patch + 1)
         else:
-            pass  # NO_RELEASE
+            max_version = (biggest_tag.major, biggest_tag.minor, biggest_tag.patch)  # NO_RELEASE
 
-        return self._config.format.replace("%M", str(max_version[0])).replace("%m", str(max_version[1])).replace("%p", str(max_version[2]))
+        name = self._config.format \
+            .replace("%M", str(max_version[0])) \
+            .replace("%m", str(max_version[1])) \
+            .replace("%p", str(max_version[2]))
+        return Tag(name, max_version[0], max_version[1], max_version[2])

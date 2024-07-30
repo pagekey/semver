@@ -1,7 +1,7 @@
 """Module for interacting with Git."""
 import os
 import subprocess
-from typing import List
+from typing import List, Optional
 from pagekey_semver.config import DEFAULT_CONFIG, SemverConfig
 from pagekey_semver.release import Commit
 
@@ -29,11 +29,15 @@ class GitManager:
             return []
 
 
-    def get_commit_messages_since(self, commit_hash) -> List[Commit]:
+    def get_commit_messages_since(self, commit_hash: Optional[str]) -> List[Commit]:
         """."""
         try:
+            if commit_hash is None:
+                args = ["git", "log", "--pretty=format:%H %s"]
+            else:
+                args = ["git", "log", f"{commit_hash}..HEAD", "--pretty=format:%H %s"]
             result = subprocess.run(
-                ["git", "log", f"{commit_hash}..HEAD", "--pretty=format:%H %s"],
+                args,
                 check=True,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,

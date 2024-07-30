@@ -119,15 +119,19 @@ class TestSemverRelease:
     class Test_get_biggest_tag:
         def test_with_list_of_tags_returns_biggest_tag(self):
             # Arrange.
-            tags = ["v0.2.0", "v0.3.0", "v1.2.3", "v1.0.0"]
+            tags = [
+                "v0.2.0",
+                "v0.3.0",
+                "v1.2.3",
+                "v1.0.0",
+            ]
             release = SemverRelease(DEFAULT_CONFIG)
             # Act.
             result = release.get_biggest_tag(tags)
             # Assert.
-            assert result == "v1.2.3"
+            assert result == Tag(tags[2], 1, 2, 3)
 
 
-        @pytest.mark.skip() # TODO remove
         def test_with_custom_tag_format_returns_biggest_tag(self):
             # Arrange.
             tags = ["v0.2.0", "v0.3.0", "v1.2.3", "v1.0.0"]
@@ -138,7 +142,7 @@ class TestSemverRelease:
             # Act.
             result = release.get_biggest_tag(tags)
             # Assert.
-            assert result == "ver_1-2-3"
+            assert result == Tag("ver_1-2-3", 1, 2, 3)
 
     class Test_compute_next_version:
         def test_with_no_existing_tags_returns_default_value(self):
@@ -149,10 +153,10 @@ class TestSemverRelease:
             # Act.
             result = release.compute_next_version(release_type, tags)
             # Assert.
-            assert result == "v0.1.0"
+            assert result == Tag("v0.1.0", 0, 1, 0)
 
 
-        def test_with_no_release_returns_greatest_tag(self):
+        def test_with_no_release_returns_none(self):
             # Arrange.
             release_type = ReleaseType.NO_RELEASE
             tags = ["v0.1.0", "v0.3.0", "v0.2.0", "unrelated-tag"]
@@ -160,7 +164,7 @@ class TestSemverRelease:
             # Act.
             result = release.compute_next_version(release_type, tags)
             # Assert.
-            assert result == "v0.3.0"
+            assert result == Tag("v0.3.0", 0, 3, 0)
 
 
         def test_with_patch_bumps_patch_value(self):
@@ -171,7 +175,7 @@ class TestSemverRelease:
             # Act.
             result = release.compute_next_version(release_type, tags)
             # Assert.
-            assert result == "v0.3.3"
+            assert result == Tag("v0.3.3", 0, 3, 3)
 
 
         def test_with_minor_bumps_minor_value(self):
@@ -182,7 +186,7 @@ class TestSemverRelease:
             # Act.
             result = release.compute_next_version(release_type, tags)
             # Assert.
-            assert result == "v0.4.0"
+            assert result == Tag("v0.4.0", 0, 4, 0)
 
 
         def test_with_major_bumps_major_value(self):
@@ -193,7 +197,7 @@ class TestSemverRelease:
             # Act.
             result = release.compute_next_version(release_type, tags)
             # Assert.
-            assert result == "v1.0.0"
+            assert result == Tag("v1.0.0", 1, 0, 0)
 
         def test_with_custom_tag_works(self):
             # Arrange.
@@ -205,4 +209,4 @@ class TestSemverRelease:
             # Act.
             result = release.compute_next_version(release_type, tags)
             # Assert.
-            assert result == "ver_1-0-0"
+            assert result == Tag("ver_1-0-0", 1, 0, 0)
