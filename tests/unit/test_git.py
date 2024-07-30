@@ -1,9 +1,8 @@
 """Test Git module."""
 from unittest.mock import MagicMock, call, patch
 
-from pagekey_semver.config import DEFAULT_CONFIG, GitConfig, SemverConfig
+from pagekey_semver.config import GitConfig, SemverConfig
 from pagekey_semver.git import apply_tag, get_commit_messages_since, get_git_tags
-from pagekey_semver.release import Commit, ReleaseType, compute_release_type
 
 
 MODULE_UNDER_TEST = "pagekey_semver.git"
