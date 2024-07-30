@@ -1,7 +1,7 @@
 """Test release module."""
 import pytest
 from pagekey_semver.config import DEFAULT_CONFIG, DEFAULT_CONFIG_DICT, SemverConfig
-from pagekey_semver.release import Commit, ReleaseType, SemverRelease, release_greater
+from pagekey_semver.release import Commit, ReleaseType, SemverRelease, Tag, release_greater
 
 
 @pytest.mark.parametrize("a, b, expected", [
@@ -89,8 +89,32 @@ class TestSemverRelease:
             assert result == ReleaseType.MAJOR
 
     class Test_get_matching_tags:
-        def test_get_matching_tags(self):
-            pass # TODO
+
+        TEST_TAGS = [
+            "v0.1.0",
+            "b1.2.3",
+            "2.0.0",
+            "ver_3-1-4",
+            "unrelated",
+        ]
+        @pytest.mark.parametrize("format, expected_matches", [
+            ("v%M.%m.%p", [Tag(name="v0.1.0", major=0, minor=1, patch=0)]),
+            ("v%m.%M.%p", [Tag(name="v0.1.0", major=1, minor=0, patch=0)]),
+            ("b%M.%m.%p", [Tag(name="b1.2.3", major=1, minor=2, patch=3)]),
+            ("%M.%m.%p", [Tag(name="2.0.0", major=2, minor=0, patch=0)]),
+            ("ver_%M-%m-%p", [Tag(name="ver_3-1-4", major=3, minor=1, patch=4)]),
+        ])
+        def test_with_various_formats_matches(self, format, expected_matches):
+            # Arrange.
+            config = SemverConfig(**{**DEFAULT_CONFIG_DICT, "format": format})
+            release = SemverRelease(config)
+
+            # Act.
+            actual_matches = release.get_matching_tags(self.TEST_TAGS)
+
+            # Assert.
+            assert expected_matches == actual_matches
+
 
     class Test_get_biggest_tag:
         def test_with_list_of_tags_returns_biggest_tag(self):

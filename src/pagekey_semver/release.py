@@ -5,7 +5,7 @@ from dataclasses import dataclass
 import re
 from typing import List
 
-from pagekey_semver.config import DEFAULT_CONFIG, ReleaseType, SemverConfig
+from pagekey_semver.config import ReleaseType, SemverConfig
 
 
 @dataclass
@@ -13,6 +13,7 @@ class Commit:
     hash: str
     message: str
 
+@dataclass
 class Tag:
     name: str
     major: int
@@ -57,14 +58,27 @@ class SemverRelease:
         return release_type
 
 
-    def get_matching_tags(config: SemverConfig) -> List[Tag]:
-        pass # TODO
+    def get_matching_tags(self, tags: List[str]) -> List[Tag]:
+        pattern = self._config.format \
+            .replace("%M", r"(?P<major>\d+)") \
+            .replace("%m", r"(?P<minor>\d+)") \
+            .replace("%p", r"(?P<patch>\d+)") \
+            .replace(".",  r"\.")
+        matches = []
+        for tag in tags:
+            match = re.match(pattern, tag)
+            if match:
+                matches.append(Tag(
+                    name=tag, 
+                    major=int(match.group('major')), 
+                    minor=int(match.group('minor')), 
+                    patch=int(match.group('patch')),
+                ))
+        return matches
 
 
     def get_biggest_tag(self, tags: List[str]):
         pattern = r"^v(\d+)\.(\d+)\.(\d+)$"
-        # pattern = config.format.replace("%M", "(\d+)").replace("%m", "(\d+)").replace("%p", "(\d+)").replace(".", "\.")
-        # pattern = f"^v{pattern}$"
         max_version = (0, 1, 0)
         for tag in tags:
             match = re.match(pattern, tag)
