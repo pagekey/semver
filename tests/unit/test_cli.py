@@ -38,14 +38,17 @@ def test_cli_entrypoint_with_no_args_calls_all_functions(
     cli_entrypoint()
     
     # Assert.
+    mock_git_manager_cls.assert_called_with(config)
+    mock_changelog_writer_cls.assert_called_with(config)
+    mock_release_cls.assert_called_with(config)
     mock_load_config.assert_called_with(Path(".semver"))
     mock_git_manager.get_git_tags.assert_called_once()
     mock_release.get_biggest_tag.assert_called_with(tags)
     mock_git_manager.get_commit_messages_since.assert_called_with("v3.0.0")
-    mock_release.compute_release_type.assert_called_with(commits, config)
+    mock_release.compute_release_type.assert_called_with(commits)
     mock_release.compute_next_version.assert_called_with(release_type, tags)
     mock_changelog_writer.update_changelog.assert_called_with(next_version, commits)
-    mock_git_manager.apply_tag.assert_called_with(tags, next_version, config=config)
+    mock_git_manager.apply_tag.assert_called_with(tags, next_version)
 
 
 @patch(f"{MODULE_UNDER_TEST}.GitManager")
@@ -82,7 +85,7 @@ def test_cli_entrypoint_with_dry_run_does_not_push(
     mock_git_manager.get_git_tags.assert_called_once()
     mock_release.get_biggest_tag.assert_called_with(tags)
     mock_git_manager.get_commit_messages_since.assert_called_with("v3.0.0")
-    mock_release.compute_release_type.assert_called_with(commits, config)
+    mock_release.compute_release_type.assert_called_with(commits)
     mock_release.compute_next_version.assert_called_with(release_type, tags)
     mock_changelog_writer.update_changelog.assert_called_with(next_version, commits)
     mock_git_manager.apply_tag.assert_not_called()

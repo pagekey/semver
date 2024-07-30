@@ -42,9 +42,9 @@ class TestSemverRelease:
                 Commit(hash="aaaaa1", message="nothing important"),
                 Commit(hash="aaaaa2", message="another poorly formatted commit message"),
             ]
-            release = SemverRelease()
+            release = SemverRelease(DEFAULT_CONFIG)
             # Act.
-            result = release.compute_release_type(commits, DEFAULT_CONFIG)
+            result = release.compute_release_type(commits)
             # Assert.
             assert result == ReleaseType.NO_RELEASE
 
@@ -55,9 +55,9 @@ class TestSemverRelease:
                 Commit(hash="aaaaa1", message="fix: Somewhat important"),
                 Commit(hash="aaaaa2", message="another poorly formatted commit message"),
             ]
-            release = SemverRelease()
+            release = SemverRelease(DEFAULT_CONFIG)
             # Act.
-            result = release.compute_release_type(commits, DEFAULT_CONFIG)
+            result = release.compute_release_type(commits)
             # Assert.
             assert result == ReleaseType.PATCH
 
@@ -68,9 +68,9 @@ class TestSemverRelease:
                 Commit(hash="aaaaa1", message="fix: Somewhat important"),
                 Commit(hash="aaaaa2", message="feat: another poorly formatted commit message"),
             ]
-            release = SemverRelease()
+            release = SemverRelease(DEFAULT_CONFIG)
             # Act.
-            result = release.compute_release_type(commits, DEFAULT_CONFIG)
+            result = release.compute_release_type(commits)
             # Assert.
             assert result == ReleaseType.MINOR
 
@@ -82,9 +82,9 @@ class TestSemverRelease:
                 Commit(hash="aaaaa2", message="feat: Add something"),
                 Commit(hash="aaaaa2", message="major: Wow this is a big deal"),
             ]
-            release = SemverRelease()
+            release = SemverRelease(DEFAULT_CONFIG)
             # Act.
-            result = release.compute_release_type(commits, DEFAULT_CONFIG)
+            result = release.compute_release_type(commits)
             # Assert.
             assert result == ReleaseType.MAJOR
 
@@ -96,7 +96,7 @@ class TestSemverRelease:
         def test_with_list_of_tags_returns_biggest_tag(self):
             # Arrange.
             tags = ["v0.2.0", "v0.3.0", "v1.2.3", "v1.0.0"]
-            release = SemverRelease()
+            release = SemverRelease(DEFAULT_CONFIG)
             # Act.
             result = release.get_biggest_tag(tags)
             # Assert.
@@ -110,9 +110,9 @@ class TestSemverRelease:
             tags = ["ver_0-2-0", "ver_0-3-0", "ver_1-2-3", "ver_1-0-0", "unrelated"]
             format = "ver_%M-%m-%p"
             config = SemverConfig(**{**DEFAULT_CONFIG_DICT, "format": format})
-            release = SemverRelease()
+            release = SemverRelease(config)
             # Act.
-            result = release.get_biggest_tag(tags, config)
+            result = release.get_biggest_tag(tags)
             # Assert.
             assert result == "ver_1-2-3"
 
@@ -121,7 +121,7 @@ class TestSemverRelease:
             # Arrange.
             release_type = ReleaseType.MAJOR
             tags = []
-            release = SemverRelease()
+            release = SemverRelease(DEFAULT_CONFIG)
             # Act.
             result = release.compute_next_version(release_type, tags)
             # Assert.
@@ -132,7 +132,7 @@ class TestSemverRelease:
             # Arrange.
             release_type = ReleaseType.NO_RELEASE
             tags = ["v0.1.0", "v0.3.0", "v0.2.0", "unrelated-tag"]
-            release = SemverRelease()
+            release = SemverRelease(DEFAULT_CONFIG)
             # Act.
             result = release.compute_next_version(release_type, tags)
             # Assert.
@@ -143,7 +143,7 @@ class TestSemverRelease:
             # Arrange.
             release_type = ReleaseType.PATCH
             tags = ["v0.1.0", "v0.3.2", "v0.2.0", "unrelated-tag"]
-            release = SemverRelease()
+            release = SemverRelease(DEFAULT_CONFIG)
             # Act.
             result = release.compute_next_version(release_type, tags)
             # Assert.
@@ -154,7 +154,7 @@ class TestSemverRelease:
             # Arrange.
             release_type = ReleaseType.MINOR
             tags = ["v0.1.0", "v0.3.2", "v0.2.0", "unrelated-tag"]
-            release = SemverRelease()
+            release = SemverRelease(DEFAULT_CONFIG)
             # Act.
             result = release.compute_next_version(release_type, tags)
             # Assert.
@@ -165,7 +165,7 @@ class TestSemverRelease:
             # Arrange.
             release_type = ReleaseType.MAJOR
             tags = ["v0.1.0", "v0.3.2", "v0.2.0", "unrelated-tag"]
-            release = SemverRelease()
+            release = SemverRelease(DEFAULT_CONFIG)
             # Act.
             result = release.compute_next_version(release_type, tags)
             # Assert.
@@ -177,8 +177,8 @@ class TestSemverRelease:
             tags = ["ver_0-1-0", "ver_0-3-2", "ver_0-2-0", "unrelated-tag"]
             format = "ver_%M-%m-%p"
             config = SemverConfig(**{**DEFAULT_CONFIG_DICT, "format": format})
-            release = SemverRelease()
+            release = SemverRelease(config)
             # Act.
-            result = release.compute_next_version(release_type, tags, config)
+            result = release.compute_next_version(release_type, tags)
             # Assert.
             assert result == "ver_1-0-0"

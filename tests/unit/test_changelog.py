@@ -1,6 +1,7 @@
 """Test changelog module."""
 from unittest.mock import call, mock_open, patch
 from pagekey_semver.changelog import ChangelogWriter
+from pagekey_semver.config import DEFAULT_CONFIG
 from pagekey_semver.release import Commit
 
 
@@ -20,7 +21,8 @@ class TestChangelogWriter:
             Commit(hash="aaaaa6", message="some other commit"),
         ]
         mock_file = mock_open.return_value
-        writer = ChangelogWriter()
+        config = DEFAULT_CONFIG
+        writer = ChangelogWriter(config)
 
         # Act.
         writer.update_changelog(version, commits)

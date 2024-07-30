@@ -42,11 +42,14 @@ def release_greater(a: ReleaseType, b: ReleaseType) -> bool:
 
 class SemverRelease:
 
-    def compute_release_type(self, commits: List[Commit], config: SemverConfig) -> ReleaseType:
+    def __init__(self, config: SemverConfig):
+        self._config = config
+
+    def compute_release_type(self, commits: List[Commit]) -> ReleaseType:
         """."""
         release_type = ReleaseType.NO_RELEASE
         for commit in commits:
-            for prefix in config.prefixes:
+            for prefix in self._config.prefixes:
                 if commit.message.startswith(f"{prefix.label}: "):
                     # Check whether this is greater than the existing value
                     if release_greater(release_type, prefix.type):
@@ -58,7 +61,7 @@ class SemverRelease:
         pass # TODO
 
 
-    def get_biggest_tag(self, tags: List[str], config: SemverConfig = DEFAULT_CONFIG):
+    def get_biggest_tag(self, tags: List[str]):
         pattern = r"^v(\d+)\.(\d+)\.(\d+)$"
         # pattern = config.format.replace("%M", "(\d+)").replace("%m", "(\d+)").replace("%p", "(\d+)").replace(".", "\.")
         # pattern = f"^v{pattern}$"
@@ -85,10 +88,10 @@ class SemverRelease:
         # return config.format.replace("%M", str(max_version[0])).replace("%m", str(max_version[1])).replace("%p", str(max_version[2]))
 
 
-    def compute_next_version(self, release_type: ReleaseType, tags: List[str], config: SemverConfig = DEFAULT_CONFIG) -> str:
+    def compute_next_version(self, release_type: ReleaseType, tags: List[str]) -> str:
         """."""
         if len(tags) < 1:
-            return config.format.replace("%M", "0").replace("%m", "1").replace("%p", "0")
+            return self._config.format.replace("%M", "0").replace("%m", "1").replace("%p", "0")
         major, minor, patch = self.get_biggest_tag(tags).replace("v", "").split(".")
         max_version = (int(major), int(minor), int(patch))
         if release_type == ReleaseType.MAJOR:
@@ -100,4 +103,4 @@ class SemverRelease:
         else:
             pass  # NO_RELEASE
 
-        return config.format.replace("%M", str(max_version[0])).replace("%m", str(max_version[1])).replace("%p", str(max_version[2]))
+        return self._config.format.replace("%M", str(max_version[0])).replace("%m", str(max_version[1])).replace("%p", str(max_version[2]))

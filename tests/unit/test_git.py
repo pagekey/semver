@@ -1,7 +1,7 @@
 """Test Git module."""
 from unittest.mock import MagicMock, call, patch
 
-from pagekey_semver.config import GitConfig, SemverConfig
+from pagekey_semver.config import DEFAULT_CONFIG, GitConfig, SemverConfig
 from pagekey_semver.git import GitManager
 
 
@@ -17,7 +17,7 @@ class TestGitManager:
             mock_result = MagicMock()
             mock_result.stdout = "tag1\ntag2"
             mock_run.return_value = mock_result
-            manager = GitManager()
+            manager = GitManager(DEFAULT_CONFIG)
 
             # Act.
             result = manager.get_git_tags()
@@ -40,7 +40,7 @@ class TestGitManager:
             mock_result = MagicMock()
             mock_result.stdout = "aaaaa1 Do something\naaaaa2 Do something else"
             mock_run.return_value = mock_result
-            manager = GitManager()
+            manager = GitManager(DEFAULT_CONFIG)
 
             # Act.
             result = manager.get_commit_messages_since("HEAD~2")
@@ -69,7 +69,7 @@ class TestGitManager:
             # Arrange.
             existing_tags = ["v0.1.0", "v3.0.0", "v2.0.0"]
             new_tag = "v3.0.0"
-            manager = GitManager()
+            manager = GitManager(DEFAULT_CONFIG)
 
             # Act.
             result = manager.apply_tag(existing_tags, new_tag)
@@ -85,7 +85,7 @@ class TestGitManager:
             new_tag = "v4.0.0"
             new_tag_stripped = new_tag.replace("v", "")
             mock_system.return_value = 0  # exit code
-            manager = GitManager()
+            manager = GitManager(DEFAULT_CONFIG)
 
             # Act.
             manager.apply_tag(existing_tags, new_tag)
@@ -123,10 +123,10 @@ class TestGitManager:
                 ),
                 prefixes=[]
             )
-            manager = GitManager()
+            manager = GitManager(config)
 
             # Act.
-            manager.apply_tag(existing_tags, new_tag, config)
+            manager.apply_tag(existing_tags, new_tag)
 
             # Assert.
             mock_system.assert_has_calls([
