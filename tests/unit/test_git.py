@@ -2,7 +2,7 @@
 from unittest.mock import MagicMock, call, patch
 
 from pagekey_semver.config import GitConfig, SemverConfig
-from pagekey_semver.git import apply_tag, get_commit_messages_since, get_git_tags
+from pagekey_semver.git import GitManager
 
 
 MODULE_UNDER_TEST = "pagekey_semver.git"
@@ -17,9 +17,10 @@ class TestGitManager:
             mock_result = MagicMock()
             mock_result.stdout = "tag1\ntag2"
             mock_run.return_value = mock_result
+            manager = GitManager()
 
             # Act.
-            result = get_git_tags()
+            result = manager.get_git_tags()
 
             # Assert.
             mock_run.assert_called_with(
@@ -39,9 +40,10 @@ class TestGitManager:
             mock_result = MagicMock()
             mock_result.stdout = "aaaaa1 Do something\naaaaa2 Do something else"
             mock_run.return_value = mock_result
+            manager = GitManager()
 
             # Act.
-            result = get_commit_messages_since("HEAD~2")
+            result = manager.get_commit_messages_since("HEAD~2")
 
             # Assert.
             mock_run.assert_called_with(
@@ -67,9 +69,10 @@ class TestGitManager:
             # Arrange.
             existing_tags = ["v0.1.0", "v3.0.0", "v2.0.0"]
             new_tag = "v3.0.0"
+            manager = GitManager()
 
             # Act.
-            result = apply_tag(existing_tags, new_tag)
+            result = manager.apply_tag(existing_tags, new_tag)
 
             # Assert.
             mock_run.assert_not_called()
@@ -82,9 +85,10 @@ class TestGitManager:
             new_tag = "v4.0.0"
             new_tag_stripped = new_tag.replace("v", "")
             mock_system.return_value = 0  # exit code
+            manager = GitManager()
 
             # Act.
-            apply_tag(existing_tags, new_tag)
+            manager.apply_tag(existing_tags, new_tag)
 
             # Assert.
             commands = [
@@ -119,9 +123,10 @@ class TestGitManager:
                 ),
                 prefixes=[]
             )
+            manager = GitManager()
 
             # Act.
-            apply_tag(existing_tags, new_tag, config)
+            manager.apply_tag(existing_tags, new_tag, config)
 
             # Assert.
             mock_system.assert_has_calls([

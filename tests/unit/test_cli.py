@@ -8,29 +8,26 @@ from pagekey_semver.release import ReleaseType
 MODULE_UNDER_TEST = "pagekey_semver.cli"
 
 
-@patch(f"{MODULE_UNDER_TEST}.apply_tag")
+@patch(f"{MODULE_UNDER_TEST}.GitManager")
 @patch(f"{MODULE_UNDER_TEST}.ChangelogWriter")
 @patch(f"{MODULE_UNDER_TEST}.SemverRelease")
-@patch(f"{MODULE_UNDER_TEST}.get_commit_messages_since")
-@patch(f"{MODULE_UNDER_TEST}.get_git_tags")
 @patch(f"{MODULE_UNDER_TEST}.load_config")
 def test_cli_entrypoint_with_no_args_calls_all_functions(
     mock_load_config,
-    mock_get_git_tags,
-    mock_get_commit_messages_since,
     mock_release_cls,
     mock_changelog_writer_cls,
-    mock_apply_tag,
+    mock_git_manager_cls,
 ):
     # Arrange.
     config = mock_load_config.return_value
     tags = ["v1.0.0", "v3.0.0", "v2.0.0"]
-    mock_get_git_tags.return_value = tags
+    mock_git_manager = mock_git_manager_cls.return_value
+    mock_git_manager.get_git_tags.return_value = tags
     biggest_tag = "v3.0.0"
     mock_release = mock_release_cls.return_value
     mock_release.get_biggest_tag.return_value = biggest_tag
     commits = ["fix: Message 1", "feat: Message 2"]
-    mock_get_commit_messages_since.return_value = commits
+    mock_git_manager.get_commit_messages_since.return_value = commits
     release_type = ReleaseType.MINOR
     mock_release.compute_release_type.return_value = release_type
     next_version = "v3.1.0"
@@ -42,38 +39,35 @@ def test_cli_entrypoint_with_no_args_calls_all_functions(
     
     # Assert.
     mock_load_config.assert_called_with(Path(".semver"))
-    mock_get_git_tags.assert_called_once()
+    mock_git_manager.get_git_tags.assert_called_once()
     mock_release.get_biggest_tag.assert_called_with(tags)
-    mock_get_commit_messages_since.assert_called_with("v3.0.0")
+    mock_git_manager.get_commit_messages_since.assert_called_with("v3.0.0")
     mock_release.compute_release_type.assert_called_with(commits, config)
     mock_release.compute_next_version.assert_called_with(release_type, tags)
     mock_changelog_writer.update_changelog.assert_called_with(next_version, commits)
-    mock_apply_tag.assert_called_with(tags, next_version, config=config)
+    mock_git_manager.apply_tag.assert_called_with(tags, next_version, config=config)
 
 
-@patch(f"{MODULE_UNDER_TEST}.apply_tag")
+@patch(f"{MODULE_UNDER_TEST}.GitManager")
 @patch(f"{MODULE_UNDER_TEST}.ChangelogWriter")
 @patch(f"{MODULE_UNDER_TEST}.SemverRelease")
-@patch(f"{MODULE_UNDER_TEST}.get_commit_messages_since")
-@patch(f"{MODULE_UNDER_TEST}.get_git_tags")
 @patch(f"{MODULE_UNDER_TEST}.load_config")
 def test_cli_entrypoint_with_dry_run_does_not_push(
     mock_load_config,
-    mock_get_git_tags,
-    mock_get_commit_messages_since,
     mock_release_cls,
     mock_changelog_writer_cls,
-    mock_apply_tag,
+    mock_git_manager_cls,
 ):
     # Arrange.
     config = mock_load_config.return_value
     tags = ["v1.0.0", "v3.0.0", "v2.0.0"]
-    mock_get_git_tags.return_value = tags
+    mock_git_manager = mock_git_manager_cls.return_value
+    mock_git_manager.get_git_tags.return_value = tags
     biggest_tag = "v3.0.0"
     mock_release = mock_release_cls.return_value
     mock_release.get_biggest_tag.return_value = biggest_tag
     commits = ["fix: Message 1", "feat: Message 2"]
-    mock_get_commit_messages_since.return_value = commits
+    mock_git_manager.get_commit_messages_since.return_value = commits
     release_type = ReleaseType.MINOR
     mock_release.compute_release_type.return_value = release_type
     next_version = "v3.1.0"
@@ -85,10 +79,10 @@ def test_cli_entrypoint_with_dry_run_does_not_push(
 
     # Assert.
     mock_load_config.assert_called_with(Path(".semver"))
-    mock_get_git_tags.assert_called_once()
+    mock_git_manager.get_git_tags.assert_called_once()
     mock_release.get_biggest_tag.assert_called_with(tags)
-    mock_get_commit_messages_since.assert_called_with("v3.0.0")
+    mock_git_manager.get_commit_messages_since.assert_called_with("v3.0.0")
     mock_release.compute_release_type.assert_called_with(commits, config)
     mock_release.compute_next_version.assert_called_with(release_type, tags)
     mock_changelog_writer.update_changelog.assert_called_with(next_version, commits)
-    mock_apply_tag.assert_not_called()
+    mock_git_manager.apply_tag.assert_not_called()
