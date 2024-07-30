@@ -81,6 +81,9 @@ def test_cli_entrypoint_with_dry_run_does_not_push(
     cli_entrypoint(["--dry-run"])
 
     # Assert.
+    mock_git_manager_cls.assert_called_with(config)
+    mock_changelog_writer_cls.assert_called_with(config)
+    mock_release_cls.assert_called_with(config)
     mock_load_config.assert_called_with(Path(".semver"))
     mock_git_manager.get_git_tags.assert_called_once()
     mock_release.get_biggest_tag.assert_called_with(tags)
