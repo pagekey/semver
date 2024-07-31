@@ -1,7 +1,7 @@
 from typing import List
 
 from pagekey_semver.config import SemverConfig
-from pagekey_semver.release import Commit
+from pagekey_semver.release import Commit, Tag
 
 
 class ChangelogWriter:
@@ -9,10 +9,11 @@ class ChangelogWriter:
     def __init__(self, config: SemverConfig):
         self._config = config
 
-    def update_changelog(self, version: str, commits: List[Commit]):
+    def update_changelog(self, version: Tag, commits: List[Commit]):
         with open("CHANGELOG.md", "a") as changelog_file:
-            changelog_file.write(f"## {version}\n\n")
+            changelog_file.write(f"## {version.name}\n\n")
             for commit in commits:
-                if commit.message.startswith("fix: ") or commit.message.startswith("feat: ") or commit.message.startswith("major: "):
-                    changelog_file.write(f"- {commit.message} ({commit.hash})\n")
+                for prefix in self._config.prefixes:
+                    if commit.message.startswith(f"{prefix.label}: "):
+                        changelog_file.write(f"- {commit.message} ({commit.hash})\n")
             changelog_file.write("\n")

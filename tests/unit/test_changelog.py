@@ -2,7 +2,7 @@
 from unittest.mock import call, mock_open, patch
 from pagekey_semver.changelog import ChangelogWriter
 from pagekey_semver.config import DEFAULT_CONFIG
-from pagekey_semver.release import Commit
+from pagekey_semver.release import Commit, Tag
 
 
 MODULE_UNDER_TEST = "pagekey_semver.changelog"
@@ -11,7 +11,7 @@ class TestChangelogWriter:
     @patch('builtins.open', new_callable=mock_open)
     def test_update_changelog_with_commits_updates_changelog_file(self, mock_open):
         # Arrange.
-        version = "v1.0.0"
+        version = Tag("v1.0.0", 1, 0, 0)
         commits = [
             Commit(hash="aaaaa1", message="my commit"),
             Commit(hash="aaaaa2", message="fix: Do something somewhat important"),
@@ -30,7 +30,7 @@ class TestChangelogWriter:
         # Assert.
         mock_open.assert_called_with("CHANGELOG.md", "a")
         mock_file.write.assert_has_calls([
-            call(f"## {version}\n\n"),
+            call(f"## {version.name}\n\n"),
             call("- fix: Do something somewhat important (aaaaa2)\n"),
             call("- feat: Add something (aaaaa3)\n"),
             call("- major: Wow this is a big deal (aaaaa5)\n"),
