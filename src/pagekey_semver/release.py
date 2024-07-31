@@ -104,7 +104,9 @@ class SemverRelease:
                 .replace("%p", "0")
             return Tag(name, 0, 1, 0)
         biggest_tag = self.get_biggest_tag(tags)
-        if release_type == ReleaseType.MAJOR:
+        if biggest_tag is None:
+            max_version = (0, 1, 0)
+        elif release_type == ReleaseType.MAJOR:
             max_version = (biggest_tag.major + 1, 0, 0)
         elif release_type == ReleaseType.MINOR:
             max_version = (biggest_tag.major, biggest_tag.minor + 1, 0)

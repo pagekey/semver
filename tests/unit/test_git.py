@@ -3,6 +3,7 @@ from unittest.mock import MagicMock, call, patch
 
 from pagekey_semver.config import DEFAULT_CONFIG, GitConfig, SemverConfig
 from pagekey_semver.git import GitManager
+from pagekey_semver.release import Tag
 
 
 MODULE_UNDER_TEST = "pagekey_semver.git"
@@ -82,8 +83,8 @@ class TestGitManager:
         def test_apply_tag_with_new_tag_tags_and_pushes(self, mock_system):
             # Arrange.
             existing_tags = ["v0.1.0", "v3.0.0", "v2.0.0"]
-            new_tag = "v4.0.0"
-            new_tag_stripped = new_tag.replace("v", "")
+            new_tag = Tag("v4.0.0", 4, 0, 0)
+            new_tag_stripped = "4.0.0"
             mock_system.return_value = 0  # exit code
             manager = GitManager(DEFAULT_CONFIG)
 
@@ -97,9 +98,9 @@ class TestGitManager:
                 f"git config user.email semver@pagekey.io",
                 f'git config user.name "PageKey Semver"',
                 f"git add --all",
-                f"git commit -m '{new_tag}'",
-                f"git tag {new_tag}",
-                f"git push origin {new_tag}",
+                f"git commit -m '{new_tag.name}'",
+                f"git tag {new_tag.name}",
+                f"git push origin {new_tag.name}",
             ]
             mock_system.assert_has_calls(
                 [
@@ -112,8 +113,7 @@ class TestGitManager:
         @patch("os.system")
         def test_apply_tag_with_config_applies_config_name_email(self, mock_system):
             existing_tags = ["v0.1.0", "v3.0.0", "v2.0.0"]
-            new_tag = "v4.0.0"
-            new_tag_stripped = new_tag.replace("v", "")
+            new_tag = Tag("v4.0.0", 4, 0, 0)
             mock_system.return_value = 0  # exit code
             config = SemverConfig(
                 format="v%M.%m.%p",

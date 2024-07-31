@@ -2,7 +2,7 @@
 from pathlib import Path
 from unittest.mock import patch
 from pagekey_semver.cli import cli_entrypoint
-from pagekey_semver.release import ReleaseType
+from pagekey_semver.release import ReleaseType, Tag
 
 
 MODULE_UNDER_TEST = "pagekey_semver.cli"
@@ -23,7 +23,7 @@ def test_cli_entrypoint_with_no_args_calls_all_functions(
     tags = ["v1.0.0", "v3.0.0", "v2.0.0"]
     mock_git_manager = mock_git_manager_cls.return_value
     mock_git_manager.get_git_tags.return_value = tags
-    biggest_tag = "v3.0.0"
+    biggest_tag = Tag("v3.0.0", 3, 0, 0)
     mock_release = mock_release_cls.return_value
     mock_release.get_biggest_tag.return_value = biggest_tag
     commits = ["fix: Message 1", "feat: Message 2"]
@@ -66,7 +66,7 @@ def test_cli_entrypoint_with_dry_run_does_not_push(
     tags = ["v1.0.0", "v3.0.0", "v2.0.0"]
     mock_git_manager = mock_git_manager_cls.return_value
     mock_git_manager.get_git_tags.return_value = tags
-    biggest_tag = "v3.0.0"
+    biggest_tag = Tag("v3.0.0", 3, 0, 0)
     mock_release = mock_release_cls.return_value
     mock_release.get_biggest_tag.return_value = biggest_tag
     commits = ["fix: Message 1", "feat: Message 2"]
