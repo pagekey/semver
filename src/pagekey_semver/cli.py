@@ -1,7 +1,7 @@
 from pathlib import Path
 import sys
 
-from pagekey_semver.changelog import DefaultChangelogWriter
+from pagekey_semver.changelog import ChangelogWriter
 from pagekey_semver.config import load_config
 from pagekey_semver.git import GitManager
 from pagekey_semver.release import SemverRelease, Tag
@@ -14,7 +14,7 @@ def cli_entrypoint(args=sys.argv[1:]):
     # Init classes.
     manager = GitManager(config)
     release = SemverRelease(config)
-    writer = DefaultChangelogWriter(config)
+    writer = ChangelogWriter.from_config(config)
     
     # Compute tags, commits
     tags = manager.get_git_tags()

@@ -1,11 +1,29 @@
 """Test changelog module."""
 from unittest.mock import call, mock_open, patch
-from pagekey_semver.changelog import DefaultChangelogWriter
-from pagekey_semver.config import DEFAULT_CONFIG_DICT, SemverConfig
+from pagekey_semver.changelog import ChangelogWriter, DefaultChangelogWriter
+from pagekey_semver.config import DEFAULT_CONFIG, DEFAULT_CONFIG_DICT, SemverConfig
 from pagekey_semver.release import Commit, Tag
 
 
 MODULE_UNDER_TEST = "pagekey_semver.changelog"
+
+
+class TestChangelogWriter:
+
+    @patch(f"{MODULE_UNDER_TEST}.dynamic_import")
+    def test_from_config_calls_dynamic_import(self, mock_dynamic_import):
+        # Arrange.
+        config = DEFAULT_CONFIG
+        imported_class = mock_dynamic_import.return_value
+
+        # Act.
+        result = ChangelogWriter.from_config(config)
+
+        # Assert.
+        mock_dynamic_import.assert_called_with(config.changelog_writer)
+        imported_class.assert_called_with(config)
+        assert result == imported_class.return_value
+
 
 class TestDefaultChangelogWriter:
 

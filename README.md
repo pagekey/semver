@@ -46,7 +46,7 @@ This package is intended to run on a Linux system with the `bash` shell installe
 ## Configuration
 
 Add a `.semver` file in the top-level directory of your repo. This file should be in YAML syntax and can override various settings for semantic release. If you do not specify part of the config, the default values will be used.
-
+commits
 
 ### Changelog Path
 
@@ -57,6 +57,44 @@ changelog_path: docs/CHANGELOG.md
 ```
 
 Any directories along the way will be created for you. For example, if the `docs/` directory does not exist when using the above config, it will be created when you run `pagekey-semver`.
+
+
+### Changelog Writer
+
+The default changelog writer is quite simple - for each version, it adds a level-2 header for the version and below it, each commit as a bullet.
+
+```md
+## v1.0.0
+
+- fix: Do something (f7ae92385abc9a0f84ed1e7624ec7205e01472a6)
+- feat: Add some feature (1933db71316abfea44b6e12d20399827eb03322e)
+```
+
+If you don't like this format, override the default changelog writer with your own class. You can do this by adding a `changelog_writer.py` and populate it with the following:
+
+```python
+from pagekey_semver.changelog import ChangelogWriter
+
+class CustomChangelogWriter(ChangelogWriter):
+    def write_changelog(self, changelog_file, version, commits):
+        changelog_file.write("Hello " + version.name + "\n")
+        for commit in commits:
+            changelog_file.write("> " + commit.message + "\n")
+```
+
+Then specify your writer in the `.semver` config file:
+
+```yaml
+changelog_writer: changelog_writer:CustomChangelogWriter
+```
+
+Now, when you run `pagekey-semver`, the changelog will look like this:
+
+```md
+Hello v1.0.0
+> fix: Do something
+> feat: Add some feature
+```
 
 
 ### Prefixes

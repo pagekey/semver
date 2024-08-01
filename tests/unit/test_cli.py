@@ -9,7 +9,7 @@ MODULE_UNDER_TEST = "pagekey_semver.cli"
 
 
 @patch(f"{MODULE_UNDER_TEST}.GitManager")
-@patch(f"{MODULE_UNDER_TEST}.DefaultChangelogWriter")
+@patch(f"{MODULE_UNDER_TEST}.ChangelogWriter")
 @patch(f"{MODULE_UNDER_TEST}.SemverRelease")
 @patch(f"{MODULE_UNDER_TEST}.load_config")
 def test_cli_entrypoint_with_no_args_calls_all_functions(
@@ -32,14 +32,14 @@ def test_cli_entrypoint_with_no_args_calls_all_functions(
     mock_release.compute_release_type.return_value = release_type
     next_version = "v3.1.0"
     mock_release.compute_next_version.return_value = next_version
-    mock_changelog_writer = mock_changelog_writer_cls.return_value
+    mock_changelog_writer = mock_changelog_writer_cls.from_config.return_value
     
     # Act.
     cli_entrypoint()
     
     # Assert.
     mock_git_manager_cls.assert_called_with(config)
-    mock_changelog_writer_cls.assert_called_with(config)
+    mock_changelog_writer_cls.from_config.assert_called_with(config)
     mock_release_cls.assert_called_with(config)
     mock_load_config.assert_called_with(Path(".semver"))
     mock_git_manager.get_git_tags.assert_called_once()
@@ -52,7 +52,7 @@ def test_cli_entrypoint_with_no_args_calls_all_functions(
 
 
 @patch(f"{MODULE_UNDER_TEST}.GitManager")
-@patch(f"{MODULE_UNDER_TEST}.DefaultChangelogWriter")
+@patch(f"{MODULE_UNDER_TEST}.ChangelogWriter")
 @patch(f"{MODULE_UNDER_TEST}.SemverRelease")
 @patch(f"{MODULE_UNDER_TEST}.load_config")
 def test_cli_entrypoint_with_dry_run_does_not_push(
@@ -75,14 +75,14 @@ def test_cli_entrypoint_with_dry_run_does_not_push(
     mock_release.compute_release_type.return_value = release_type
     next_version = "v3.1.0"
     mock_release.compute_next_version.return_value = next_version
-    mock_changelog_writer = mock_changelog_writer_cls.return_value
+    mock_changelog_writer = mock_changelog_writer_cls.from_config.return_value
 
     # Act.
     cli_entrypoint(["--dry-run"])
 
     # Assert.
     mock_git_manager_cls.assert_called_with(config)
-    mock_changelog_writer_cls.assert_called_with(config)
+    mock_changelog_writer_cls.from_config.assert_called_with(config)
     mock_release_cls.assert_called_with(config)
     mock_load_config.assert_called_with(Path(".semver"))
     mock_git_manager.get_git_tags.assert_called_once()

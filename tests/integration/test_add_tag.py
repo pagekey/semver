@@ -47,13 +47,23 @@ def test_add_tag_with_existing_project_works(tmp_path):
     assert os.path.exists("CHANGELOG.md")
     with open("CHANGELOG.md", "r") as changelog_file:
         changelog = changelog_file.read()
-    assert "## v0.1.0" in changelog
-    assert "fix: Add package.json" in changelog
+    assert "## v0.1.0\n" in changelog
+    assert "- fix: Add package.json" in changelog
 
+    # Create custom changelog writer.
+    with open("custom_changelog_writer.py", 'w') as writer_src:
+        writer_src.write("""
+from pagekey_semver.changelog import ChangelogWriter
+class CustomChangelogWriter(ChangelogWriter):
+    def write_changelog(self, changelog_file, version, commits):
+        changelog_file.write("Hello " + version.name + "\\n")
+        for commit in commits:
+            changelog_file.write("> " + commit.message + "\\n")
+""")
     # Set up custom config file.
     config = SemverConfig(
         changelog_path="docs/CHANGELOG.md",
-        changelog_writer="pagekey_semver.changelog:ChangelogWriter",
+        changelog_writer="custom_changelog_writer:CustomChangelogWriter",
         format="ver_%M-%m-%p",
         git=GitConfig(
             name="my name",
@@ -76,8 +86,8 @@ def test_add_tag_with_existing_project_works(tmp_path):
     assert os.path.exists("docs/CHANGELOG.md")
     with open("docs/CHANGELOG.md", "r") as changelog_file:
         changelog = changelog_file.read()
-    assert "## ver_0-1-0" in changelog
-    assert "custom: Add .semver" in changelog
+    assert "Hello ver_0-1-0\n" in changelog
+    assert "> custom: Add .semver\n" in changelog
 
     result = subprocess.run(
         ["git", "tag"],

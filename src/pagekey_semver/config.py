@@ -35,7 +35,7 @@ class SemverConfig(BaseModel):
 
 DEFAULT_CONFIG = SemverConfig(
     changelog_path="CHANGELOG.md",
-    changelog_writer="pagekey_semver.changelog:ChangelogWriter",
+    changelog_writer="pagekey_semver.changelog:DefaultChangelogWriter",
     format="v%M.%m.%p",
     git=GitConfig(
         name="PageKey Semver",
