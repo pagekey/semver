@@ -1,13 +1,13 @@
 """Test changelog module."""
 from unittest.mock import call, mock_open, patch
-from pagekey_semver.changelog import ChangelogWriter
+from pagekey_semver.changelog import DefaultChangelogWriter
 from pagekey_semver.config import DEFAULT_CONFIG
 from pagekey_semver.release import Commit, Tag
 
 
 MODULE_UNDER_TEST = "pagekey_semver.changelog"
 
-class TestChangelogWriter:
+class TestDefaultChangelogWriter:
     @patch('builtins.open', new_callable=mock_open)
     def test_update_changelog_with_commits_updates_changelog_file(self, mock_open):
         # Arrange.
@@ -22,7 +22,7 @@ class TestChangelogWriter:
         ]
         mock_file = mock_open.return_value
         config = DEFAULT_CONFIG
-        writer = ChangelogWriter(config)
+        writer = DefaultChangelogWriter(config)
 
         # Act.
         writer.update_changelog(version, commits)

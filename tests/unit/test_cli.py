@@ -9,7 +9,7 @@ MODULE_UNDER_TEST = "pagekey_semver.cli"
 
 
 @patch(f"{MODULE_UNDER_TEST}.GitManager")
-@patch(f"{MODULE_UNDER_TEST}.ChangelogWriter")
+@patch(f"{MODULE_UNDER_TEST}.DefaultChangelogWriter")
 @patch(f"{MODULE_UNDER_TEST}.SemverRelease")
 @patch(f"{MODULE_UNDER_TEST}.load_config")
 def test_cli_entrypoint_with_no_args_calls_all_functions(
@@ -52,7 +52,7 @@ def test_cli_entrypoint_with_no_args_calls_all_functions(
 
 
 @patch(f"{MODULE_UNDER_TEST}.GitManager")
-@patch(f"{MODULE_UNDER_TEST}.ChangelogWriter")
+@patch(f"{MODULE_UNDER_TEST}.DefaultChangelogWriter")
 @patch(f"{MODULE_UNDER_TEST}.SemverRelease")
 @patch(f"{MODULE_UNDER_TEST}.load_config")
 def test_cli_entrypoint_with_dry_run_does_not_push(
