@@ -1,15 +1,17 @@
 """Test changelog module."""
 from unittest.mock import call, mock_open, patch
 from pagekey_semver.changelog import DefaultChangelogWriter
-from pagekey_semver.config import DEFAULT_CONFIG
+from pagekey_semver.config import DEFAULT_CONFIG_DICT, SemverConfig
 from pagekey_semver.release import Commit, Tag
 
 
 MODULE_UNDER_TEST = "pagekey_semver.changelog"
 
 class TestDefaultChangelogWriter:
+
+    @patch(f"{MODULE_UNDER_TEST}.os.makedirs")
     @patch('builtins.open', new_callable=mock_open)
-    def test_update_changelog_with_commits_updates_changelog_file(self, mock_open):
+    def test_update_changelog_with_commits_updates_changelog_file(self, mock_open, mock_makedirs):
         # Arrange.
         version = Tag("v1.0.0", 1, 0, 0)
         commits = [
@@ -21,14 +23,15 @@ class TestDefaultChangelogWriter:
             Commit(hash="aaaaa6", message="some other commit"),
         ]
         mock_file = mock_open.return_value
-        config = DEFAULT_CONFIG
+        config = SemverConfig(**{**DEFAULT_CONFIG_DICT, "changelog_path": "docs/CHANGELOG.md"})
         writer = DefaultChangelogWriter(config)
 
         # Act.
         writer.update_changelog(version, commits)
 
         # Assert.
-        mock_open.assert_called_with("CHANGELOG.md", "a")
+        mock_makedirs.assert_called_with("docs", exist_ok=True)
+        mock_open.assert_called_with("docs/CHANGELOG.md", "a")
         mock_file.write.assert_has_calls([
             call(f"## {version.name}\n\n"),
             call("- fix: Do something somewhat important (aaaaa2)\n"),

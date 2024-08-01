@@ -44,10 +44,15 @@ def test_add_tag_with_existing_project_works(tmp_path):
         text=True,
     )
     assert result.stdout.strip() == "v0.1.0"
+    assert os.path.exists("CHANGELOG.md")
+    with open("CHANGELOG.md", "r") as changelog_file:
+        changelog = changelog_file.read()
+    assert "## v0.1.0" in changelog
+    assert "fix: Add package.json" in changelog
 
     # Set up custom config file.
     config = SemverConfig(
-        changelog_path="CHANGELOG.md",
+        changelog_path="docs/CHANGELOG.md",
         format="ver_%M-%m-%p",
         git=GitConfig(
             name="my name",
@@ -67,11 +72,9 @@ def test_add_tag_with_existing_project_works(tmp_path):
     cli_entrypoint()
 
     # Assert.
-    assert os.path.exists("CHANGELOG.md")
-    with open("CHANGELOG.md", "r") as changelog_file:
+    assert os.path.exists("docs/CHANGELOG.md")
+    with open("docs/CHANGELOG.md", "r") as changelog_file:
         changelog = changelog_file.read()
-    assert "## v0.1.0" in changelog
-    assert "fix: Add package.json" in changelog
     assert "## ver_0-1-0" in changelog
     assert "custom: Add .semver" in changelog
 
