@@ -27,30 +27,30 @@ class Prefix(BaseModel):
         return type.value
 
 
-class UpdateFileType(str, enum.Enum):
+class ReplaceFileType(str, enum.Enum):
     JSON = "json"
     SED = "sed"
     TOML = "toml"
     YAML = "yaml"
 
-class UpdateFile(BaseModel):
+class ReplaceFile(BaseModel):
     name: str
-    type: UpdateFileType
+    type: ReplaceFileType
 
-class JsonUpdateFile(UpdateFile):
-    type: Literal[UpdateFileType.JSON] = UpdateFileType.JSON
+class JsonReplaceFile(ReplaceFile):
+    type: Literal[ReplaceFileType.JSON] = ReplaceFileType.JSON
 
-class SedUpdateFile(UpdateFile):
-    type: Literal[UpdateFileType.SED] = UpdateFileType.SED
+class SedReplaceFile(ReplaceFile):
+    type: Literal[ReplaceFileType.SED] = ReplaceFileType.SED
     pattern: str = "%M.%m.%p"
 
-class TomlUpdateFile(UpdateFile):
-    type: Literal[UpdateFileType.TOML] = UpdateFileType.TOML
+class TomlReplaceFile(ReplaceFile):
+    type: Literal[ReplaceFileType.TOML] = ReplaceFileType.TOML
 
-class YamlUpdateFile(UpdateFile):
-    type: Literal[UpdateFileType.YAML] = UpdateFileType.YAML
+class YamlReplaceFile(ReplaceFile):
+    type: Literal[ReplaceFileType.YAML] = ReplaceFileType.YAML
 
-UpdateFileUnion = Union[JsonUpdateFile, SedUpdateFile, TomlUpdateFile, YamlUpdateFile]
+ReplaceFileUnion = Union[JsonReplaceFile, SedReplaceFile, TomlReplaceFile, YamlReplaceFile]
 
 
 class SemverConfig(BaseModel):
@@ -59,7 +59,7 @@ class SemverConfig(BaseModel):
     format: str
     git: GitConfig
     prefixes: List[Prefix]
-    update_files: List[UpdateFileUnion] = Field(discriminator="type")
+    replace_files: List[ReplaceFileUnion] = Field(discriminator="type")
 
 
 DEFAULT_CONFIG = SemverConfig(
@@ -79,7 +79,7 @@ DEFAULT_CONFIG = SemverConfig(
         Prefix(label="patch", type="patch"),
         Prefix(label="fix", type="patch"),
     ],
-    update_files=[],
+    replace_files=[],
 )
 DEFAULT_CONFIG_DICT = DEFAULT_CONFIG.model_dump()
 

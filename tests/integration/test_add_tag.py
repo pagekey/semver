@@ -72,7 +72,7 @@ class CustomChangelogWriter(ChangelogWriter):
         prefixes=[
             Prefix(label="custom", type="major"),
         ],
-        update_files=[],
+        replace_files=[],
     )
     with open('.semver', 'w') as semver_file:
         semver_file.write(yaml.safe_dump(config.model_dump()))

@@ -124,7 +124,7 @@ class TestGitManager:
                     email="some@email.com",
                 ),
                 prefixes=[],
-                update_files=[],
+                replace_files=[],
             )
             manager = GitManager(config)
 

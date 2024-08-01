@@ -5,7 +5,7 @@ from unittest.mock import MagicMock, call, mock_open, patch
 
 import yaml
 
-from pagekey_semver.config import DEFAULT_CONFIG, DEFAULT_CONFIG_DICT, JsonUpdateFile, SedUpdateFile, SemverConfig, TomlUpdateFile, UpdateFileType, YamlUpdateFile, load_config
+from pagekey_semver.config import DEFAULT_CONFIG, DEFAULT_CONFIG_DICT, JsonReplaceFile, SedReplaceFile, SemverConfig, TomlReplaceFile, ReplaceFileType, YamlReplaceFile, load_config
 from pagekey_semver.release import ReleaseType
 
 MODULE_UNDER_TEST = "pagekey_semver.config"
@@ -157,13 +157,13 @@ def test_load_config_with_changelog_writer_parses_config(mock_builtin_open):
 
 
 @patch('builtins.open', new_callable=mock_open)
-def test_load_config_with_update_files_parses_config(mock_builtin_open):
+def test_load_config_with_replace_files_parses_config(mock_builtin_open):
     # Arrange.
     mock_path = MagicMock()
     mock_path.is_file.return_value = True
     mock_file = mock_builtin_open.return_value
     mock_file.read.return_value = yaml.safe_dump({
-        "update_files": [
+        "replace_files": [
             {
                 "name": "myfile.json",
                 "type": "json",
@@ -188,7 +188,7 @@ def test_load_config_with_update_files_parses_config(mock_builtin_open):
     config = load_config(mock_path)
 
     # Assert.
-    assert config.update_files[0] == JsonUpdateFile(name="myfile.json")
-    assert config.update_files[1] == SedUpdateFile(name="myfile.md", pattern="v%M.%m.%p")
-    assert config.update_files[2] == TomlUpdateFile(name="myfile.toml")
-    assert config.update_files[3] == YamlUpdateFile(name="myfile.yaml")
+    assert config.replace_files[0] == JsonReplaceFile(name="myfile.json")
+    assert config.replace_files[1] == SedReplaceFile(name="myfile.md", pattern="v%M.%m.%p")
+    assert config.replace_files[2] == TomlReplaceFile(name="myfile.toml")
+    assert config.replace_files[3] == YamlReplaceFile(name="myfile.yaml")
