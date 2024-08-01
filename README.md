@@ -54,12 +54,32 @@ To override which prefixes create a new release, you can use the following `.sem
 
 ```yaml
 prefixes:
-    - label: huge
-      type: major
-    - label: mini
-      type: minor
-    - label: micro
-      type: patch
+  - label: huge
+    type: major
+  - label: mini
+    type: minor
+  - label: micro
+    type: patch
 ```
 
 With the above config and a project with a latest tag of `v0.1.0`, adding the commit `micro: Fix a bug` would create `v0.1.1`, adding `mini: Add feature` would create `v0.2.0`, and adding `huge: Break everything` would create `v1.0.0`.
+
+### Tag Format
+
+You can specify a custom tag format for your versioning. This affects which existing tags are detected and, in turn, the new tag that is created. You can use `%M` to represent the major version, `%m` to represent minor, and `%p` to represent patch. The default format is:
+
+```yaml
+foramt: "v%M.%m.%p"
+```
+
+If you want to remove the `v`, then you just need to configure the following:
+
+```yaml
+format: "%M.%m.%p
+```
+
+If you prefer dahses over dots, you can write:
+
+```yaml
+format: "v%M-%m-%p
+```
