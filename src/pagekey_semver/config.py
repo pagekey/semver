@@ -28,12 +28,14 @@ class Prefix(BaseModel):
 
 class SemverConfig(BaseModel):
     changelog_path: str
+    changelog_writer: str
     format: str
     git: GitConfig
     prefixes: List[Prefix]
 
 DEFAULT_CONFIG = SemverConfig(
     changelog_path="CHANGELOG.md",
+    changelog_writer="pagekey_semver.changelog:ChangelogWriter",
     format="v%M.%m.%p",
     git=GitConfig(
         name="PageKey Semver",

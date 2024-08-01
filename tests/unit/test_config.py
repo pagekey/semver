@@ -138,3 +138,21 @@ def test_load_config_with_changelog_path_parses_config(mock_builtin_open, mock_g
 
     # Assert.
     assert config.changelog_path == "docs/CHANGELOG.md"
+
+
+@patch('os.getenv')
+@patch('builtins.open', new_callable=mock_open)
+def test_load_config_with_changelog_writer_parses_config(mock_builtin_open, mock_getenv):
+    # Arrange.
+    mock_path = MagicMock()
+    mock_path.is_file.return_value = True
+    mock_file = mock_builtin_open.return_value
+    mock_file.read.return_value = yaml.safe_dump({
+        "changelog_writer": "my_package:MyWriter",
+    })
+
+    # Act.
+    config = load_config(mock_path)
+
+    # Assert.
+    assert config.changelog_writer == "my_package:MyWriter"

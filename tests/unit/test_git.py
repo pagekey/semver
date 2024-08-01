@@ -117,6 +117,7 @@ class TestGitManager:
             mock_system.return_value = 0  # exit code
             config = SemverConfig(
                 changelog_path="CHANGELOG.md",
+                changelog_writer="pagekey_semver.changelog:ChangelogWriter",
                 format="v%M.%m.%p",
                 git=GitConfig(
                     name="some name",
