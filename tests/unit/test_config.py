@@ -5,7 +5,7 @@ from unittest.mock import MagicMock, call, mock_open, patch
 
 import yaml
 
-from pagekey_semver.config import DEFAULT_CONFIG, DEFAULT_CONFIG_DICT, SemverConfig, load_config
+from pagekey_semver.config import DEFAULT_CONFIG, DEFAULT_CONFIG_DICT, JsonUpdateFile, SedUpdateFile, SemverConfig, TomlUpdateFile, YamlUpdateFile, load_config
 from pagekey_semver.release import ReleaseType
 
 MODULE_UNDER_TEST = "pagekey_semver.config"
@@ -105,9 +105,8 @@ def test_load_config_with_git_user_override_parses_config(mock_builtin_open):
 #     assert config.git.email == "git@email.com"
 
 
-@patch('os.getenv')
 @patch('builtins.open', new_callable=mock_open)
-def test_load_config_with_tag_format_parses_config(mock_builtin_open, mock_getenv):
+def test_load_config_with_tag_format_parses_config(mock_builtin_open):
     # Arrange.
     mock_path = MagicMock()
     mock_path.is_file.return_value = True
@@ -122,9 +121,9 @@ def test_load_config_with_tag_format_parses_config(mock_builtin_open, mock_geten
     # Assert.
     assert config.format == "ver_%M-%m-%p"
 
-@patch('os.getenv')
+
 @patch('builtins.open', new_callable=mock_open)
-def test_load_config_with_changelog_path_parses_config(mock_builtin_open, mock_getenv):
+def test_load_config_with_changelog_path_parses_config(mock_builtin_open):
     # Arrange.
     mock_path = MagicMock()
     mock_path.is_file.return_value = True
@@ -140,9 +139,8 @@ def test_load_config_with_changelog_path_parses_config(mock_builtin_open, mock_g
     assert config.changelog_path == "docs/CHANGELOG.md"
 
 
-@patch('os.getenv')
 @patch('builtins.open', new_callable=mock_open)
-def test_load_config_with_changelog_writer_parses_config(mock_builtin_open, mock_getenv):
+def test_load_config_with_changelog_writer_parses_config(mock_builtin_open):
     # Arrange.
     mock_path = MagicMock()
     mock_path.is_file.return_value = True
@@ -156,3 +154,43 @@ def test_load_config_with_changelog_writer_parses_config(mock_builtin_open, mock
 
     # Assert.
     assert config.changelog_writer == "my_package:MyWriter"
+
+
+@patch('builtins.open', new_callable=mock_open)
+def test_load_config_with_update_files_parses_config(mock_builtin_open):
+    # Arrange.
+    mock_path = MagicMock()
+    mock_path.is_file.return_value = True
+    mock_file = mock_builtin_open.return_value
+    mock_file.read.return_value = yaml.safe_dump({
+        "update_files": [
+            {
+                "name": "myfile.yaml",
+                "type": "yaml",
+            },
+            {
+                "name": "myfile.json",
+                "type": "json",
+            },
+            {
+                "name": "myfile.toml",
+                "type": "toml",
+            },
+            {
+                "name": "myfile.md",
+                "type": "sed",
+                "pattern": "v%M.%m.%p"
+            },
+        ],
+    })
+
+    # Act.
+    config = load_config(mock_path)
+
+    # Assert.
+    assert config.update_files == [
+        JsonUpdateFile(name="myfile.json"),
+        SedUpdateFile(name="myfile.md", pattern="v%M.%m.%p"),
+        TomlUpdateFile(name="myfile.toml"),
+        YamlUpdateFile(name="myfile.yaml"),
+    ]

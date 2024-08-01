@@ -26,12 +26,39 @@ class Prefix(BaseModel):
     def serialize_type(self, type: ReleaseType, _info):
         return type.value
 
+
+class UpdateFileType(enum.Enum):
+    JSON = "json"
+    SED = "sed"
+    TOML = "toml"
+    YAML = "yaml"
+
+class UpdateFile(BaseModel):
+    name: str
+    type: UpdateFileType
+
+class JsonUpdateFile(UpdateFile):
+    type: UpdateFileType = UpdateFileType.JSON
+
+class SedUpdateFile(UpdateFile):
+    type: UpdateFileType = UpdateFileType.SED
+    pattern: str = "%M.%m.%p"
+
+class TomlUpdateFile(UpdateFile):
+    type: UpdateFileType = UpdateFileType.TOML
+
+class YamlUpdateFile(UpdateFile):
+    type: UpdateFileType = UpdateFileType.YAML
+
+
 class SemverConfig(BaseModel):
     changelog_path: str
     changelog_writer: str
     format: str
     git: GitConfig
     prefixes: List[Prefix]
+    update_files: List[UpdateFile]
+
 
 DEFAULT_CONFIG = SemverConfig(
     changelog_path="CHANGELOG.md",
@@ -49,7 +76,8 @@ DEFAULT_CONFIG = SemverConfig(
         
         Prefix(label="patch", type="patch"),
         Prefix(label="fix", type="patch"),
-    ]
+    ],
+    update_files=[],
 )
 DEFAULT_CONFIG_DICT = DEFAULT_CONFIG.model_dump()
 

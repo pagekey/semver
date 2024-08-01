@@ -123,7 +123,8 @@ class TestGitManager:
                     name="some name",
                     email="some@email.com",
                 ),
-                prefixes=[]
+                prefixes=[],
+                update_files=[],
             )
             manager = GitManager(config)
 
