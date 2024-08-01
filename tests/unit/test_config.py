@@ -5,7 +5,7 @@ from unittest.mock import MagicMock, call, mock_open, patch
 
 import yaml
 
-from pagekey_semver.config import DEFAULT_CONFIG, DEFAULT_CONFIG_DICT, JsonUpdateFile, SedUpdateFile, SemverConfig, TomlUpdateFile, YamlUpdateFile, load_config
+from pagekey_semver.config import DEFAULT_CONFIG, DEFAULT_CONFIG_DICT, JsonUpdateFile, SedUpdateFile, SemverConfig, TomlUpdateFile, UpdateFileType, YamlUpdateFile, load_config
 from pagekey_semver.release import ReleaseType
 
 MODULE_UNDER_TEST = "pagekey_semver.config"
@@ -165,21 +165,21 @@ def test_load_config_with_update_files_parses_config(mock_builtin_open):
     mock_file.read.return_value = yaml.safe_dump({
         "update_files": [
             {
-                "name": "myfile.yaml",
-                "type": "yaml",
-            },
-            {
                 "name": "myfile.json",
                 "type": "json",
+            },
+            {
+                "name": "myfile.md",
+                "type": "sed",
+                "pattern": "v%M.%m.%p"
             },
             {
                 "name": "myfile.toml",
                 "type": "toml",
             },
             {
-                "name": "myfile.md",
-                "type": "sed",
-                "pattern": "v%M.%m.%p"
+                "name": "myfile.yaml",
+                "type": "yaml",
             },
         ],
     })
@@ -188,9 +188,7 @@ def test_load_config_with_update_files_parses_config(mock_builtin_open):
     config = load_config(mock_path)
 
     # Assert.
-    assert config.update_files == [
-        JsonUpdateFile(name="myfile.json"),
-        SedUpdateFile(name="myfile.md", pattern="v%M.%m.%p"),
-        TomlUpdateFile(name="myfile.toml"),
-        YamlUpdateFile(name="myfile.yaml"),
-    ]
+    assert config.update_files[0] == JsonUpdateFile(name="myfile.json")
+    assert config.update_files[1] == SedUpdateFile(name="myfile.md", pattern="v%M.%m.%p")
+    assert config.update_files[2] == TomlUpdateFile(name="myfile.toml")
+    assert config.update_files[3] == YamlUpdateFile(name="myfile.yaml")

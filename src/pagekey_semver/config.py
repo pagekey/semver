@@ -2,9 +2,9 @@
 import enum
 import json
 from pathlib import Path
-from typing import List
+from typing import List, Literal, Union
 
-from pydantic import BaseModel, field_serializer
+from pydantic import BaseModel, Field, field_serializer
 import yaml
 
 
@@ -27,7 +27,7 @@ class Prefix(BaseModel):
         return type.value
 
 
-class UpdateFileType(enum.Enum):
+class UpdateFileType(str, enum.Enum):
     JSON = "json"
     SED = "sed"
     TOML = "toml"
@@ -38,17 +38,19 @@ class UpdateFile(BaseModel):
     type: UpdateFileType
 
 class JsonUpdateFile(UpdateFile):
-    type: UpdateFileType = UpdateFileType.JSON
+    type: Literal[UpdateFileType.JSON] = UpdateFileType.JSON
 
 class SedUpdateFile(UpdateFile):
-    type: UpdateFileType = UpdateFileType.SED
+    type: Literal[UpdateFileType.SED] = UpdateFileType.SED
     pattern: str = "%M.%m.%p"
 
 class TomlUpdateFile(UpdateFile):
-    type: UpdateFileType = UpdateFileType.TOML
+    type: Literal[UpdateFileType.TOML] = UpdateFileType.TOML
 
 class YamlUpdateFile(UpdateFile):
-    type: UpdateFileType = UpdateFileType.YAML
+    type: Literal[UpdateFileType.YAML] = UpdateFileType.YAML
+
+UpdateFileUnion = Union[JsonUpdateFile, SedUpdateFile, TomlUpdateFile, YamlUpdateFile]
 
 
 class SemverConfig(BaseModel):
@@ -57,7 +59,7 @@ class SemverConfig(BaseModel):
     format: str
     git: GitConfig
     prefixes: List[Prefix]
-    update_files: List[UpdateFile]
+    update_files: List[UpdateFileUnion] = Field(discriminator="type")
 
 
 DEFAULT_CONFIG = SemverConfig(
