@@ -13,7 +13,7 @@ class TestGitManager:
 
     class Test_get_git_tags:
         @patch("subprocess.run")
-        def test_get_git_tags_with_no_fail_returns_list_of_tags(self, mock_run):
+        def test_with_no_fail_returns_list_of_tags(self, mock_run):
             # Arrange.
             mock_result = MagicMock()
             mock_result.stdout = "tag1\ntag2"
@@ -36,7 +36,7 @@ class TestGitManager:
 
     class Test_get_commit_messages:
         @patch("subprocess.run")
-        def test_get_commit_messages_since_with_valid_hash_returns_list_of_messages(self, mock_run):
+        def test_with_valid_hash_returns_list_of_messages(self, mock_run):
             # Arrange.
             mock_result = MagicMock()
             mock_result.stdout = "aaaaa1 Do something\naaaaa2 Do something else"
@@ -66,7 +66,7 @@ class TestGitManager:
 
     class Test_apply_tag:
         @patch("subprocess.run")
-        def test_apply_tag_with_existing_tag_does_nothing(self, mock_run):
+        def test_with_existing_tag_does_nothing(self, mock_run):
             # Arrange.
             existing_tags = ["v0.1.0", "v3.0.0", "v2.0.0"]
             new_tag = "v3.0.0"
@@ -80,7 +80,7 @@ class TestGitManager:
 
 
         @patch("os.system")
-        def test_apply_tag_with_new_tag_tags_and_pushes(self, mock_system):
+        def test_with_new_tag_tags_and_pushes(self, mock_system):
             # Arrange.
             existing_tags = ["v0.1.0", "v3.0.0", "v2.0.0"]
             new_tag = Tag("v4.0.0", 4, 0, 0)
@@ -111,7 +111,7 @@ class TestGitManager:
 
 
         @patch("os.system")
-        def test_apply_tag_with_config_applies_config_name_email(self, mock_system):
+        def test_with_config_applies_config_name_email(self, mock_system):
             existing_tags = ["v0.1.0", "v3.0.0", "v2.0.0"]
             new_tag = Tag("v4.0.0", 4, 0, 0)
             mock_system.return_value = 0  # exit code
