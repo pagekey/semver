@@ -48,6 +48,17 @@ This package is intended to run on a Linux system with the `bash` shell installe
 Add a `.semver` file in the top-level directory of your repo. This file should be in YAML syntax and can override various settings for semantic release. If you do not specify part of the config, the default values will be used.
 
 
+### Changelog Path
+
+You can change the path to the Changelog file by simply specifying a new `changelog_path` in the config.
+
+```yaml
+changelog_path: docs/CHANGELOG.md
+```
+
+Any directories along the way will be created for you. For example, if the `docs/` directory does not exist when using the above config, it will be created when you run `pagekey-semver`.
+
+
 ### Prefixes
 
 To override which prefixes create a new release, you can use the following `.semver` file. Be sure to provide values for major, minor, and patch releases.
