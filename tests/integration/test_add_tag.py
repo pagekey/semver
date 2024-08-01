@@ -47,6 +47,7 @@ def test_add_tag_with_existing_project_works(tmp_path):
 
     # Set up custom config file.
     config = SemverConfig(
+        changelog_path="CHANGELOG.md",
         format="ver_%M-%m-%p",
         git=GitConfig(
             name="my name",

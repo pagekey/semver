@@ -116,6 +116,7 @@ class TestGitManager:
             new_tag = Tag("v4.0.0", 4, 0, 0)
             mock_system.return_value = 0  # exit code
             config = SemverConfig(
+                changelog_path="CHANGELOG.md",
                 format="v%M.%m.%p",
                 git=GitConfig(
                     name="some name",

@@ -74,6 +74,7 @@ def test_load_config_with_git_user_override_parses_config(mock_builtin_open):
     assert config.git.email == "steve@pagekey.io"
 
 
+# TODO: support env var override of config.
 # @patch('os.getenv')
 # @patch('builtins.open', new_callable=mock_open)
 # def test_load_config_with_env_vars_for_git_user_parses_config(mock_builtin_open, mock_getenv):
@@ -120,3 +121,20 @@ def test_load_config_with_tag_format_parses_config(mock_builtin_open, mock_geten
 
     # Assert.
     assert config.format == "ver_%M-%m-%p"
+
+@patch('os.getenv')
+@patch('builtins.open', new_callable=mock_open)
+def test_load_config_with_changelog_path_parses_config(mock_builtin_open, mock_getenv):
+    # Arrange.
+    mock_path = MagicMock()
+    mock_path.is_file.return_value = True
+    mock_file = mock_builtin_open.return_value
+    mock_file.read.return_value = yaml.safe_dump({
+        "changelog_path": "docs/CHANGELOG.md",
+    })
+
+    # Act.
+    config = load_config(mock_path)
+
+    # Assert.
+    assert config.changelog_path == "docs/CHANGELOG.md"

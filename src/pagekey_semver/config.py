@@ -27,11 +27,13 @@ class Prefix(BaseModel):
         return type.value
 
 class SemverConfig(BaseModel):
+    changelog_path: str
     format: str
     git: GitConfig
     prefixes: List[Prefix]
 
 DEFAULT_CONFIG = SemverConfig(
+    changelog_path="CHANGELOG.md",
     format="v%M.%m.%p",
     git=GitConfig(
         name="PageKey Semver",
