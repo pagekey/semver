@@ -1,4 +1,6 @@
 from unittest.mock import MagicMock, call
+
+import pytest
 from pagekey_semver.config import DEFAULT_CONFIG, DEFAULT_CONFIG_DICT, JsonReplaceFile, SedReplaceFile, SemverConfig, TomlReplaceFile, YamlReplaceFile
 from pagekey_semver.file_replacer import FileReplacer
 
@@ -27,17 +29,39 @@ class TestFileReplacer:
                 call(YamlReplaceFile(name="file.yaml")),
             ])
 
+
     class Test_replace_file:
-        pass
+
+        @pytest.mark.parametrize("replace_file, replace_function", [
+            (JsonReplaceFile(name="file.json"), "replace_json"),
+            (SedReplaceFile(name="file.md", pattern="some_pattern"), "replace_sed"),
+            (TomlReplaceFile(name="file.toml"), "replace_toml"),
+            (YamlReplaceFile(name="file.yaml"), "replace_yaml")
+        ])
+        def test_with_file_calls_specific_type_function(self, replace_file, replace_function):
+            # Arrange.
+            config = DEFAULT_CONFIG
+            replacer = FileReplacer(config)
+            setattr(replacer, replace_function, MagicMock())
+
+            # Act.
+            replacer.replace_one(replace_file)
+
+            # Assert.
+            getattr(replacer, replace_function).assert_called_with(replace_file)
+        
 
     class Test_replace_json:
         pass
 
+
     class Test_replace_sed:
         pass
 
+
     class Test_replace_toml:
         pass
+
 
     class Test_replace_yaml:
         pass
