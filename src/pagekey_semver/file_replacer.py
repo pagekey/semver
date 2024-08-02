@@ -21,7 +21,8 @@ class FileReplacer:
             self.replace_yaml(file)
 
     def replace_json(self, file: JsonReplaceFile):
-        pass
+        with open(file.name, "r"):
+            pass
 
     def replace_sed(self, file: SedReplaceFile):
         pass

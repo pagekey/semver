@@ -1,4 +1,5 @@
-from unittest.mock import MagicMock, call
+import json
+from unittest.mock import MagicMock, call, mock_open, patch
 
 import pytest
 from pagekey_semver.config import DEFAULT_CONFIG, DEFAULT_CONFIG_DICT, JsonReplaceFile, SedReplaceFile, SemverConfig, TomlReplaceFile, YamlReplaceFile
@@ -52,7 +53,38 @@ class TestFileReplacer:
         
 
     class Test_replace_json:
-        pass
+        
+        @patch('builtins.open', new_callable=mock_open)
+        def test_with_top_level_key_replaces(self, mock_builtin_open):
+            # Arrange.
+            config = DEFAULT_CONFIG
+            replacer = FileReplacer(config)
+            replace_file = JsonReplaceFile(name="file.json", key="version")
+            mock_file_handle = mock_builtin_open.return_value
+            mock_file_handle.read.return_value = json.dumps({
+                "version": "something",
+            })
+
+            # Act.
+            replacer.replace_json(replace_file)
+
+            # Assert.
+            mock_builtin_open.assert_called_with("file.json", "r")
+            # TODO: more assertions, pass new_version, update JsonReplaceFile model to have key
+
+
+        @patch('builtins.open', new_callable=mock_open)
+        def test_with_nested_key_replaces(self, mock_builtin_open):
+            # Arrange.
+            config = DEFAULT_CONFIG
+            replacer = FileReplacer(config)
+            replace_file = JsonReplaceFile(name="file.json")
+
+            # Act.
+            replacer.replace_json(replace_file)
+
+            # Assert.
+            pass
 
 
     class Test_replace_sed:
