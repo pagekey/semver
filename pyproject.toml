@@ -17,6 +17,7 @@ pagekey-semver = "pagekey_semver.cli:cli_entrypoint"
 python = ">=3.8"
 pydantic = "^2.8.2"
 pyyaml = "^6.0.1"
+toml = "^0.10.2"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.2"

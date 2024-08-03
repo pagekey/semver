@@ -47,6 +47,7 @@ class SedReplaceFile(ReplaceFile):
 
 class TomlReplaceFile(ReplaceFile):
     type: Literal[ReplaceFileType.TOML] = ReplaceFileType.TOML
+    key: str
 
 class YamlReplaceFile(ReplaceFile):
     type: Literal[ReplaceFileType.YAML] = ReplaceFileType.YAML

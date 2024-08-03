@@ -1,5 +1,6 @@
 
 import json
+import toml
 from pagekey_semver.config import JsonReplaceFile, ReplaceFileType, ReplaceFileUnion, SedReplaceFile, SemverConfig, TomlReplaceFile, YamlReplaceFile
 from pagekey_semver.release import Tag
 from pagekey_semver.util.update_dict import set_dict_value
@@ -33,11 +34,17 @@ class FileReplacer:
         with open(replace_file.name, "w") as replace_file_handle:
             json.dump(contents, replace_file_handle)
 
-    def replace_sed(self, file: SedReplaceFile):
+    def replace_sed(self, replace_file: SedReplaceFile):
         pass
 
-    def replace_toml(self, file: TomlReplaceFile):
-        pass
+    def replace_toml(self, replace_file: TomlReplaceFile):
+        with open(replace_file.name, "r") as replace_file_handle:
+            contents = toml.load(replace_file_handle)
+        
+        set_dict_value(contents, replace_file.key, self._new_version.name)
 
-    def replace_yaml(self, file: YamlReplaceFile):
+        with open(replace_file.name, "w") as replace_file_handle:
+            toml.dump(contents, replace_file_handle)
+
+    def replace_yaml(self, replace_file: YamlReplaceFile):
         pass
