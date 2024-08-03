@@ -39,6 +39,7 @@ class ReplaceFile(BaseModel):
 
 class JsonReplaceFile(ReplaceFile):
     type: Literal[ReplaceFileType.JSON] = ReplaceFileType.JSON
+    key: str
 
 class SedReplaceFile(ReplaceFile):
     type: Literal[ReplaceFileType.SED] = ReplaceFileType.SED

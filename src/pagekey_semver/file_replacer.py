@@ -1,4 +1,5 @@
 
+import json
 from pagekey_semver.config import JsonReplaceFile, ReplaceFileType, ReplaceFileUnion, SedReplaceFile, SemverConfig, TomlReplaceFile, YamlReplaceFile
 from pagekey_semver.release import Tag
 
@@ -22,9 +23,12 @@ class FileReplacer:
         else:
             self.replace_yaml(file)
 
-    def replace_json(self, file: JsonReplaceFile):
-        with open(file.name, "r"):
-            pass
+    def replace_json(self, replace_file: JsonReplaceFile):
+        with open(replace_file.name, "r") as replace_file_handle:
+            contents = json.load(replace_file_handle)
+        contents[replace_file.key] = self._new_version.name
+        with open(replace_file.name, "w") as replace_file_handle:
+            json.dump(contents, replace_file_handle)
 
     def replace_sed(self, file: SedReplaceFile):
         pass
