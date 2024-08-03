@@ -1,17 +1,18 @@
 from unittest.mock import patch
 import pytest
 
-from pagekey_semver.dynamic_import import dynamic_import
+from pagekey_semver.util.dynamic_import import dynamic_import
 
 
-MODULE_UNDER_TEST = "pagekey_semver.dynamic_import"
+MODULE_UNDER_TEST = "pagekey_semver.util.dynamic_import"
+
 
 
 @patch(f"{MODULE_UNDER_TEST}.os")
 @patch(f"{MODULE_UNDER_TEST}.sys")
 def test_dynamic_import_with_valid_import_returns_module(mock_sys, mock_os):
     # Arrange.
-    path = "pagekey_semver.dynamic_import:dynamic_import"
+    path = "pagekey_semver.util.dynamic_import:dynamic_import"
     cwd = mock_os.getcwd.return_value
     
     # Act.

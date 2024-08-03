@@ -92,12 +92,29 @@ class TestFileReplacer:
             new_version = Tag("v2.0.0", 2, 0, 0)
             replacer = FileReplacer(config, new_version)
             replace_file = JsonReplaceFile(name="file.json", key="project.metadata.version")
+            mock_json.load.return_value = {
+                "project": {
+                    "metadata": {
+                        "version": "something",
+                    },
+                },
+                "other_key": "untouched",
+            }
 
             # Act.
             replacer.replace_json(replace_file)
 
             # Assert.
-            pass
+            mock_builtin_open.assert_called_with("file.json", "w")
+            # Assert first arg of first call is this:
+            assert mock_json.dump.call_args_list[0][0][0] == {
+                "project": {
+                    "metadata": {
+                        "version": "v2.0.0",
+                    },
+                },
+                "other_key": "untouched",
+            }
 
 
     class Test_replace_sed:

@@ -2,6 +2,7 @@
 import json
 from pagekey_semver.config import JsonReplaceFile, ReplaceFileType, ReplaceFileUnion, SedReplaceFile, SemverConfig, TomlReplaceFile, YamlReplaceFile
 from pagekey_semver.release import Tag
+from pagekey_semver.util.update_dict import set_dict_value
 
 
 class FileReplacer:
@@ -26,7 +27,9 @@ class FileReplacer:
     def replace_json(self, replace_file: JsonReplaceFile):
         with open(replace_file.name, "r") as replace_file_handle:
             contents = json.load(replace_file_handle)
-        contents[replace_file.key] = self._new_version.name
+        
+        set_dict_value(contents, replace_file.key, self._new_version.name)
+
         with open(replace_file.name, "w") as replace_file_handle:
             json.dump(contents, replace_file_handle)
 
