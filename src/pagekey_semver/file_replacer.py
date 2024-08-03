@@ -1,10 +1,12 @@
 
 from pagekey_semver.config import JsonReplaceFile, ReplaceFileType, ReplaceFileUnion, SedReplaceFile, SemverConfig, TomlReplaceFile, YamlReplaceFile
+from pagekey_semver.release import Tag
 
 
 class FileReplacer:
-    def __init__(self, config: SemverConfig):
+    def __init__(self, config: SemverConfig, new_version: Tag):
         self._config = config
+        self._new_version = new_version
     
     def replace_all(self):
         for replace_file in self._config.replace_files:

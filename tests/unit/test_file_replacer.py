@@ -4,6 +4,7 @@ from unittest.mock import MagicMock, call, mock_open, patch
 import pytest
 from pagekey_semver.config import DEFAULT_CONFIG, DEFAULT_CONFIG_DICT, JsonReplaceFile, SedReplaceFile, SemverConfig, TomlReplaceFile, YamlReplaceFile
 from pagekey_semver.file_replacer import FileReplacer
+from pagekey_semver.release import Tag
 
 
 class TestFileReplacer:
@@ -18,7 +19,8 @@ class TestFileReplacer:
                 { "type": "toml", "name": "file.toml" },
                 { "type": "yaml", "name": "file.yaml" },
             ]})
-            replacer = FileReplacer(config)
+            new_version = Tag("v2.0.0", 2, 0, 0)
+            replacer = FileReplacer(config, new_version)
             replacer.replace_one = MagicMock()
             # Act.
             replacer.replace_all()
@@ -42,7 +44,8 @@ class TestFileReplacer:
         def test_with_file_calls_specific_type_function(self, replace_file, replace_function):
             # Arrange.
             config = DEFAULT_CONFIG
-            replacer = FileReplacer(config)
+            new_version = Tag("v2.0.0", 2, 0, 0)
+            replacer = FileReplacer(config, new_version)
             setattr(replacer, replace_function, MagicMock())
 
             # Act.
@@ -58,7 +61,8 @@ class TestFileReplacer:
         def test_with_top_level_key_replaces(self, mock_builtin_open):
             # Arrange.
             config = DEFAULT_CONFIG
-            replacer = FileReplacer(config)
+            new_version = Tag("v2.0.0", 2, 0, 0)
+            replacer = FileReplacer(config, new_version)
             replace_file = JsonReplaceFile(name="file.json", key="version")
             mock_file_handle = mock_builtin_open.return_value
             mock_file_handle.read.return_value = json.dumps({
@@ -77,7 +81,8 @@ class TestFileReplacer:
         def test_with_nested_key_replaces(self, mock_builtin_open):
             # Arrange.
             config = DEFAULT_CONFIG
-            replacer = FileReplacer(config)
+            new_version = Tag("v2.0.0", 2, 0, 0)
+            replacer = FileReplacer(config, new_version)
             replace_file = JsonReplaceFile(name="file.json")
 
             # Act.
