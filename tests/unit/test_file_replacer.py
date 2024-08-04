@@ -17,7 +17,7 @@ class TestFileReplacer:
             # Arrange.
             config = SemverConfig(**{**DEFAULT_CONFIG_DICT, "replace_files": [
                 { "type": "json", "name": "file.json", "key": "version" },
-                { "type": "sed", "name": "file.md", "pattern": "some_pattern" },
+                { "type": "sed", "name": "file.md", "script": "s/some/pattern/g" },
                 { "type": "toml", "name": "file.toml", "key": "version" },
                 { "type": "yaml", "name": "file.yaml", "key": "version" },
             ]})
@@ -29,7 +29,7 @@ class TestFileReplacer:
             # Assert.
             replacer.replace_one.assert_has_calls([
                 call(JsonReplaceFile(name="file.json", key="version")),
-                call(SedReplaceFile(name="file.md", pattern="some_pattern")),
+                call(SedReplaceFile(name="file.md", script="s/some/pattern/g")),
                 call(TomlReplaceFile(name="file.toml", key="version")),
                 call(YamlReplaceFile(name="file.yaml", key="version")),
             ])
@@ -39,7 +39,7 @@ class TestFileReplacer:
 
         @pytest.mark.parametrize("replace_file, replace_function", [
             (JsonReplaceFile(name="file.json", key="version"), "replace_json"),
-            (SedReplaceFile(name="file.md", pattern="some_pattern"), "replace_sed"),
+            (SedReplaceFile(name="file.md", script="s/some/pattern/g"), "replace_sed"),
             (TomlReplaceFile(name="file.toml", key="version"), "replace_toml"),
             (YamlReplaceFile(name="file.yaml", key="version"), "replace_yaml")
         ])
@@ -132,8 +132,21 @@ class TestFileReplacer:
             with pytest.raises(EnvironmentError):
                 replacer.replace_sed(replace_file)
 
-        def test_with_script_calls_sed(self):
-            pass
+        @pytest.mark.parametrize("input_script, new_version, expected_command", [
+            ("s/something/else/g", Tag("v2.0.0", 2, 0, 0), 'sed -i "s/something/else/g" file.md'),
+        ])
+        @patch(f"{MODULE_UNDER_TEST}.os")
+        def test_with_script_calls_sed(self, mock_os, input_script, new_version, expected_command):
+            # Arrange.
+            config = DEFAULT_CONFIG
+            replacer = FileReplacer(config, new_version)
+            replace_file = SedReplaceFile(name="file.md", script=input_script)
+
+            # Act.
+            replacer.replace_sed(replace_file)
+
+            # Assert.
+            mock_os.system.assert_called_with(expected_command)
 
 
     class Test_replace_toml:

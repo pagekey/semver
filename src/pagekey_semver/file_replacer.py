@@ -1,5 +1,6 @@
 
 import json
+import os
 import shutil
 import toml
 import yaml
@@ -39,6 +40,7 @@ class FileReplacer:
     def replace_sed(self, replace_file: SedReplaceFile):
         if shutil.which("sed") is None:
             raise EnvironmentError("Sed executable not found on system - have you installed sed?")
+        os.system(f"sed -i \"{replace_file.script}\" {replace_file.name}")
 
     def replace_toml(self, replace_file: TomlReplaceFile):
         with open(replace_file.name, "r") as replace_file_handle:

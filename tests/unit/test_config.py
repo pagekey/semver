@@ -172,7 +172,7 @@ def test_load_config_with_replace_files_parses_config(mock_builtin_open):
             {
                 "name": "myfile.md",
                 "type": "sed",
-                "pattern": "v%M.%m.%p"
+                "script": "s/some/pattern/g",
             },
             {
                 "name": "myfile.toml",
@@ -192,6 +192,6 @@ def test_load_config_with_replace_files_parses_config(mock_builtin_open):
 
     # Assert.
     assert config.replace_files[0] == JsonReplaceFile(name="myfile.json", key="version")
-    assert config.replace_files[1] == SedReplaceFile(name="myfile.md", pattern="v%M.%m.%p")
+    assert config.replace_files[1] == SedReplaceFile(name="myfile.md", script="s/some/pattern/g")
     assert config.replace_files[2] == TomlReplaceFile(name="myfile.toml", key="version")
     assert config.replace_files[3] == YamlReplaceFile(name="myfile.yaml", key="version")

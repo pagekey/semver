@@ -43,7 +43,7 @@ class JsonReplaceFile(ReplaceFile):
 
 class SedReplaceFile(ReplaceFile):
     type: Literal[ReplaceFileType.SED] = ReplaceFileType.SED
-    pattern: str = "%M.%m.%p"
+    script: str
 
 class TomlReplaceFile(ReplaceFile):
     type: Literal[ReplaceFileType.TOML] = ReplaceFileType.TOML
