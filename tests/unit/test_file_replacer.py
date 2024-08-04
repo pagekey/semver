@@ -133,7 +133,9 @@ class TestFileReplacer:
                 replacer.replace_sed(replace_file)
 
         @pytest.mark.parametrize("input_script, new_version, expected_command", [
-            ("s/something/else/g", Tag("v2.0.0", 2, 0, 0), 'sed -i "s/something/else/g" file.md'),
+            ("s/something/else/g", Tag("v2.0.0", 2, 0, 0), "sed -i 's/something/else/g' file.md"),
+            ("s/^version=\".*\"/version=%M.%m.%p/g", Tag("v2.0.0", 2, 0, 1), "sed -i 's/^version=\".*\"/version=2.0.1/g' file.md"),
+            ("s/^version='.*'/version=%M.%m.%p/g", Tag("v2.0.0", 2, 0, 1), "sed -i 's/^version=\\'.*\\'/version=2.0.1/g' file.md"),
         ])
         @patch(f"{MODULE_UNDER_TEST}.os")
         def test_with_script_calls_sed(self, mock_os, input_script, new_version, expected_command):

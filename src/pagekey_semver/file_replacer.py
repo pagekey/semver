@@ -40,7 +40,12 @@ class FileReplacer:
     def replace_sed(self, replace_file: SedReplaceFile):
         if shutil.which("sed") is None:
             raise EnvironmentError("Sed executable not found on system - have you installed sed?")
-        os.system(f"sed -i \"{replace_file.script}\" {replace_file.name}")
+        script_escaped = replace_file.script.replace("'", "\\'")
+        script_replaced = script_escaped \
+                .replace("%M", str(self._new_version.major)) \
+                .replace("%m", str(self._new_version.minor)) \
+                .replace("%p", str(self._new_version.patch))
+        os.system(f"sed -i '{script_replaced}' {replace_file.name}")
 
     def replace_toml(self, replace_file: TomlReplaceFile):
         with open(replace_file.name, "r") as replace_file_handle:
