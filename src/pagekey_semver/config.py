@@ -51,6 +51,7 @@ class TomlReplaceFile(ReplaceFile):
 
 class YamlReplaceFile(ReplaceFile):
     type: Literal[ReplaceFileType.YAML] = ReplaceFileType.YAML
+    key: str
 
 ReplaceFileUnion = Union[JsonReplaceFile, SedReplaceFile, TomlReplaceFile, YamlReplaceFile]
 
