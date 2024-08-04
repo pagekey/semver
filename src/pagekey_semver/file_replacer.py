@@ -1,5 +1,6 @@
 
 import json
+import shutil
 import toml
 import yaml
 from pagekey_semver.config import JsonReplaceFile, ReplaceFileType, ReplaceFileUnion, SedReplaceFile, SemverConfig, TomlReplaceFile, YamlReplaceFile
@@ -36,7 +37,8 @@ class FileReplacer:
             json.dump(contents, replace_file_handle)
 
     def replace_sed(self, replace_file: SedReplaceFile):
-        pass
+        if shutil.which("sed") is None:
+            raise EnvironmentError("Sed executable not found on system - have you installed sed?")
 
     def replace_toml(self, replace_file: TomlReplaceFile):
         with open(replace_file.name, "r") as replace_file_handle:

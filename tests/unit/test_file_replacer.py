@@ -118,7 +118,22 @@ class TestFileReplacer:
 
 
     class Test_replace_sed:
-        pass
+        
+        @patch(f"{MODULE_UNDER_TEST}.shutil")
+        def test_with_sed_not_installed_raises_error(self, mock_shutil):
+            # Arrange.
+            config = DEFAULT_CONFIG
+            new_version = Tag("v2.0.0", 2, 0, 0)
+            replacer = FileReplacer(config, new_version)
+            replace_file = SedReplaceFile(name="file.md", script="s/something/other/g")
+            mock_shutil.which.return_value = None
+
+            # Act, Assert.
+            with pytest.raises(EnvironmentError):
+                replacer.replace_sed(replace_file)
+
+        def test_with_script_calls_sed(self):
+            pass
 
 
     class Test_replace_toml:
