@@ -6,7 +6,7 @@ import toml
 import yaml
 
 from pagekey_semver.cli import cli_entrypoint
-from pagekey_semver.config import GitConfig, Prefix, SemverConfig, TomlReplaceFile
+from pagekey_semver.config import GitConfig, JsonReplaceFile, Prefix, SemverConfig, TomlReplaceFile
 
 
 def test_add_tag_with_existing_project_works(tmp_path):
@@ -62,6 +62,13 @@ class CustomChangelogWriter(ChangelogWriter):
             changelog_file.write("> " + commit.message + "\\n")
 """)
     # Add files to be replaced
+    with open("replace_file.json", "w") as file_handle:
+        json.dump({
+            "my": {
+                "version": "hello",
+            },
+            "something": "else",
+        }, file_handle)
     with open("replace_file.toml", "w") as file_handle:
         toml.dump({
             "my_version": "hello",
@@ -81,6 +88,7 @@ class CustomChangelogWriter(ChangelogWriter):
         ],
         replace_files=[
             # TODO add one of each here.
+            JsonReplaceFile(name="replace_file.json", key="my.version"),
             TomlReplaceFile(name="replace_file.toml", key="my_version"),
         ],
     )
@@ -125,6 +133,10 @@ class CustomChangelogWriter(ChangelogWriter):
     )
     assert result.stdout.strip() == "my@email.com"
     # Make sure replace_file stuff worked.
+    with open("replace_file.json") as file_handle:
+        the_dict = json.load(file_handle)
+        assert the_dict["my"]["version"] == "ver_0-1-0"
+        assert the_dict["something"] == "else"
     with open("replace_file.toml") as file_handle:
         the_dict = toml.load(file_handle)
         assert the_dict["my_version"] == "ver_0-1-0"
