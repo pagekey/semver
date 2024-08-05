@@ -143,12 +143,26 @@ class TestFileReplacer:
             config = DEFAULT_CONFIG
             replacer = FileReplacer(config, new_version)
             replace_file = SedReplaceFile(name="file.md", script=input_script)
+            mock_os.system.return_value = 0
 
             # Act.
             replacer.replace_sed(replace_file)
 
             # Assert.
             mock_os.system.assert_called_with(expected_command)
+        
+        @patch(f"{MODULE_UNDER_TEST}.os")
+        def test_with_failed_sed_raises_error(self, mock_os):
+            # Arrange.
+            new_version = Tag("v2.0.0", 2, 0, 0)
+            config = DEFAULT_CONFIG
+            replacer = FileReplacer(config, new_version)
+            replace_file = SedReplaceFile(name="some_file.md", script="some_invalid_script")
+            mock_os.system.return_value = -1
+
+            # Act, Assert.
+            with pytest.raises(OSError):
+                replacer.replace_sed(replace_file)
 
 
     class Test_replace_toml:

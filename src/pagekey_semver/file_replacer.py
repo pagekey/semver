@@ -45,7 +45,9 @@ class FileReplacer:
                 .replace("%M", str(self._new_version.major)) \
                 .replace("%m", str(self._new_version.minor)) \
                 .replace("%p", str(self._new_version.patch))
-        os.system(f"sed -i '{script_replaced}' {replace_file.name}")
+        exit_code = os.system(f"sed -i '{script_replaced}' {replace_file.name}")
+        if exit_code != 0:
+            raise OSError("Invoking sed failed!")
 
     def replace_toml(self, replace_file: TomlReplaceFile):
         with open(replace_file.name, "r") as replace_file_handle:
