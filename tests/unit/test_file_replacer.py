@@ -221,7 +221,7 @@ class TestFileReplacer:
             new_version = Tag("v2.0.0", 2, 0, 0)
             replacer = FileReplacer(config, new_version)
             replace_file = YamlReplaceFile(name="file.yaml", key="version")
-            mock_yaml.load.return_value = {
+            mock_yaml.safe_load.return_value = {
                 "version": "something",
                 "other_key": "untouched",
             }
@@ -246,7 +246,7 @@ class TestFileReplacer:
             new_version = Tag("v2.0.0", 2, 0, 0)
             replacer = FileReplacer(config, new_version)
             replace_file = YamlReplaceFile(name="file.yaml", key="project.metadata.version")
-            mock_yaml.load.return_value = {
+            mock_yaml.safe_load.return_value = {
                 "project": {
                     "metadata": {
                         "version": "something",

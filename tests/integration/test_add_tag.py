@@ -6,7 +6,7 @@ import toml
 import yaml
 
 from pagekey_semver.cli import cli_entrypoint
-from pagekey_semver.config import GitConfig, JsonReplaceFile, Prefix, SemverConfig, TomlReplaceFile
+from pagekey_semver.config import GitConfig, JsonReplaceFile, Prefix, SemverConfig, TomlReplaceFile, YamlReplaceFile
 
 
 def test_add_tag_with_existing_project_works(tmp_path):
@@ -74,6 +74,11 @@ class CustomChangelogWriter(ChangelogWriter):
             "my_version": "hello",
             "something": "else",
         }, file_handle)
+    with open("replace_file.yaml", "w") as file_handle:
+        yaml.dump({
+            "my_version": "hello",
+            "something": "else",
+        }, file_handle)
     # Set up custom config file.
     config = SemverConfig(
         changelog_path="docs/CHANGELOG.md",
@@ -90,6 +95,7 @@ class CustomChangelogWriter(ChangelogWriter):
             # TODO add one of each here.
             JsonReplaceFile(name="replace_file.json", key="my.version"),
             TomlReplaceFile(name="replace_file.toml", key="my_version"),
+            YamlReplaceFile(name="replace_file.yaml", key="my_version"),
         ],
     )
     with open('.semver', 'w') as semver_file:
@@ -139,5 +145,9 @@ class CustomChangelogWriter(ChangelogWriter):
         assert the_dict["something"] == "else"
     with open("replace_file.toml") as file_handle:
         the_dict = toml.load(file_handle)
+        assert the_dict["my_version"] == "ver_0-1-0"
+        assert the_dict["something"] == "else"
+    with open("replace_file.yaml") as file_handle:
+        the_dict = yaml.safe_load(file_handle)
         assert the_dict["my_version"] == "ver_0-1-0"
         assert the_dict["something"] == "else"

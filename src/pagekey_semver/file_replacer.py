@@ -58,7 +58,7 @@ class FileReplacer:
 
     def replace_yaml(self, replace_file: YamlReplaceFile):
         with open(replace_file.name, "r") as replace_file_handle:
-            contents = yaml.load(replace_file_handle)
+            contents = yaml.safe_load(replace_file_handle)
         
         set_dict_value(contents, replace_file.key, self._new_version.name)
 
