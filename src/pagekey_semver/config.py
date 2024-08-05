@@ -37,6 +37,10 @@ class ReplaceFile(BaseModel):
     name: str
     type: ReplaceFileType
 
+    @field_serializer('type')
+    def get_eunm_value(self, v, info) -> str:
+        return str(v.value)
+
 class JsonReplaceFile(ReplaceFile):
     type: Literal[ReplaceFileType.JSON] = ReplaceFileType.JSON
     key: str

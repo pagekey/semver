@@ -2,9 +2,10 @@ from pathlib import Path
 import sys
 
 from pagekey_semver.changelog import ChangelogWriter
-from pagekey_semver.config import load_config
+from pagekey_semver.file_replacer import FileReplacer
 from pagekey_semver.git import GitManager
 from pagekey_semver.release import SemverRelease, Tag
+from pagekey_semver.config import load_config
 
 
 def cli_entrypoint(args=sys.argv[1:]):
@@ -25,6 +26,7 @@ def cli_entrypoint(args=sys.argv[1:]):
     commits = manager.get_commit_messages_since(hash)
     release_type = release.compute_release_type(commits)
     next_version = release.compute_next_version(release_type, tags)
+    
 
     # Write to changelog.
     writer.update_changelog(next_version, commits)
@@ -32,6 +34,10 @@ def cli_entrypoint(args=sys.argv[1:]):
     
     # Apply tag if appropriate.
     if not dry_run:
+        # Replace files
+        file_replacer = FileReplacer(config, next_version)
+        file_replacer.replace_all()
+        # Apply tag, commit, push
         manager.apply_tag(tags, next_version)
     else:
         print("Dry run mode - not applying version.", flush=True)

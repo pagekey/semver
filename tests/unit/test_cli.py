@@ -8,15 +8,17 @@ from pagekey_semver.release import ReleaseType, Tag
 MODULE_UNDER_TEST = "pagekey_semver.cli"
 
 
-@patch(f"{MODULE_UNDER_TEST}.GitManager")
 @patch(f"{MODULE_UNDER_TEST}.ChangelogWriter")
+@patch(f"{MODULE_UNDER_TEST}.FileReplacer")
+@patch(f"{MODULE_UNDER_TEST}.GitManager")
 @patch(f"{MODULE_UNDER_TEST}.SemverRelease")
 @patch(f"{MODULE_UNDER_TEST}.load_config")
 def test_cli_entrypoint_with_no_args_calls_all_functions(
     mock_load_config,
     mock_release_cls,
-    mock_changelog_writer_cls,
     mock_git_manager_cls,
+    mock_file_replacer_cls,
+    mock_changelog_writer_cls,
 ):
     # Arrange.
     config = mock_load_config.return_value
@@ -33,6 +35,7 @@ def test_cli_entrypoint_with_no_args_calls_all_functions(
     next_version = "v3.1.0"
     mock_release.compute_next_version.return_value = next_version
     mock_changelog_writer = mock_changelog_writer_cls.from_config.return_value
+    mock_file_replacer = mock_file_replacer_cls.return_value
     
     # Act.
     cli_entrypoint()
@@ -49,17 +52,21 @@ def test_cli_entrypoint_with_no_args_calls_all_functions(
     mock_release.compute_next_version.assert_called_with(release_type, tags)
     mock_changelog_writer.update_changelog.assert_called_with(next_version, commits)
     mock_git_manager.apply_tag.assert_called_with(tags, next_version)
+    mock_file_replacer_cls.assert_called_with(config, next_version)
+    mock_file_replacer.replace_all.assert_called_with()
 
 
-@patch(f"{MODULE_UNDER_TEST}.GitManager")
 @patch(f"{MODULE_UNDER_TEST}.ChangelogWriter")
+@patch(f"{MODULE_UNDER_TEST}.FileReplacer")
+@patch(f"{MODULE_UNDER_TEST}.GitManager")
 @patch(f"{MODULE_UNDER_TEST}.SemverRelease")
 @patch(f"{MODULE_UNDER_TEST}.load_config")
 def test_cli_entrypoint_with_dry_run_does_not_push(
     mock_load_config,
     mock_release_cls,
-    mock_changelog_writer_cls,
     mock_git_manager_cls,
+    mock_file_replacer_cls,
+    mock_changelog_writer_cls,
 ):
     # Arrange.
     config = mock_load_config.return_value
@@ -92,3 +99,4 @@ def test_cli_entrypoint_with_dry_run_does_not_push(
     mock_release.compute_next_version.assert_called_with(release_type, tags)
     mock_changelog_writer.update_changelog.assert_called_with(next_version, commits)
     mock_git_manager.apply_tag.assert_not_called()
+    mock_file_replacer_cls.assert_not_called()
