@@ -113,6 +113,85 @@ prefixes:
 
 With the above config and a project with a latest tag of `v0.1.0`, adding the commit `micro: Fix a bug` would create `v0.1.1`, adding `mini: Add feature` would create `v0.2.0`, and adding `huge: Break everything` would create `v1.0.0`.
 
+### Replace Files
+
+You can specify "replace files," which PageKey Semver will process and replace the text you specify with the new version. There are four types of Replace Files: JSON, YAML, SED, and TOML.
+
+You can provide a list of any number of files you need to replace in the config. By default, none are specified:
+
+```yaml
+replace_files: []
+```
+
+#### JSON Replace File
+
+If you specify a JSON Replace File, it will parse the JSON file specified and replace the key with the new version. Nested keys are supported using `.`.
+
+##### Example 1: package.json
+
+Given the following file:
+
+```json
+{
+  "name": "my package",
+  "version": "v0.0.0"
+}
+```
+
+If you specify the following:
+
+```yaml
+replace_files:
+  - type: json
+    name: package.json
+    key: version
+```
+
+When creating `v1.0.0`, the package will replace the file with the following:
+
+```json
+{
+  "name": "my_package",
+  "version": "v1.0.0"
+}
+```
+
+Note that the value will always be replaced with the `format` you specified in the config, regardless of the previous value.
+
+##### Example 2: Nested Keys
+
+TODO
+
+#### TOML Replace File
+
+TODO
+
+##### Example 1: Cargo.toml
+
+TODO
+
+##### Example 2: Nested Keys
+
+TODO
+
+#### SED Replace File
+
+##### Example 1: README Replacement
+
+TODO
+
+#### YAML Replace File
+
+TODO
+
+##### Example 1: Cargo.toml
+
+TODO
+
+##### Example 2: Nested Keys
+
+TODO
+
 ### Tag Format
 
 You can specify a custom tag format for your versioning. This affects which existing tags are detected and, in turn, the new tag that is created. You can use `%M` to represent the major version, `%m` to represent minor, and `%p` to represent patch. The default format is:
