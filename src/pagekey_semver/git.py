@@ -59,10 +59,7 @@ class GitManager:
     def apply_tag(self, existing_tags: List[Tag], new_tag: Tag):
         if new_tag not in existing_tags:
             print(f"Tagging/pushing new tag: {new_tag}", flush=True)
-            new_tag_stripped = f"{new_tag.major}.{new_tag.minor}.{new_tag.patch}"
             commands = [
-                f'sed -i -E "s/^version = \\"[0-9]+\\.[0-9]+\\.[0-9]+\\"/version = \\"{new_tag_stripped}\\"/" Cargo.toml',
-                f'sed -i -E "s/\\"version\\": \\"[0-9]+\\.[0-9]+\\.[0-9]+\\"/\\"version\\": \\"{new_tag_stripped}\\"/" package.json',
                 f"git config user.email {self._config.git.email}",
                 f'git config user.name "{self._config.git.name}"',
                 f"git add --all",
