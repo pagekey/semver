@@ -4,16 +4,7 @@ If you specify a JSON Replace File, it will parse the JSON file specified and re
 
 ## Example 1: package.json
 
-Given the following file:
-
-```json
-{
-  "name": "my package",
-  "version": "v0.0.0"
-}
-```
-
-If you specify the following:
+If you specify the following in your `.semver` config file:
 
 ```yaml
 replace_files:
@@ -22,7 +13,16 @@ replace_files:
     key: version
 ```
 
-When creating `v1.0.0`, the package will replace the file with the following:
+Given the following contents for `package.json`:
+
+```json
+{
+  "name": "my package",
+  "version": "v0.0.0"
+}
+```
+
+When creating `v1.0.0`, the PageKey Semver will replace the `package.json` with the following:
 
 ```json
 {
@@ -35,4 +35,39 @@ Note that the value will always be replaced with the `format` you specified in t
 
 ## Example 2: Nested Keys
 
-TODO
+If you specify the following in your `.semver` config file:
+
+```yaml
+replace_files:
+  - type: json
+    name: package.json
+    key: project.metadata.version
+```
+
+Given the following contents for `package.json`:
+
+```json
+{
+  "name": "my package",
+  "project": {
+    "metadata": {
+        "version": "v0.0.0"
+    }
+  }
+}
+```
+
+When creating `v1.0.0`, the PageKey Semver will replace the `package.json` with the following:
+
+```json
+{
+  "name": "my package",
+  "project": {
+    "metadata": {
+        "version": "v1.0.0"
+    }
+  }
+}
+```
+
+Note that the value will always be replaced with the `format` you specified in the config, regardless of the previous value.
