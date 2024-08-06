@@ -91,12 +91,16 @@ DEFAULT_CONFIG = SemverConfig(
 DEFAULT_CONFIG_DICT = DEFAULT_CONFIG.model_dump()
 
 
-def load_config(config_path: Path) -> None:
+def load_config(config_path: Path) -> SemverConfig:
     if not config_path.is_file():
-        return SemverConfig(**DEFAULT_CONFIG_DICT)
+        return apply_env_to_config_dict(DEFAULT_CONFIG_DICT)
     with open(config_path, "r") as config_file:
         config_raw = config_file.read()
     config_dict = yaml.safe_load(config_raw)
     config_merged = {**DEFAULT_CONFIG_DICT, **config_dict}
     print(f"Loaded config:", json.dumps(config_merged))
-    return SemverConfig(**config_merged)
+    return apply_env_to_config_dict(config_merged)
+
+
+def apply_env_to_config_dict(config_dict: dict) -> SemverConfig:
+    return SemverConfig(**config_dict)

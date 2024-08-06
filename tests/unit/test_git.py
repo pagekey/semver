@@ -93,8 +93,6 @@ class TestGitManager:
 
             # Assert.
             commands = [
-                f'sed -i -E "s/^version = \\"[0-9]+\\.[0-9]+\\.[0-9]+\\"/version = \\"{new_tag_stripped}\\"/" Cargo.toml',
-                f'sed -i -E "s/\\"version\\": \\"[0-9]+\\.[0-9]+\\.[0-9]+\\"/\\"version\\": \\"{new_tag_stripped}\\"/" package.json',
                 f"git config user.email semver@pagekey.io",
                 f'git config user.name "PageKey Semver"',
                 f"git add --all",
