@@ -3,9 +3,10 @@
 
 from unittest.mock import MagicMock, call, mock_open, patch
 
+import pytest
 import yaml
 
-from pagekey_semver.config import DEFAULT_CONFIG, DEFAULT_CONFIG_DICT, JsonReplaceFile, SedReplaceFile, SemverConfig, TomlReplaceFile, ReplaceFileType, YamlReplaceFile, load_config
+from pagekey_semver.config import DEFAULT_CONFIG, DEFAULT_CONFIG_DICT, JsonReplaceFile, SedReplaceFile, SemverConfig, TomlReplaceFile, ReplaceFileType, YamlReplaceFile, apply_env_to_config_dict, get_all_prefixed_env_vars, load_config
 from pagekey_semver.release import ReleaseType
 
 MODULE_UNDER_TEST = "pagekey_semver.config"
@@ -170,11 +171,49 @@ class Test_load_config:
         assert config.replace_files[3] == YamlReplaceFile(name="myfile.yaml", key="version")
 
 
+class Test_get_all_prefixed_env_vars:
+    
+    @pytest.mark.parametrize("environ, expected", [
+        (
+            {
+                "PATH": "something",
+                "TEST_VAR": "something else",
+            },
+            {}
+        ),
+        (
+            {
+                "SEMVER_changelog_path": "CHANGELOG.md",
+                "SEMVER_git__name": "me",
+                "SEMVER_replace_files__0": "testing",
+                "SOME_OTHER_VAR": "irrelevant"
+            },
+            {
+                "SEMVER_changelog_path": "CHANGELOG.md",
+                "SEMVER_git__name": "me",
+                "SEMVER_replace_files__0": "testing",
+            }
+        ),
+    ])
+    def test_with_env_vars_returns_prefixed_vars(self, environ, expected):
+        # Act.
+        result = get_all_prefixed_env_vars(environ)
+
+        # Assert.
+        # assert result == expected
+
+
 class Test_apply_env_to_config_dict:
 
-    def test_with_nothing_does_nothing(self):
+    def test_with_no_env_vars_set_returns_same_dict(self):
+        # Arrange.
         pass
-        # apply_env_to_config_dict({})
+        
+        # Act.
+        apply_env_to_config_dict(DEFAULT_CONFIG_DICT)
+        
+        # Assert.
+        pass
 
 
 # @patch('os.getenv')

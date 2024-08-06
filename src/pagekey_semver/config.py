@@ -1,8 +1,9 @@
 """Module related to config files."""
 import enum
 import json
+import os
 from pathlib import Path
-from typing import List, Literal, Union
+from typing import Dict, List, Literal, Union
 
 from pydantic import BaseModel, Field, field_serializer
 import yaml
@@ -101,6 +102,9 @@ def load_config(config_path: Path) -> SemverConfig:
     print(f"Loaded config:", json.dumps(config_merged))
     return apply_env_to_config_dict(config_merged)
 
+
+def get_all_prefixed_env_vars(environ: dict = os.environ) -> Dict[str, str]:
+    pass
 
 def apply_env_to_config_dict(config_dict: dict) -> SemverConfig:
     return SemverConfig(**config_dict)
