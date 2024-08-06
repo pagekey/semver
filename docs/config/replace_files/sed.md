@@ -1,17 +1,30 @@
 ### SED Replace File
 
+The SED Replace File is unlike the others in that it executes the `sed` program to perform a very flexible replace on any file. This is helpful when you have references to versions buried somewhere that is not easily parsed and changed by the other tools.
+
 #### Example 1: README Replacement
 
-TODO
+If you specify the following in your `.semver` config file:
 
-### YAML Replace File
+```yaml
+replace_files:
+  - type: sed
+    name: README.md
+    script: s/^This/This is version %M.%m.%p of the project./g
+```
 
-TODO
+Given the following contents for `README.md`:
 
-#### Example 1: Cargo.toml
+```md
+# Some Project
 
-TODO
+This is version 0.0.0 of the project.
+```
 
-#### Example 2: Nested Keys
+When creating `v1.0.0`, the PageKey Semver will replace the `package.json` with the following:
 
-TODO
+```md
+# Some Project
+
+This is version 1.0.0 of the project.
+```
