@@ -8,6 +8,8 @@ from typing import Dict, List, Literal, Union
 from pydantic import BaseModel, Field, field_serializer
 import yaml
 
+from pagekey_semver.util.variable_parser import VariableParser
+
 
 class ReleaseType(enum.Enum):
     NO_RELEASE = "no release"
@@ -83,8 +85,6 @@ DEFAULT_CONFIG = SemverConfig(
         
         Prefix(label="minor", type="minor"),
         Prefix(label="feat", type="minor"),
-        
-        Prefix(label="patch", type="patch"),
         Prefix(label="fix", type="patch"),
     ],
     replace_files=[],
@@ -93,18 +93,14 @@ DEFAULT_CONFIG_DICT = DEFAULT_CONFIG.model_dump()
 
 
 def load_config(config_path: Path) -> SemverConfig:
+    variable_parser = VariableParser(os.environ)
     if not config_path.is_file():
-        return apply_env_to_config_dict(DEFAULT_CONFIG_DICT)
+        final_config = variable_parser.merge_config(DEFAULT_CONFIG_DICT)
+        return SemverConfig(**final_config)
     with open(config_path, "r") as config_file:
         config_raw = config_file.read()
     config_dict = yaml.safe_load(config_raw)
     config_merged = {**DEFAULT_CONFIG_DICT, **config_dict}
     print(f"Loaded config:", json.dumps(config_merged))
-    return apply_env_to_config_dict(config_merged)
-
-
-def get_all_prefixed_env_vars(environ: dict = os.environ) -> Dict[str, str]:
-    pass
-
-def apply_env_to_config_dict(config_dict: dict) -> SemverConfig:
-    return SemverConfig(**config_dict)
+    final_config = variable_parser.merge_config(config_merged)
+    return SemverConfig(**final_config)
