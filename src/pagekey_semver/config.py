@@ -93,14 +93,19 @@ DEFAULT_CONFIG_DICT = DEFAULT_CONFIG.model_dump()
 
 
 def load_config(config_path: Path) -> SemverConfig:
+    # Get the file config.
+    if config_path.is_file():
+        with open(config_path, "r") as file_handle:
+            custom_config = yaml.safe_load(file_handle.read())
+        config_without_env = {**DEFAULT_CONFIG_DICT, **custom_config}
+    else:
+        config_without_env = DEFAULT_CONFIG_DICT
+    
+    # Get the config defined by environment variables.
     variable_parser = VariableParser(os.environ)
-    if not config_path.is_file():
-        final_config = variable_parser.merge_config(DEFAULT_CONFIG_DICT)
-        return SemverConfig(**final_config)
-    with open(config_path, "r") as config_file:
-        config_raw = config_file.read()
-    config_dict = yaml.safe_load(config_raw)
-    config_merged = {**DEFAULT_CONFIG_DICT, **config_dict}
-    print(f"Loaded config:", json.dumps(config_merged))
-    final_config = variable_parser.merge_config(config_merged)
+    env_config = variable_parser.get_config()
+    
+    # Merge the file config and the environment config.
+    # Environment takes precedence.
+    final_config = {**config_without_env, **env_config}
     return SemverConfig(**final_config)

@@ -4,13 +4,17 @@ import os
 from typing import Dict
 
 
+VARIABLE_PREFIX = "SEMVER_"
+
 class VariableParser:
 
-    def __init__(self, vars: Dict[str, str]):
-        self._vars = vars
-
-    def get_all_prefixed_vars(self):
-        return {key: self._vars[key] for key in self._vars if key.startswith("SEMVER_")}
+    def __init__(self, variables: Dict[str, str]):
+        # Filter out irrelevant variables.
+        self._variables = {
+            key: variables[key]
+            for key in variables
+            if key.startswith("SEMVER_")
+        }
 
     def convert_prefixed_vars_to_config_dict(self, prefixed_vars: Dict[str, str]) -> dict:
         result = {}
@@ -49,7 +53,7 @@ class VariableParser:
             cur_dict[fields[-1]] = value
         return result
 
-    def merge_config(self, config_dict: dict):
-        prefixed_vars = self.get_all_prefixed_vars()
-        config_from_prefixed_vars = self.convert_prefixed_vars_to_config_dict(prefixed_vars)
-        return config_dict
+    def get_config(self):
+        # prefixed_vars = self.get_all_prefixed_vars()
+        # config_from_prefixed_vars = self.convert_prefixed_vars_to_config_dict(prefixed_vars)
+        return {}

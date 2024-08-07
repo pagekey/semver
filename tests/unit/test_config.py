@@ -5,65 +5,117 @@ from unittest.mock import MagicMock, mock_open, patch
 
 import yaml
 
-from pagekey_semver.config import DEFAULT_CONFIG_DICT, JsonReplaceFile, SedReplaceFile, SemverConfig, TomlReplaceFile, ReplaceFileType, YamlReplaceFile, load_config
+from pagekey_semver.config import DEFAULT_CONFIG, DEFAULT_CONFIG_DICT, JsonReplaceFile, Prefix, SedReplaceFile, SemverConfig, TomlReplaceFile, ReplaceFileType, YamlReplaceFile, load_config
 
 MODULE_UNDER_TEST = "pagekey_semver.config"
 
 
 class Test_load_config:
 
-    @patch(f"{MODULE_UNDER_TEST}.SemverConfig")
     @patch(f"{MODULE_UNDER_TEST}.os")
-    @patch(f'{MODULE_UNDER_TEST}.VariableParser')
-    @patch('builtins.open', new_callable=mock_open)
-    def test_with_file_not_found_returns_default_config(self, mock_builtin_open, mock_variable_parser_cls, mock_os, mock_semver_config_cls):
+    def test_with_no_config_file_returns_default_config(self, mock_os):
         # Arrange.
-        mock_path = MagicMock()
-        mock_path.is_file.return_value = False
-        mock_variable_parser = mock_variable_parser_cls.return_value
+        mock_os.environ = {}
+        config_path = MagicMock()
+        config_path.is_file.return_value = False
 
         # Act.
-        config = load_config(mock_path)
+        config = load_config(config_path)
 
         # Assert.
-        mock_path.is_file.assert_called()
-        mock_builtin_open.assert_not_called()
-        mock_variable_parser_cls.assert_called_with(mock_os.environ)
-        mock_variable_parser.merge_config.assert_called_with(DEFAULT_CONFIG_DICT)
-        mock_semver_config_cls.assert_called_with(DEFAULT_CONFIG_DICT)
+        assert config == DEFAULT_CONFIG
 
 
-
-    @patch(f"{MODULE_UNDER_TEST}.SemverConfig")
-    @patch(f"{MODULE_UNDER_TEST}.os")
-    @patch(f'{MODULE_UNDER_TEST}.VariableParser')
     @patch('builtins.open', new_callable=mock_open)
-    def test_with_existing_file_parses_and_merges_configs(self, mock_builtin_open, mock_variable_parser_cls, mock_os, mock_semver_config_cls):
+    @patch(f"{MODULE_UNDER_TEST}.os")
+    def test_with_config_file_returns_merged_config(self, mock_os, mock_builtin_open):
         # Arrange.
-        mock_path = MagicMock()
-        mock_path.is_file.return_value = True
-        mock_file = mock_builtin_open.return_value
-        config_dict = {
+        mock_os.environ = {}
+        config_path = MagicMock()
+        config_path.is_file.return_value = True
+        mock_builtin_open.return_value.read.return_value = yaml.safe_dump({
             "prefixes": [
                 {
                     "label": "fix",
                     "type": "patch",
                 }
             ]
-        }
-        mock_file.read.return_value = yaml.safe_dump(config_dict)
-        mock_variable_parser = mock_variable_parser_cls.return_value
+        })
 
         # Act.
-        config = load_config(mock_path)
+        config = load_config(config_path)
 
         # Assert.
-        mock_path.is_file.assert_called()
-        mock_builtin_open.assert_called_with(mock_path, "r")
-        mock_file.read.assert_called()
-        mock_variable_parser_cls.assert_called_with(mock_os.environ)
-        mock_variable_parser.merge_config.assert_called_with({**DEFAULT_CONFIG_DICT, **config_dict})
-        mock_semver_config_cls.assert_called_with({**DEFAULT_CONFIG_DICT, **config_dict})
+        assert config.prefixes[0] == Prefix(label="fix", type="patch")
+
+
+    @patch(f"{MODULE_UNDER_TEST}.os")
+    def test_with_env_vars_returns_overridden_config(self, mock_os):
+        # Arrange.
+        mock_os.environ = {
+            "SEMVER_prefixes__0__label": "fix",
+            "SEMVER_prefixes__0__type": "patch",
+        }
+        config_path = MagicMock()
+        config_path.is_file.return_value = False
+
+        # Act.
+        config = load_config(config_path)
+
+        # Assert.
+        assert config.prefixes[0] == Prefix(label="fix", type="patch")
+
+
+    # @patch(f"{MODULE_UNDER_TEST}.SemverConfig")
+    # @patch('builtins.open', new_callable=mock_open)
+    # def test_with_file_not_found_returns_default_config(self, mock_builtin_open, mock_variable_parser_cls, mock_os, mock_semver_config_cls):
+    #     # Arrange.
+    #     mock_path = MagicMock()
+    #     mock_path.is_file.return_value = False
+    #     mock_variable_parser = mock_variable_parser_cls.return_value
+
+    #     # Act.
+    #     config = load_config(mock_path)
+
+    #     # Assert.
+    #     mock_path.is_file.assert_called()
+    #     mock_builtin_open.assert_not_called()
+    #     mock_variable_parser_cls.assert_called_with(mock_os.environ)
+    #     mock_variable_parser.merge_config.assert_called_with(DEFAULT_CONFIG_DICT)
+    #     mock_semver_config_cls.assert_called_with(DEFAULT_CONFIG_DICT)
+
+
+
+    # @patch(f"{MODULE_UNDER_TEST}.SemverConfig")
+    # @patch(f"{MODULE_UNDER_TEST}.os")
+    # @patch(f'{MODULE_UNDER_TEST}.VariableParser')
+    # @patch('builtins.open', new_callable=mock_open)
+    # def test_with_existing_file_parses_and_merges_configs(self, mock_builtin_open, mock_variable_parser_cls, mock_os, mock_semver_config_cls):
+    #     # Arrange.
+    #     mock_path = MagicMock()
+    #     mock_path.is_file.return_value = True
+    #     mock_file = mock_builtin_open.return_value
+    #     config_dict = {
+    #         "prefixes": [
+    #             {
+    #                 "label": "fix",
+    #                 "type": "patch",
+    #             }
+    #         ]
+    #     }
+    #     mock_file.read.return_value = yaml.safe_dump(config_dict)
+    #     mock_variable_parser = mock_variable_parser_cls.return_value
+
+    #     # Act.
+    #     config = load_config(mock_path)
+
+    #     # Assert.
+    #     mock_path.is_file.assert_called()
+    #     mock_builtin_open.assert_called_with(mock_path, "r")
+    #     mock_file.read.assert_called()
+    #     mock_variable_parser_cls.assert_called_with(mock_os.environ)
+    #     mock_variable_parser.merge_config.assert_called_with({**DEFAULT_CONFIG_DICT, **config_dict})
+    #     mock_semver_config_cls.assert_called_with({**DEFAULT_CONFIG_DICT, **config_dict})
 
 
     @patch('builtins.open', new_callable=mock_open)
