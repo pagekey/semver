@@ -5,7 +5,7 @@ from pathlib import Path
 import yaml
 
 from pagekey_semver.models import GitConfig, Prefix, SemverConfig
-from pagekey_semver.util.variable_parser import VariableParser
+from pagekey_semver.util.env_to_dict import convert_env_to_dict
 
 
 DEFAULT_CONFIG = SemverConfig(
@@ -37,8 +37,7 @@ def load_config(config_path: Path) -> SemverConfig:
         config_without_env = DEFAULT_CONFIG_DICT
     
     # Get the config defined by environment variables.
-    variable_parser = VariableParser(os.environ)
-    env_config = variable_parser.get_config()
+    env_config = convert_env_to_dict(os.environ)
     
     # Merge the file config and the environment config.
     # Environment takes precedence.
