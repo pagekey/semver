@@ -1,6 +1,7 @@
 import json
 import os
 import subprocess
+from unittest.mock import patch
 
 import toml
 import yaml
@@ -8,8 +9,7 @@ import yaml
 from pagekey_semver.cli import cli_entrypoint
 from pagekey_semver.models import GitConfig, JsonReplaceFile, Prefix, SedReplaceFile, SemverConfig, TomlReplaceFile, YamlReplaceFile
 
-
-def test_add_tag_with_existing_project_works(tmp_path):
+def setup_git_repo(tmp_path):
     # Arrange.
     # Create a temporary directory representing a project.
     tmp_dir = tmp_path / "project"
@@ -31,6 +31,10 @@ def test_add_tag_with_existing_project_works(tmp_path):
     os.chdir(tmp_dir)
     os.system("git remote add origin ../remote")
 
+def test_default_config(tmp_path):
+    # Arrange.
+    setup_git_repo(tmp_path)
+
     # Act.
     # Invoke semver.
     cli_entrypoint()
@@ -51,6 +55,9 @@ def test_add_tag_with_existing_project_works(tmp_path):
     assert "## v0.1.0\n" in changelog
     assert "- fix: Add package.json" in changelog
 
+def test_custom_config(tmp_path):
+    # Arrange.
+    setup_git_repo(tmp_path)
     # Create custom changelog writer.
     with open("custom_changelog_writer.py", 'w') as writer_src:
         writer_src.write("""
@@ -85,9 +92,9 @@ class CustomChangelogWriter(ChangelogWriter):
     config = SemverConfig(
         changelog_path="docs/CHANGELOG.md",
         changelog_writer="custom_changelog_writer:CustomChangelogWriter",
-        format="ver_%M-%m-%p",
+        format="overridden by env",
         git=GitConfig(
-            name="my name",
+            name="overridden by env",
             email="my@email.com"
         ),
         prefixes=[
@@ -100,6 +107,14 @@ class CustomChangelogWriter(ChangelogWriter):
             YamlReplaceFile(name="replace_file.yaml", key="my_version"),
         ],
     )
+    # Make sure environment overrides work.
+    # mock_environ = {}
+    # # Top-level key
+    # mock_environ["SEMVER_format"] = "ver_%M-%m-%p"
+    # # Nested key
+    # mock_environ["SEMVER_git__name"] = "my name"
+
+    # Make test commit.
     with open('.semver', 'w') as semver_file:
         semver_file.write(yaml.safe_dump(config.model_dump()))
     os.system("git add .semver")
@@ -123,7 +138,7 @@ class CustomChangelogWriter(ChangelogWriter):
         stderr=subprocess.PIPE,
         text=True,
     )
-    assert result.stdout.strip() == "v0.1.0\nver_0-1-0"
+    assert result.stdout.strip() == "ver_0-1-0"
     result = subprocess.run(
         ["git", "show", "-s", "--format=%an", "HEAD"],
         check=True,
