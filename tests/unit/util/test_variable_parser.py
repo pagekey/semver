@@ -5,47 +5,9 @@ from src.pagekey_semver.util.variable_parser import VariableParser
 
 class TestVariableParser:
 
-    class Test_apply_parts:
-
-        def test_with_last_value_sets_value(self):
-            # Arrange.
-            parser = VariableParser({})
-            map = {}
-            part1 = "something"
-            part2 = "value"
-            part3 = None
-
-            # Act.
-            result = parser.apply_parts(map, part1, part2, part3)
-
-            # Assert.
-            assert result == {
-                "something": "value"
-            }
-
-        def test_with_all_values_creates_dicts(self):
-            # Arrange.
-            parser = VariableParser({})
-            map = {}
-            part1 = "something"
-            part2 = "something_else"
-            part3 = "value"
-
-            # Act.
-            result = parser.apply_parts(map, part1, part2, part3)
-
-            # Assert.
-            assert result == {
-                "something": {
-                    "something_else": {},
-                }
-            }
-
-
 
     class Test_get_config:
 
-        @pytest.mark.skip()
         @pytest.mark.parametrize("variables, expected", [
             (
                 {
@@ -58,8 +20,11 @@ class TestVariableParser:
                 {
                     "SEMVER_changelog_path": "CHANGELOG.md",
                     "SEMVER_git__name": "me",
-                    "SEMVER_replace_files__testing": "minor",
-                    "SEMVER_replace_files__testing2": "major",
+                    "SEMVER_prefixes__testing": "minor",
+                    "SEMVER_prefixes__testing2": "major",
+                    "SEMVER_replace_files__0__name": "file.md",
+                    "SEMVER_replace_files__0__type": "sed",
+                    "SEMVER_replace_files__0__script": "pattern/pattern",
                     "SOME_OTHER_VAR": "irrelevant"
                 },
                 {
@@ -77,7 +42,13 @@ class TestVariableParser:
                             "type": "major",
                         },
                     ],
-                    # TODO replace files
+                    "replace_files": [
+                        {
+                            "type": "sed",
+                            "name": "file.md",
+                            "script": "pattern/pattern",
+                        },
+                    ],
                 }
             ),
         ])

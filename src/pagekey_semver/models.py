@@ -37,7 +37,7 @@ class ReplaceFile(BaseModel):
     type: ReplaceFileType
 
     @field_serializer('type')
-    def get_eunm_value(self, v, info) -> str:
+    def get_enum_value(self, v, info) -> str:
         return str(v.value)
 
 

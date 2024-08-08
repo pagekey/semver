@@ -3,6 +3,7 @@
 
 from unittest.mock import MagicMock, mock_open, patch
 
+import pytest
 import yaml
 
 from pagekey_semver.config import DEFAULT_CONFIG, DEFAULT_CONFIG_DICT, load_config
@@ -49,12 +50,11 @@ class Test_load_config:
         # Assert.
         assert config.prefixes[0] == Prefix(label="fix", type="patch")
 
-
     @patch(f"{MODULE_UNDER_TEST}.os")
     def test_with_env_vars_returns_overridden_config(self, mock_os):
         # Arrange.
         mock_os.environ = {
-            "SEMVER_prefixes__patch": "fix",
+            "SEMVER_prefixes__fix": "patch",
         }
         config_path = MagicMock()
         config_path.is_file.return_value = False

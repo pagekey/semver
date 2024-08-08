@@ -19,34 +19,36 @@ class VariableParser:
         }
 
     def apply_parts(self, map, part1, part2, part3):
-        if part3 is None:
-            map[part1] = part2
-        else:
-            map.setdefault(part1, {}).setdefault(part2, {})
+
         return map
 
     def get_config(self):
         result = {}
-        current_dict = result
-        for variable in self._variables:
+        
+        for variable, value in self._variables.items():
             parts = variable.split("__")
-            for index, part1 in enumerate(parts):
-                is_last_part = index == len(parts) - 1
-                if is_last_part:
-                    part2 = None
-                    part3 = None
-                else:
-                    part2 = parts[index + 1]
-                    is_second_to_last = index == len(parts) - 2
-                    if is_second_to_last:
-                        part3 = None
-                    else:
-                        part3 = parts[index + 2]
-                current_dict = self.apply_parts(current_dict, part1, part2, part3)
+            # Create a nested dictionary structure
+            d = result
+            for part in parts[:-1]:
+                if part not in d:
+                    d[part] = {}
+                d = d[part]
+            
+            # Set the final key's value
+            d[parts[-1]] = value
+        
         # Manually re-arrange config items that are lists
         if "prefixes" in result:
             new_prefixes = []
-            for key, value in enumerate(result["prefixes"]):
-                new_prefixes.append(Prefix(label=key, type=value))
+            for key, value in result["prefixes"].items():
+                new_prefixes.append({
+                    "label": key,
+                    "type": value,
+                })
             result["prefixes"] = new_prefixes
+        if "replace_files" in result:
+            # Simply discard the keys to convert to list.
+            new_replace_files = list(result["replace_files"].values())
+            result["replace_files"] = new_replace_files
+
         return result
