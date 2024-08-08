@@ -5,7 +5,7 @@ from dataclasses import dataclass
 import re
 from typing import List, Optional
 
-from pagekey_semver.config import ReleaseType, SemverConfig
+from pagekey_semver.models import ReleaseType, SemverConfig
 
 
 @dataclass

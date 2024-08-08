@@ -3,7 +3,7 @@ import os
 from typing import List, TextIO
 
 from pagekey_semver.util.dynamic_import import dynamic_import
-from pagekey_semver.config import SemverConfig
+from pagekey_semver.models import SemverConfig
 from pagekey_semver.release import Commit, Tag
 
 

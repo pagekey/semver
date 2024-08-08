@@ -2,7 +2,8 @@ import json
 from unittest.mock import MagicMock, call, mock_open, patch
 
 import pytest
-from pagekey_semver.config import DEFAULT_CONFIG, DEFAULT_CONFIG_DICT, JsonReplaceFile, SedReplaceFile, SemverConfig, TomlReplaceFile, YamlReplaceFile
+from pagekey_semver.config import DEFAULT_CONFIG, DEFAULT_CONFIG_DICT
+from pagekey_semver.models import JsonReplaceFile, SedReplaceFile, SemverConfig, TomlReplaceFile, YamlReplaceFile
 from pagekey_semver.file_replacer import FileReplacer
 from pagekey_semver.release import Tag
 

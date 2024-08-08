@@ -4,7 +4,7 @@ import os
 import shutil
 import toml
 import yaml
-from pagekey_semver.config import JsonReplaceFile, ReplaceFileType, ReplaceFileUnion, SedReplaceFile, SemverConfig, TomlReplaceFile, YamlReplaceFile
+from pagekey_semver.models import JsonReplaceFile, ReplaceFileType, ReplaceFileUnion, SedReplaceFile, SemverConfig, TomlReplaceFile, YamlReplaceFile
 from pagekey_semver.release import Tag
 from pagekey_semver.util.update_dict import set_dict_value
 

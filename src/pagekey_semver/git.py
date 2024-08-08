@@ -2,7 +2,7 @@
 import os
 import subprocess
 from typing import List, Optional
-from pagekey_semver.config import DEFAULT_CONFIG, SemverConfig
+from pagekey_semver.models import SemverConfig
 from pagekey_semver.release import Commit, Tag
 
 
