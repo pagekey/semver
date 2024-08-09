@@ -3,7 +3,7 @@
 import os
 import subprocess
 from typing import List, Optional
-from pagekey_semver.models import SemverConfig
+from pagekey_semver.models import GitConfig, SemverConfig
 from pagekey_semver.release import Commit, Tag
 
 
@@ -13,6 +13,33 @@ class GitManager:
     def __init__(self, config: SemverConfig):
         """Initialize Git manager."""
         self._config = config
+
+    def get_existing_git_info(self) -> Optional[GitConfig]:
+        """Determine exisitng Git config information.
+        
+        Returns:
+            GitConfig containing Git user.name and user.email.
+        
+        Raises:
+            CalledProcessError if there is an issue calling Git to check these values.
+        """
+        result = subprocess.run(
+            ["git", "config", "user.email"],
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+        email = result.stdout.strip()
+        result = subprocess.run(
+            ["git", "config", "user.name"],
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+        name = result.stdout.strip()
+        return GitConfig(name=name, email=email)
 
     def get_git_tags(self) -> List[str]:
         """Get a list of all Git tags for the current repo.
@@ -71,6 +98,9 @@ class GitManager:
 
     def apply_tag(self, existing_tags: List[Tag], new_tag: Tag) -> None:
         """Commit, tag, and push.
+
+        Changes Git username, email based on config
+        and restores them to what they were previously when done.
         
         Args:
             existing_tags: List of pre-existing Git tags in repo.
@@ -78,14 +108,17 @@ class GitManager:
         """
         if new_tag not in existing_tags:
             print(f"Tagging/pushing new tag: {new_tag}", flush=True)
+            original_git_config = self.get_existing_git_info()
             commands = [
-                f"git config user.email {self._config.git.email}",
+                f'git config user.email "{self._config.git.email}"',
                 f'git config user.name "{self._config.git.name}"',
                 f"git add --all",
                 f"git commit -m '{new_tag.name}'",
                 f"git tag {new_tag.name}",
                 f"git push origin {new_tag.name}",
                 f"git push origin HEAD",
+                f'git config user.email "{original_git_config.email}"',
+                f'git config user.name "{original_git_config.name}"',
             ]
             for command in commands:
                 print("Running:", command, flush=True)

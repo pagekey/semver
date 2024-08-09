@@ -51,6 +51,9 @@ def setup_git_repo(tmp_path):
     os.system("git config receive.denyCurrentBranch ignore")
     os.chdir(tmp_dir)
     os.system("git remote add origin ../remote")
+    # Set up Git user/email.
+    os.system('git config user.email "integration@test.com"')
+    os.system('git config user.name "integration tester"')
 
 
 def test_default_config(tmp_path):
@@ -215,6 +218,23 @@ class CustomChangelogWriter(ChangelogWriter):
         the_dict = yaml.safe_load(file_handle)
         assert the_dict["my_version"] == "ver_0-1-0"
         assert the_dict["something"] == "else"
+    # Make sure Git user has been restored.
+    result = subprocess.run(
+        ["git", "config", "user.email"],
+        check=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    assert result.stdout.strip() == "integration@test.com"
+    result = subprocess.run(
+        ["git", "config", "user.name"],
+        check=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    assert result.stdout.strip() == "integration tester"
 
 
 def test_env_overrides(tmp_path):

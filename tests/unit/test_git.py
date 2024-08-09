@@ -12,6 +12,46 @@ MODULE_UNDER_TEST = "pagekey_semver.git"
 
 
 class TestGitManager:
+
+    class Test_get_existing_git_info:
+
+        @patch("subprocess.run")
+        def test_with_successful_call_returns_gitconfig(self, mock_run):
+            # Arrange.
+            mock_result_email = MagicMock()
+            mock_result_email.stdout = "email@email.com\n"
+            mock_result_name = MagicMock()
+            mock_result_name.stdout = "me\n"
+            mock_run.side_effect = [
+                mock_result_email,
+                mock_result_name,
+            ]
+            manager = GitManager(DEFAULT_CONFIG)
+
+            # Act.
+            result = manager.get_existing_git_info()
+
+            # Assert.
+            mock_run.assert_has_calls([
+                call(
+                    "git config user.email".split(),
+                    check=True,
+                    stdout=-1,
+                    stderr=-1,
+                    text=True,
+                ),
+                call(
+                    "git config user.name".split(),
+                    check=True,
+                    stdout=-1,
+                    stderr=-1,
+                    text=True,
+                ),
+            ])
+            assert result.email == "email@email.com"
+            assert result.name == "me"
+
+
     class Test_get_git_tags:
         @patch("subprocess.run")
         def test_with_no_fail_returns_list_of_tags(self, mock_run):
@@ -74,7 +114,7 @@ class TestGitManager:
             manager = GitManager(DEFAULT_CONFIG)
 
             # Act.
-            result = manager.apply_tag(existing_tags, new_tag)
+            manager.apply_tag(existing_tags, new_tag)
 
             # Assert.
             mock_run.assert_not_called()
@@ -84,23 +124,28 @@ class TestGitManager:
             # Arrange.
             existing_tags = ["v0.1.0", "v3.0.0", "v2.0.0"]
             new_tag = Tag("v4.0.0", 4, 0, 0)
-            new_tag_stripped = "4.0.0"
             mock_system.return_value = 0  # exit code
             manager = GitManager(DEFAULT_CONFIG)
+            mock_get_existing_git_info = patch.object(manager, 'get_existing_git_info', return_value=GitConfig(name="original", email="original@email.com"))
+            mock_get_existing_git_info.start()
 
             # Act.
             manager.apply_tag(existing_tags, new_tag)
 
             # Assert.
             commands = [
-                f"git config user.email semver@pagekey.io",
+                f'git config user.email "semver@pagekey.io"',
                 f'git config user.name "PageKey Semver"',
                 f"git add --all",
                 f"git commit -m '{new_tag.name}'",
                 f"git tag {new_tag.name}",
                 f"git push origin {new_tag.name}",
+                f"git push origin HEAD",
+                f'git config user.email "original@email.com"',
+                f'git config user.name "original"',
             ]
             mock_system.assert_has_calls([call(command) for command in commands])
+            mock_get_existing_git_info.stop()
 
         @patch("os.system")
         def test_with_config_applies_config_name_email(self, mock_system):
@@ -126,7 +171,7 @@ class TestGitManager:
             # Assert.
             mock_system.assert_has_calls(
                 [
-                    call("git config user.email some@email.com"),
+                    call('git config user.email "some@email.com"'),
                     call('git config user.name "some name"'),
                 ]
             )
