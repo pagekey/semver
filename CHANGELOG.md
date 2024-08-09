@@ -7,3 +7,7 @@
 
 - fix: Correct line bug in git.py (3c3bd5c626d56f20a05c99ac4b51d1cbe2cf4e59)
 
+## v0.2.5
+
+- fix: Add pyproject.toml to replace_files (3e5480038e2c9d0134f11dfae3bcb28ecca547d0)
+
