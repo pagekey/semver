@@ -1,0 +1,28 @@
+name: PageKey Semver
+
+on: workflow_call  # This makes it reusable.
+
+jobs:
+  run-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # fetch all commits instead of just current one
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      
+      - name: Install semver
+        run: pip3 install pagekey-semver
+
+      - name: Run semver live when on main
+        if: github.ref == 'refs/heads/main'
+        run: pagekey-semver apply
+
+      - name: Run semver dry-run when not on main
+        if: github.ref != 'refs/heads/main'
+        run: pagekey-semver plan

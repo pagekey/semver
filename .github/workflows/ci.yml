@@ -1,0 +1,7 @@
+name: Run CI/CD for PageKey Semver package.
+
+on: [push]
+
+jobs:
+  call-workflow:
+    uses: ./.github/workflows/semver.yml
