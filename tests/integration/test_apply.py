@@ -32,6 +32,9 @@ def setup_git_repo(tmp_path):
 
     Helper method for the integration tests below.
     """
+    # Set up Git user/email.
+    os.system('git config --global user.email "integration@test.com"')
+    os.system('git config --global user.name "integration tester"')
     # Create a temporary directory representing a project.
     tmp_dir = tmp_path / "project"
     tmp_dir.mkdir()
@@ -51,9 +54,6 @@ def setup_git_repo(tmp_path):
     os.system("git config receive.denyCurrentBranch ignore")
     os.chdir(tmp_dir)
     os.system("git remote add origin ../remote")
-    # Set up Git user/email.
-    os.system('git config --global user.email "integration@test.com"')
-    os.system('git config --global user.name "integration tester"')
 
 
 def test_default_config(tmp_path):
