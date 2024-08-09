@@ -1,4 +1,9 @@
-"""."""
+"""Integration tests.
+
+These tests actually create git repos and run the pagekey-semver tool on the real filesystem.
+
+The docstring for each test outlines the use case being tested.
+"""
 
 import json
 import os
@@ -21,8 +26,12 @@ from pagekey_semver.models import (
 
 
 def setup_git_repo(tmp_path):
-    """."""
-    # Arrange.
+    """Initialize a git repo given a temp path.
+    
+    Sets up remote and adds first commit.
+
+    Helper method for the integration tests below.
+    """
     # Create a temporary directory representing a project.
     tmp_dir = tmp_path / "project"
     tmp_dir.mkdir()
@@ -45,7 +54,14 @@ def setup_git_repo(tmp_path):
 
 
 def test_default_config(tmp_path):
-    """."""
+    """Test using with default options.
+    
+    Use case:
+
+    1. User creates a git repo.
+    2. User runs pagekey-semver.
+    3. Pagekey-semver updates version, tag, and changelog using default config.
+    """
     # Arrange.
     setup_git_repo(tmp_path)
 
@@ -71,7 +87,16 @@ def test_default_config(tmp_path):
 
 
 def test_custom_config_and_changelog_writer(tmp_path):
-    """."""
+    """Test using custm config and custom changelog writer.
+    
+    Use case:
+
+    1. User creates a git repo.
+    2. User writes their own ChangelogWriter class.
+    3. User creates a custom `.semver` config file and references the custom changelog writer.
+    4. User runs pagekey-semver.
+    5. Pagekey-semver parses the config and uses the custom changelog writer.
+    """
     # Arrange.
     setup_git_repo(tmp_path)
     # Create custom changelog writer.
@@ -193,6 +218,15 @@ class CustomChangelogWriter(ChangelogWriter):
 
 
 def test_env_overrides(tmp_path):
+    """Test using environment variable overrides.
+    
+    Use case:
+
+    1. User creates a git repo.
+    2. User sets environment variables to override file-based configs.
+    3. User runs pagekey-semver.
+    4. Pagekey-semver parses/uses the environment variables.
+    """
     # Arrange.
     setup_git_repo(tmp_path)
     # Make sure environment overrides work.

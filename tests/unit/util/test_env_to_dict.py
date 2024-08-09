@@ -1,4 +1,4 @@
-"""."""
+"""Test env_to_dict module."""
 
 import pytest
 

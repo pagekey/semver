@@ -1,4 +1,4 @@
-"""."""
+"""Test file_replacer module."""
 
 from unittest.mock import MagicMock, call, mock_open, patch
 

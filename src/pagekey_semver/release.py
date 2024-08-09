@@ -9,7 +9,7 @@ from pagekey_semver.models import ReleaseType, SemverConfig
 
 @dataclass
 class Commit:
-    """."""
+    """Represents a Git commit."""
 
     hash: str
     message: str
@@ -17,26 +17,26 @@ class Commit:
 
 @dataclass
 class Tag:
-    """."""
+    """Represents a Semver logical tag."""
 
+    # The formatted tag name as it appears in Git.
     name: str
+    # The major part of the version.
     major: int
+    # The minor part of the version.
     minor: int
+    # The patch part of the version.
     patch: int
 
 
+# This variable assigns a numeric priority to each ReleaseType,
+# which allows the higher numbers to take precedence over the
+# lower ones.
 RELEASE_TYPE_PRIORITIES = {
     ReleaseType.NO_RELEASE: 0,
     ReleaseType.PATCH: 1,
     ReleaseType.MINOR: 2,
     ReleaseType.MAJOR: 3,
-}
-
-
-PREFIXES = {
-    "fix": ReleaseType.PATCH,
-    "feat": ReleaseType.MINOR,
-    "major": ReleaseType.MAJOR,
 }
 
 

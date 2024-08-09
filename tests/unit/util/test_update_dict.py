@@ -1,4 +1,4 @@
-"""."""
+"""Test update_dict module."""
 
 import pytest
 

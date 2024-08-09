@@ -1,4 +1,4 @@
-"""."""
+"""Test dynamic_import module."""
 
 from unittest.mock import patch
 import pytest

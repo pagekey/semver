@@ -1,4 +1,4 @@
-"""."""
+"""Module to convert env vars to a dict."""
 
 from typing import Dict
 
@@ -7,7 +7,18 @@ VARIABLE_PREFIX = "SEMVER_"
 
 
 def convert_env_to_dict(variables: Dict[str, str]) -> Dict:
-    """."""
+    """Convert variables dict to config dict.
+
+    This function takes a list of flattened config items and
+    re-hydrates them into a valid config dict.
+
+    To learn more about the expected inputs and outputs, check out the tests for this function or the docs.
+    
+    Args:
+        variables: Dict with keys/values that represent environment variables.
+
+    Returns: Dictionary that can be parsed into a valid SemverConfig object.
+    """
     # Filter irrelevant vars and get rid of prefix.
     variables = {
         key.replace(VARIABLE_PREFIX, ""): variables[key]

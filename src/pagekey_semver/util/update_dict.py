@@ -1,4 +1,4 @@
-"""."""
+"""Module for functions that modify dicts."""
 
 from typing import Any
 
