@@ -15,13 +15,13 @@ pip install pagekey-semver
 2. Run the dry run to see what will happen.
 
 ```bash
-pagekey-semver --dry-run
+pagekey-semver plan
 ```
 
 3. Run it for real to tag and push!
 
 ```bash
-pagekey-semver
+pagekey-semver apply
 ```
 
 ## Usage
