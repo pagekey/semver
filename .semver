@@ -1,0 +1,4 @@
+replace_files:
+  - type: toml
+    name: pyproject.toml
+    key: version
