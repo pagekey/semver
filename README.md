@@ -29,7 +29,20 @@ pagekey-semver apply
 
 ### GitHub Actions
 
-Coming soon.
+Add the following workflow to get started using this with GitHub Actions.
+
+```yaml
+name: Run semantic version process.
+
+on:
+  push:
+    branches-ignore:
+      - 'refs/tags/*'
+
+jobs:
+  version:
+    uses: pagekey/semver/.github/workflows/semver.yml@main
+```
 
 
 ### GitLab CI/CD
