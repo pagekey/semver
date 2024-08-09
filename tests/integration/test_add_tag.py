@@ -1,3 +1,5 @@
+"""."""
+
 import json
 import os
 import subprocess
@@ -7,9 +9,19 @@ import toml
 import yaml
 
 from pagekey_semver.cli import cli_entrypoint
-from pagekey_semver.models import GitConfig, JsonReplaceFile, Prefix, SedReplaceFile, SemverConfig, TomlReplaceFile, YamlReplaceFile
+from pagekey_semver.models import (
+    GitConfig,
+    JsonReplaceFile,
+    Prefix,
+    SedReplaceFile,
+    SemverConfig,
+    TomlReplaceFile,
+    YamlReplaceFile,
+)
+
 
 def setup_git_repo(tmp_path):
+    """."""
     # Arrange.
     # Create a temporary directory representing a project.
     tmp_dir = tmp_path / "project"
@@ -31,7 +43,9 @@ def setup_git_repo(tmp_path):
     os.chdir(tmp_dir)
     os.system("git remote add origin ../remote")
 
+
 def test_default_config(tmp_path):
+    """."""
     # Arrange.
     setup_git_repo(tmp_path)
 
@@ -55,11 +69,13 @@ def test_default_config(tmp_path):
     assert "## v0.1.0\n" in changelog
     assert "- fix: Add package.json" in changelog
 
+
 def test_custom_config_and_changelog_writer(tmp_path):
+    """."""
     # Arrange.
     setup_git_repo(tmp_path)
     # Create custom changelog writer.
-    with open("custom_changelog_writer.py", 'w') as writer_src:
+    with open("custom_changelog_writer.py", "w") as writer_src:
         writer_src.write("""
 from pagekey_semver.changelog import ChangelogWriter
 class CustomChangelogWriter(ChangelogWriter):
@@ -70,50 +86,59 @@ class CustomChangelogWriter(ChangelogWriter):
 """)
     # Add files to be replaced
     with open("replace_file.json", "w") as file_handle:
-        json.dump({
-            "my": {
-                "version": "hello",
+        json.dump(
+            {
+                "my": {
+                    "version": "hello",
+                },
+                "something": "else",
             },
-            "something": "else",
-        }, file_handle)
+            file_handle,
+        )
     with open("replace_file.md", "w") as file_handle:
         file_handle.write("# Some Project\n\nThis is version 0.0.0 of the project.\n")
     with open("replace_file.toml", "w") as file_handle:
-        toml.dump({
-            "my_version": "hello",
-            "something": "else",
-        }, file_handle)
+        toml.dump(
+            {
+                "my_version": "hello",
+                "something": "else",
+            },
+            file_handle,
+        )
     with open("replace_file.yaml", "w") as file_handle:
-        yaml.dump({
-            "my_version": "hello",
-            "something": "else",
-        }, file_handle)
+        yaml.dump(
+            {
+                "my_version": "hello",
+                "something": "else",
+            },
+            file_handle,
+        )
     # Set up custom config file.
     config = SemverConfig(
         changelog_path="docs/CHANGELOG.md",
         changelog_writer="custom_changelog_writer:CustomChangelogWriter",
         format="ver_%M-%m-%p",
-        git=GitConfig(
-            name="my name",
-            email="my@email.com"
-        ),
+        git=GitConfig(name="my name", email="my@email.com"),
         prefixes=[
             Prefix(label="custom", type="major"),
         ],
         replace_files=[
             JsonReplaceFile(name="replace_file.json", key="my.version"),
-            SedReplaceFile(name="replace_file.md", script="s/^This/This is version %M.%m.%p of the project./g"),
+            SedReplaceFile(
+                name="replace_file.md",
+                script="s/^This/This is version %M.%m.%p of the project./g",
+            ),
             TomlReplaceFile(name="replace_file.toml", key="my_version"),
             YamlReplaceFile(name="replace_file.yaml", key="my_version"),
         ],
     )
 
     # Make test commit.
-    with open('.semver', 'w') as semver_file:
+    with open(".semver", "w") as semver_file:
         semver_file.write(yaml.safe_dump(config.model_dump()))
     os.system("git add .semver")
     os.system("git commit -m 'custom: Add .semver'")
-    
+
     # Act.
     # Invoke semver.
     cli_entrypoint()
@@ -166,6 +191,7 @@ class CustomChangelogWriter(ChangelogWriter):
         assert the_dict["my_version"] == "ver_0-1-0"
         assert the_dict["something"] == "else"
 
+
 def test_env_overrides(tmp_path):
     # Arrange.
     setup_git_repo(tmp_path)
@@ -184,9 +210,12 @@ def test_env_overrides(tmp_path):
     }
     # Make a test commit.
     with open("test.json", "w") as file_handle:
-        json.dump({
-            "version": "replace me",
-        }, file_handle)
+        json.dump(
+            {
+                "version": "replace me",
+            },
+            file_handle,
+        )
     os.system("git add test.json")
     os.system("git commit -m 'custom: Add test.json'")
 

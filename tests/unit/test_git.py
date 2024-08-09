@@ -1,4 +1,5 @@
 """Test Git module."""
+
 from unittest.mock import MagicMock, call, patch
 
 from pagekey_semver.config import DEFAULT_CONFIG
@@ -11,7 +12,6 @@ MODULE_UNDER_TEST = "pagekey_semver.git"
 
 
 class TestGitManager:
-
     class Test_get_git_tags:
         @patch("subprocess.run")
         def test_with_no_fail_returns_list_of_tags(self, mock_run):
@@ -79,7 +79,6 @@ class TestGitManager:
             # Assert.
             mock_run.assert_not_called()
 
-
         @patch("os.system")
         def test_with_new_tag_tags_and_pushes(self, mock_system):
             # Arrange.
@@ -101,13 +100,7 @@ class TestGitManager:
                 f"git tag {new_tag.name}",
                 f"git push origin {new_tag.name}",
             ]
-            mock_system.assert_has_calls(
-                [
-                    call(command)
-                    for command in commands
-                ]
-            )
-
+            mock_system.assert_has_calls([call(command) for command in commands])
 
         @patch("os.system")
         def test_with_config_applies_config_name_email(self, mock_system):
@@ -131,7 +124,9 @@ class TestGitManager:
             manager.apply_tag(existing_tags, new_tag)
 
             # Assert.
-            mock_system.assert_has_calls([
-                call("git config user.email some@email.com"),
-                call('git config user.name "some name"'),
-            ])
+            mock_system.assert_has_calls(
+                [
+                    call("git config user.email some@email.com"),
+                    call('git config user.name "some name"'),
+                ]
+            )

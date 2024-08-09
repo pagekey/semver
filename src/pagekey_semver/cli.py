@@ -1,3 +1,5 @@
+"""."""
+
 from pathlib import Path
 import sys
 
@@ -11,12 +13,12 @@ from pagekey_semver.config import load_config
 def cli_entrypoint(args=sys.argv[1:]):
     dry_run = "--dry-run" in args
     config = load_config(Path(".semver"))
-    
+
     # Init classes.
     manager = GitManager(config)
     release = SemverRelease(config)
     writer = ChangelogWriter.from_config(config)
-    
+
     # Compute tags, commits
     tags = manager.get_git_tags()
     max_tag: Tag = release.get_biggest_tag(tags)
@@ -26,12 +28,11 @@ def cli_entrypoint(args=sys.argv[1:]):
     commits = manager.get_commit_messages_since(hash)
     release_type = release.compute_release_type(commits)
     next_version = release.compute_next_version(release_type, tags)
-    
 
     # Write to changelog.
     writer.update_changelog(next_version, commits)
     print("Next version:", next_version, flush=True)
-    
+
     # Apply tag if appropriate.
     if not dry_run:
         # Replace files

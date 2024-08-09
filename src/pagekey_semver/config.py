@@ -1,4 +1,5 @@
 """Module related to config files."""
+
 import os
 from pathlib import Path
 
@@ -18,7 +19,7 @@ DEFAULT_CONFIG = SemverConfig(
         email="semver@pagekey.io",
     ),
     prefixes=[
-        Prefix(label="major", type="major"),  
+        Prefix(label="major", type="major"),
         Prefix(label="minor", type="minor"),
         Prefix(label="feat", type="minor"),
         Prefix(label="fix", type="patch"),
@@ -29,6 +30,7 @@ DEFAULT_CONFIG_DICT = DEFAULT_CONFIG.model_dump()
 
 
 def load_config(config_path: Path) -> SemverConfig:
+    """."""
     # Get the file config.
     if config_path.is_file():
         with open(config_path, "r") as file_handle:
@@ -36,10 +38,10 @@ def load_config(config_path: Path) -> SemverConfig:
         config_without_env = merge_dicts(DEFAULT_CONFIG_DICT, custom_config)
     else:
         config_without_env = DEFAULT_CONFIG_DICT
-    
+
     # Get the config defined by environment variables.
     env_config = convert_env_to_dict(os.environ)
-    
+
     # Merge the file config and the environment config.
     # Environment takes precedence.
     final_config = merge_dicts(config_without_env, env_config)

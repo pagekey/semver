@@ -1,4 +1,5 @@
 """Test CLI module."""
+
 from pathlib import Path
 from unittest.mock import patch
 from pagekey_semver.cli import cli_entrypoint
@@ -36,10 +37,10 @@ def test_cli_entrypoint_with_no_args_calls_all_functions(
     mock_release.compute_next_version.return_value = next_version
     mock_changelog_writer = mock_changelog_writer_cls.from_config.return_value
     mock_file_replacer = mock_file_replacer_cls.return_value
-    
+
     # Act.
     cli_entrypoint()
-    
+
     # Assert.
     mock_git_manager_cls.assert_called_with(config)
     mock_changelog_writer_cls.from_config.assert_called_with(config)

@@ -1,4 +1,5 @@
 """Module for interacting with Git."""
+
 import os
 import subprocess
 from typing import List, Optional
@@ -7,8 +8,10 @@ from pagekey_semver.release import Commit, Tag
 
 
 class GitManager:
+    """."""
 
     def __init__(self, config: SemverConfig):
+        """."""
         self._config = config
 
     def get_git_tags(self) -> List[str]:
@@ -27,7 +30,6 @@ class GitManager:
         except subprocess.CalledProcessError as e:
             print(f"Error getting git tags: {e.stderr}", flush=True)
             return []
-
 
     def get_commit_messages_since(self, commit_hash: Optional[str]) -> List[Commit]:
         """."""
@@ -48,15 +50,15 @@ class GitManager:
             commits = []
             for line in commit_lines:
                 hash = line.split()[0]
-                message = line.replace(hash + ' ', '')
+                message = line.replace(hash + " ", "")
                 commits.append(Commit(hash, message))
             return commits
         except subprocess.CalledProcessError as e:
             print(f"Error getting commit messages: {e.stderr}", flush=True)
             return []
 
-
     def apply_tag(self, existing_tags: List[Tag], new_tag: Tag):
+        """."""
         if new_tag not in existing_tags:
             print(f"Tagging/pushing new tag: {new_tag}", flush=True)
             commands = [

@@ -1,4 +1,5 @@
 """Test changelog module."""
+
 from unittest.mock import call, mock_open, patch
 from pagekey_semver.changelog import ChangelogWriter, DefaultChangelogWriter
 from pagekey_semver.config import DEFAULT_CONFIG, DEFAULT_CONFIG_DICT
@@ -10,7 +11,6 @@ MODULE_UNDER_TEST = "pagekey_semver.changelog"
 
 
 class TestChangelogWriter:
-
     @patch(f"{MODULE_UNDER_TEST}.dynamic_import")
     def test_from_config_calls_dynamic_import(self, mock_dynamic_import):
         # Arrange.
@@ -27,10 +27,11 @@ class TestChangelogWriter:
 
 
 class TestDefaultChangelogWriter:
-
     @patch(f"{MODULE_UNDER_TEST}.os.makedirs")
-    @patch('builtins.open', new_callable=mock_open)
-    def test_update_changelog_with_commits_updates_changelog_file(self, mock_open, mock_makedirs):
+    @patch("builtins.open", new_callable=mock_open)
+    def test_update_changelog_with_commits_updates_changelog_file(
+        self, mock_open, mock_makedirs
+    ):
         # Arrange.
         version = Tag("v1.0.0", 1, 0, 0)
         commits = [
@@ -42,7 +43,9 @@ class TestDefaultChangelogWriter:
             Commit(hash="aaaaa6", message="some other commit"),
         ]
         mock_file = mock_open.return_value
-        config = SemverConfig(**{**DEFAULT_CONFIG_DICT, "changelog_path": "docs/CHANGELOG.md"})
+        config = SemverConfig(
+            **{**DEFAULT_CONFIG_DICT, "changelog_path": "docs/CHANGELOG.md"}
+        )
         writer = DefaultChangelogWriter(config)
 
         # Act.
@@ -51,10 +54,12 @@ class TestDefaultChangelogWriter:
         # Assert.
         mock_makedirs.assert_called_with("docs", exist_ok=True)
         mock_open.assert_called_with("docs/CHANGELOG.md", "a")
-        mock_file.write.assert_has_calls([
-            call(f"## {version.name}\n\n"),
-            call("- fix: Do something somewhat important (aaaaa2)\n"),
-            call("- feat: Add something (aaaaa3)\n"),
-            call("- major: Wow this is a big deal (aaaaa5)\n"),
-            call("\n"),
-        ])
+        mock_file.write.assert_has_calls(
+            [
+                call(f"## {version.name}\n\n"),
+                call("- fix: Do something somewhat important (aaaaa2)\n"),
+                call("- feat: Add something (aaaaa3)\n"),
+                call("- major: Wow this is a big deal (aaaaa5)\n"),
+                call("\n"),
+            ]
+        )
