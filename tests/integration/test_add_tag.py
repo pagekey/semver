@@ -1,7 +1,7 @@
 import json
 import os
 import subprocess
-from unittest.mock import patch
+from unittest import mock
 
 import toml
 import yaml
@@ -55,7 +55,7 @@ def test_default_config(tmp_path):
     assert "## v0.1.0\n" in changelog
     assert "- fix: Add package.json" in changelog
 
-def test_custom_config(tmp_path):
+def test_custom_config_and_changelog_writer(tmp_path):
     # Arrange.
     setup_git_repo(tmp_path)
     # Create custom changelog writer.
@@ -92,9 +92,9 @@ class CustomChangelogWriter(ChangelogWriter):
     config = SemverConfig(
         changelog_path="docs/CHANGELOG.md",
         changelog_writer="custom_changelog_writer:CustomChangelogWriter",
-        format="overridden by env",
+        format="ver_%M-%m-%p",
         git=GitConfig(
-            name="overridden by env",
+            name="my name",
             email="my@email.com"
         ),
         prefixes=[
@@ -107,12 +107,6 @@ class CustomChangelogWriter(ChangelogWriter):
             YamlReplaceFile(name="replace_file.yaml", key="my_version"),
         ],
     )
-    # Make sure environment overrides work.
-    # mock_environ = {}
-    # # Top-level key
-    # mock_environ["SEMVER_format"] = "ver_%M-%m-%p"
-    # # Nested key
-    # mock_environ["SEMVER_git__name"] = "my name"
 
     # Make test commit.
     with open('.semver', 'w') as semver_file:
@@ -171,3 +165,44 @@ class CustomChangelogWriter(ChangelogWriter):
         the_dict = yaml.safe_load(file_handle)
         assert the_dict["my_version"] == "ver_0-1-0"
         assert the_dict["something"] == "else"
+
+def test_env_overrides(tmp_path):
+    # Arrange.
+    setup_git_repo(tmp_path)
+    # Make sure environment overrides work.
+    env_overrides = {
+        # Top-level key
+        "SEMVER_format": "ver_%M-%m-%p",
+        # Nested key
+        "SEMVER_git__name": "my name",
+        # Prefix
+        "SEMVER_prefixes__custom": "minor",
+        # Replace File
+        "SEMVER_replace_files__0__name": "test.json",
+        "SEMVER_replace_files__0__type": "json",
+        "SEMVER_replace_files__0__key": "version",
+    }
+    # Make a test commit.
+    with open("test.json", "w") as file_handle:
+        json.dump({
+            "version": "replace me",
+        }, file_handle)
+    os.system("git add test.json")
+    os.system("git commit -m 'custom: Add test.json'")
+
+    # Act.
+    # Invoke semver.
+    with mock.patch.dict(os.environ, env_overrides):
+        cli_entrypoint()
+
+    # Assert.
+    # Check CHANGELOG.
+    assert os.path.exists("CHANGELOG.md")
+    with open("CHANGELOG.md", "r") as changelog_file:
+        changelog = changelog_file.read()
+    assert "## ver_0-1-0\n" in changelog
+    assert "- custom: Add test.json" in changelog
+    # Check replaced JSON file.
+    with open("test.json", "r") as file_handle:
+        file_dict = json.load(file_handle)
+    assert file_dict["version"] == "ver_0-1-0"

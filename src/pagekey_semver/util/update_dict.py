@@ -42,3 +42,32 @@ def set_dict_value(d: dict, path: str, value: Any, sep: str = ".") -> None:
     for key in keys[:-1]:
         d = d.setdefault(key, {})
     d[keys[-1]] = value
+
+
+def merge_dicts(d1: dict, d2: dict) -> dict:
+    """
+    Merges two dictionaries recursively. If both dictionaries contain a key 
+    with a dictionary as its value, the function will recursively merge the 
+    sub-dictionaries. If a key exists in both dictionaries but the corresponding 
+    values are not dictionaries, the value from the second dictionary (d2) 
+    will overwrite the value from the first dictionary (d1).
+
+    Args:
+        d1 (dict): The first dictionary to merge.
+        d2 (dict): The second dictionary to merge.
+
+    Returns:
+        dict: A new dictionary that is the result of merging d1 and d2.
+    """
+    # Start with a copy of the first dictionary
+    merged = d1.copy()
+    
+    for key, value in d2.items():
+        if key in merged and isinstance(merged[key], dict) and isinstance(value, dict):
+            # If both d1 and d2 have the same key and the value is a dict, merge them recursively
+            merged[key] = merge_dicts(merged[key], value)
+        else:
+            # Otherwise, just set the value from d2
+            merged[key] = value
+    
+    return merged

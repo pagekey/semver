@@ -1,6 +1,6 @@
 import pytest
 
-from pagekey_semver.util.update_dict import get_dict_value, set_dict_value
+from pagekey_semver.util.update_dict import get_dict_value, merge_dicts, set_dict_value
 
 @pytest.fixture
 def sample_dict():
@@ -88,3 +88,31 @@ class Test_set_dict_value:
         
         # Assert
         assert another_dict["a"]["b"]["c"] == 20
+
+class Test_merge_dicts:
+
+    def test_with_two_dicts_merges_values(self):
+        # Arrange.
+        d1 = {
+            "git": {
+                "name": "me",
+            },
+        }
+        d2 = {
+            "git": {
+                "email": "me@email.com",
+            },
+            "other": "key",
+        }
+
+        # Act.
+        result = merge_dicts(d1, d2)
+
+        # Assert.
+        assert result == {
+            "git": {
+                "name": "me",
+                "email": "me@email.com",
+            },
+            "other": "key",
+        }

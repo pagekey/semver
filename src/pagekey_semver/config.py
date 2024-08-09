@@ -6,6 +6,7 @@ import yaml
 
 from pagekey_semver.models import GitConfig, Prefix, SemverConfig
 from pagekey_semver.util.env_to_dict import convert_env_to_dict
+from pagekey_semver.util.update_dict import merge_dicts
 
 
 DEFAULT_CONFIG = SemverConfig(
@@ -32,7 +33,7 @@ def load_config(config_path: Path) -> SemverConfig:
     if config_path.is_file():
         with open(config_path, "r") as file_handle:
             custom_config = yaml.safe_load(file_handle.read())
-        config_without_env = {**DEFAULT_CONFIG_DICT, **custom_config}
+        config_without_env = merge_dicts(DEFAULT_CONFIG_DICT, custom_config)
     else:
         config_without_env = DEFAULT_CONFIG_DICT
     
@@ -41,5 +42,5 @@ def load_config(config_path: Path) -> SemverConfig:
     
     # Merge the file config and the environment config.
     # Environment takes precedence.
-    final_config = {**config_without_env, **env_config}
+    final_config = merge_dicts(config_without_env, env_config)
     return SemverConfig(**final_config)
