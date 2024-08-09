@@ -1,4 +1,4 @@
-"""."""
+"""Module for CLI."""
 
 from pathlib import Path
 import sys
@@ -11,6 +11,11 @@ from pagekey_semver.config import load_config
 
 
 def cli_entrypoint(args=sys.argv[1:]):
+    """Runs pagekey-semver when called from the command-line.
+    
+    Args:
+        args: List of command-line args passed by user, or fake args for testing purposes.
+    """
     dry_run = "--dry-run" in args
     config = load_config(Path(".semver"))
 

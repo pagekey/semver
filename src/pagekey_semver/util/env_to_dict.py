@@ -17,7 +17,8 @@ def convert_env_to_dict(variables: Dict[str, str]) -> Dict:
     Args:
         variables: Dict with keys/values that represent environment variables.
 
-    Returns: Dictionary that can be parsed into a valid SemverConfig object.
+    Returns:
+        Dictionary that can be parsed into a valid SemverConfig object.
     """
     # Filter irrelevant vars and get rid of prefix.
     variables = {

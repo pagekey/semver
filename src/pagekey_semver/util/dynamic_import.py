@@ -17,9 +17,11 @@ def dynamic_import(path: str) -> Any:
             A colon is used to separate the module from the object with it being imported.
             Example: "shutil:rmtree" will import the rmtree function from the shutil module and return it.
 
-    Returns: The object represented by the "path" arg.
+    Returns:
+        The object represented by the "path" arg.
 
-    Raises: ImportError, AttributeError if the import string is not valid.
+    Raises:
+        ImportError, AttributeError if the import string is not valid.
     """
     # Include .py files in the current directory.
     sys.path.insert(0, os.getcwd())

@@ -41,21 +41,41 @@ RELEASE_TYPE_PRIORITIES = {
 
 
 def release_greater(a: ReleaseType, b: ReleaseType) -> bool:
-    """."""
+    """Determine which of the two release types is greater in priority.
+    
+    Args:
+        a: The first release type to compare.
+        b: The second release type to compare.
+    
+    Returns:
+        True if release b is greater than release a.
+        False otherwise.
+    """
     pri1 = RELEASE_TYPE_PRIORITIES[a]
     pri2 = RELEASE_TYPE_PRIORITIES[b]
     return pri1 < pri2
 
 
 class SemverRelease:
-    """."""
+    """Class representing a release."""
 
     def __init__(self, config: SemverConfig):
-        """."""
+        """Initialize SemverRelease object.
+        
+        Args:
+            config: The SemverConfig to dictate behavior.
+        """
         self._config = config
 
     def compute_release_type(self, commits: List[Commit]) -> ReleaseType:
-        """."""
+        """Compute release type (major/minor/patch) based on commits.
+        
+        Args:
+            commits: List of commits since last tag.
+        
+        Returns:
+            ReleaseType that should be generated based on these commits.
+        """
         release_type = ReleaseType.NO_RELEASE
         for commit in commits:
             for prefix in self._config.prefixes:
@@ -66,7 +86,17 @@ class SemverRelease:
         return release_type
 
     def get_matching_tags(self, tags: List[str]) -> List[Tag]:
-        """."""
+        """Parse git tags and return Tag objects.
+        
+        Only Git tags that match the `tag_format` in the config
+        will be returned.
+
+        Args:
+            tags: Full list of Git tags for current repo.
+        
+        Returns:
+            List of relevant tags, parsed into Tag objects.
+        """
         pattern = (
             self._config.format.replace("%M", r"(?P<major>\d+)")
             .replace("%m", r"(?P<minor>\d+)")
@@ -88,7 +118,15 @@ class SemverRelease:
         return matches
 
     def get_biggest_tag(self, tags: List[str]) -> Optional[Tag]:
-        """."""
+        """Among existing tags, determine which is newest.
+        
+        Args:
+            tags: Full list of Git tags.
+        
+        Returns:
+            Largest tag if at least one tag was provided.
+            None if the `tags` arg was an empty list.
+        """
         tags = self.get_matching_tags(tags)
         max_tag = None
         for tag in tags:
@@ -107,8 +145,17 @@ class SemverRelease:
 
     def compute_next_version(
         self, release_type: ReleaseType, tags: List[Tag]
-    ) -> Optional[Tag]:
-        """."""
+    ) -> Tag:
+        """Given the release type and tags, determine new tag (if any).
+        
+        Args:
+            release_type: ReleaseType for next version.
+            tags: List of Git tags in repo.
+        
+        Returns:
+            Tag representing new version if new release needed.
+            Biggest tag among existing tags if no need release needed.
+        """
         if len(tags) < 1:
             name = (
                 self._config.format.replace("%M", "0")

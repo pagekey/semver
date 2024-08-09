@@ -30,7 +30,14 @@ DEFAULT_CONFIG_DICT = DEFAULT_CONFIG.model_dump()
 
 
 def load_config(config_path: Path) -> SemverConfig:
-    """."""
+    """Load config from default, file, environment (in that order).
+    
+    Args:
+        config_path: Path to config to parse.
+    
+    Returns:
+        SemverConfig representing merged config from defaults, config file, and environment settings.
+    """
     # Get the file config.
     if config_path.is_file():
         with open(config_path, "r") as file_handle:

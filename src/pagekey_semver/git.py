@@ -8,14 +8,18 @@ from pagekey_semver.release import Commit, Tag
 
 
 class GitManager:
-    """."""
+    """Class to handle all communications with Git executable."""
 
     def __init__(self, config: SemverConfig):
-        """."""
+        """Initialize Git manager."""
         self._config = config
 
     def get_git_tags(self) -> List[str]:
-        """."""
+        """Get a list of all Git tags for the current repo.
+        
+        Returns:
+            List of each tag name as a string.
+        """
         try:
             result = subprocess.run(
                 ["git", "tag"],
@@ -32,7 +36,15 @@ class GitManager:
             return []
 
     def get_commit_messages_since(self, commit_hash: Optional[str]) -> List[Commit]:
-        """."""
+        """Return a  list of commit messages since a commit ref.
+        
+        Args:
+            commit_hash: Reference to a commit to pull messages since, or None.
+        
+        Returns:
+            Commit messages since `commit_hash` if provided.
+            All commit messages if `commit_hash` is None.
+        """
         try:
             if commit_hash is None:
                 args = ["git", "log", "--pretty=format:%H %s"]
@@ -57,8 +69,13 @@ class GitManager:
             print(f"Error getting commit messages: {e.stderr}", flush=True)
             return []
 
-    def apply_tag(self, existing_tags: List[Tag], new_tag: Tag):
-        """."""
+    def apply_tag(self, existing_tags: List[Tag], new_tag: Tag) -> None:
+        """Commit, tag, and push.
+        
+        Args:
+            existing_tags: List of pre-existing Git tags in repo.
+            new_tag: Tag to be added, if it does not already exist.
+        """
         if new_tag not in existing_tags:
             print(f"Tagging/pushing new tag: {new_tag}", flush=True)
             commands = [
