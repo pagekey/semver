@@ -94,6 +94,8 @@ class GitManager:
             commit_lines = result.stdout.strip().split("\n")
             commits = []
             for line in commit_lines:
+                if len(line) < 1:
+                    continue
                 hash = line.split()[0]
                 message = line.replace(hash + " ", "")
                 commits.append(Commit(hash, message))
