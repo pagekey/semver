@@ -52,8 +52,8 @@ def setup_git_repo(tmp_path):
     os.chdir(tmp_dir)
     os.system("git remote add origin ../remote")
     # Set up Git user/email.
-    os.system('git config user.email "integration@test.com"')
-    os.system('git config user.name "integration tester"')
+    os.system('git config --global user.email "integration@test.com"')
+    os.system('git config --global user.name "integration tester"')
 
 
 def test_default_config(tmp_path):
