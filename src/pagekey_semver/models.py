@@ -59,6 +59,7 @@ class JsonReplaceFile(ReplaceFile):
 
     type: Literal[ReplaceFileType.JSON] = ReplaceFileType.JSON
     key: str
+    format: str
 
 
 class SedReplaceFile(ReplaceFile):
@@ -73,6 +74,7 @@ class TomlReplaceFile(ReplaceFile):
 
     type: Literal[ReplaceFileType.TOML] = ReplaceFileType.TOML
     key: str
+    format: str
 
 
 class YamlReplaceFile(ReplaceFile):
@@ -80,6 +82,7 @@ class YamlReplaceFile(ReplaceFile):
 
     type: Literal[ReplaceFileType.YAML] = ReplaceFileType.YAML
     key: str
+    format: str
 
 
 ReplaceFileUnion = Union[

@@ -119,7 +119,7 @@ Documentation and examples are available for each type of replace file:
 
 ### Environment Variable Override
 
-You can use environment variables to set additional replace files. To do so, you **must** set **three** environment variables per replace file (`name`, `type`, and `key` or `script`). Setting only one or two fields will result in an error - you must set all three.
+You can use environment variables to set additional replace files. To do so, you **must** set **multiple** environment variables per replace file (`name`, `type`, and any additional fields required for that particular replacer). Setting only one or two fields will result in an error - you must set all of them.
 
 You must create an arbitrary index for your replace file. This is used only when parsing environment variables, then it is discarded. This can be any string or even an index number. The example below uses index `0`.
 
@@ -128,6 +128,7 @@ If you set the following three environment variables:
 - `SEMVER_replace_files__0__name=my_file.json`
 - `SEMVER_replace_files__0__type=json`
 - `SEMVER_replace_files__0__key=version`
+- `SEMVER_replace_files__0__format=%M.%m.%p`
 
 Setting these variables will add the following replace file to your configuration:
 

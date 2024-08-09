@@ -56,7 +56,10 @@ class FileReplacer:
         with open(replace_file.name, "r") as replace_file_handle:
             contents = json.load(replace_file_handle)
 
-        set_dict_value(contents, replace_file.key, self._new_version.name)
+        new_version_str = replace_file.format.replace("%M", str(self._new_version.major)) \
+            .replace("%m", str(self._new_version.minor)) \
+            .replace("%p", str(self._new_version.patch))
+        set_dict_value(contents, replace_file.key, new_version_str)
 
         with open(replace_file.name, "w") as replace_file_handle:
             json.dump(contents, replace_file_handle)
@@ -90,7 +93,10 @@ class FileReplacer:
         with open(replace_file.name, "r") as replace_file_handle:
             contents = toml.load(replace_file_handle)
 
-        set_dict_value(contents, replace_file.key, self._new_version.name)
+        new_version_str = replace_file.format.replace("%M", str(self._new_version.major)) \
+            .replace("%m", str(self._new_version.minor)) \
+            .replace("%p", str(self._new_version.patch))
+        set_dict_value(contents, replace_file.key, new_version_str)
 
         with open(replace_file.name, "w") as replace_file_handle:
             toml.dump(contents, replace_file_handle)
@@ -104,7 +110,10 @@ class FileReplacer:
         with open(replace_file.name, "r") as replace_file_handle:
             contents = yaml.safe_load(replace_file_handle)
 
-        set_dict_value(contents, replace_file.key, self._new_version.name)
+        new_version_str = replace_file.format.replace("%M", str(self._new_version.major)) \
+            .replace("%m", str(self._new_version.minor)) \
+            .replace("%p", str(self._new_version.patch))
+        set_dict_value(contents, replace_file.key, new_version_str)
 
         with open(replace_file.name, "w") as replace_file_handle:
             yaml.dump(contents, replace_file_handle)

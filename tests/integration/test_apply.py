@@ -155,13 +155,13 @@ class CustomChangelogWriter(ChangelogWriter):
             Prefix(label="custom", type="major"),
         ],
         replace_files=[
-            JsonReplaceFile(name="replace_file.json", key="my.version"),
+            JsonReplaceFile(name="replace_file.json", key="my.version", format="%M.%m.%p"),
             SedReplaceFile(
                 name="replace_file.md",
                 script="s/^This/This is version %M.%m.%p of the project./g",
             ),
-            TomlReplaceFile(name="replace_file.toml", key="my_version"),
-            YamlReplaceFile(name="replace_file.yaml", key="my_version"),
+            TomlReplaceFile(name="replace_file.toml", key="my_version", format="%M.%m.%p"),
+            YamlReplaceFile(name="replace_file.yaml", key="my_version", format="%M.%m.%p"),
         ],
     )
 
@@ -209,18 +209,18 @@ class CustomChangelogWriter(ChangelogWriter):
     # Make sure replace_file stuff worked.
     with open("replace_file.json") as file_handle:
         the_dict = json.load(file_handle)
-        assert the_dict["my"]["version"] == "ver_0-1-0"
+        assert the_dict["my"]["version"] == "0.1.0"
         assert the_dict["something"] == "else"
     with open("replace_file.md") as file_handle:
         the_contents = file_handle.read()
         assert "This is version 0.1.0 of the project." in the_contents
     with open("replace_file.toml") as file_handle:
         the_dict = toml.load(file_handle)
-        assert the_dict["my_version"] == "ver_0-1-0"
+        assert the_dict["my_version"] == "0.1.0"
         assert the_dict["something"] == "else"
     with open("replace_file.yaml") as file_handle:
         the_dict = yaml.safe_load(file_handle)
-        assert the_dict["my_version"] == "ver_0-1-0"
+        assert the_dict["my_version"] == "0.1.0"
         assert the_dict["something"] == "else"
     # Make sure Git user has been restored.
     result = subprocess.run(
@@ -265,6 +265,7 @@ def test_env_overrides(tmp_path):
         "SEMVER_replace_files__0__name": "test.json",
         "SEMVER_replace_files__0__type": "json",
         "SEMVER_replace_files__0__key": "version",
+        "SEMVER_replace_files__0__format": "%M.%m.%p",
     }
     # Make a test commit.
     with open("test.json", "w") as file_handle:
@@ -292,4 +293,4 @@ def test_env_overrides(tmp_path):
     # Check replaced JSON file.
     with open("test.json", "r") as file_handle:
         file_dict = json.load(file_handle)
-    assert file_dict["version"] == "ver_0-1-0"
+    assert file_dict["version"] == "0.1.0"

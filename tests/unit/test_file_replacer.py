@@ -26,14 +26,14 @@ class TestFileReplacer:
                 **{
                     **DEFAULT_CONFIG_DICT,
                     "replace_files": [
-                        {"type": "json", "name": "file.json", "key": "version"},
+                        {"type": "json", "name": "file.json", "key": "version", "format": "%M.%m.%p" },
                         {
                             "type": "sed",
                             "name": "file.md",
                             "script": "s/some/pattern/g",
                         },
-                        {"type": "toml", "name": "file.toml", "key": "version"},
-                        {"type": "yaml", "name": "file.yaml", "key": "version"},
+                        {"type": "toml", "name": "file.toml", "key": "version", "format": "%M.%m.%p" },
+                        {"type": "yaml", "name": "file.yaml", "key": "version", "format": "%M.%m.%p" },
                     ],
                 }
             )
@@ -45,10 +45,10 @@ class TestFileReplacer:
             # Assert.
             replacer.replace_one.assert_has_calls(
                 [
-                    call(JsonReplaceFile(name="file.json", key="version")),
+                    call(JsonReplaceFile(name="file.json", key="version", format="%M.%m.%p")),
                     call(SedReplaceFile(name="file.md", script="s/some/pattern/g")),
-                    call(TomlReplaceFile(name="file.toml", key="version")),
-                    call(YamlReplaceFile(name="file.yaml", key="version")),
+                    call(TomlReplaceFile(name="file.toml", key="version", format="%M.%m.%p")),
+                    call(YamlReplaceFile(name="file.yaml", key="version", format="%M.%m.%p")),
                 ]
             )
 
@@ -56,13 +56,13 @@ class TestFileReplacer:
         @pytest.mark.parametrize(
             "replace_file, replace_function",
             [
-                (JsonReplaceFile(name="file.json", key="version"), "replace_json"),
+                (JsonReplaceFile(name="file.json", key="version", format="%M.%m.%p"), "replace_json"),
                 (
                     SedReplaceFile(name="file.md", script="s/some/pattern/g"),
                     "replace_sed",
                 ),
-                (TomlReplaceFile(name="file.toml", key="version"), "replace_toml"),
-                (YamlReplaceFile(name="file.yaml", key="version"), "replace_yaml"),
+                (TomlReplaceFile(name="file.toml", key="version", format="%M.%m.%p"), "replace_toml"),
+                (YamlReplaceFile(name="file.yaml", key="version", format="%M.%m.%p"), "replace_yaml"),
             ],
         )
         def test_with_file_calls_specific_type_function(
@@ -88,7 +88,7 @@ class TestFileReplacer:
             config = DEFAULT_CONFIG
             new_version = Tag("v2.0.0", 2, 0, 0)
             replacer = FileReplacer(config, new_version)
-            replace_file = JsonReplaceFile(name="file.json", key="version")
+            replace_file = JsonReplaceFile(name="file.json", key="version", format="%M.%m.%p")
             mock_json.load.return_value = {
                 "version": "something",
                 "other_key": "untouched",
@@ -101,7 +101,7 @@ class TestFileReplacer:
             mock_builtin_open.assert_called_with("file.json", "w")
             # Assert first arg of first call is this:
             assert mock_json.dump.call_args_list[0][0][0] == {
-                "version": "v2.0.0",
+                "version": "2.0.0",
                 "other_key": "untouched",
             }
 
@@ -113,7 +113,7 @@ class TestFileReplacer:
             new_version = Tag("v2.0.0", 2, 0, 0)
             replacer = FileReplacer(config, new_version)
             replace_file = JsonReplaceFile(
-                name="file.json", key="project.metadata.version"
+                name="file.json", key="project.metadata.version", format="%M.%m.%p"
             )
             mock_json.load.return_value = {
                 "project": {
@@ -133,7 +133,7 @@ class TestFileReplacer:
             assert mock_json.dump.call_args_list[0][0][0] == {
                 "project": {
                     "metadata": {
-                        "version": "v2.0.0",
+                        "version": "2.0.0",
                     },
                 },
                 "other_key": "untouched",
@@ -212,7 +212,7 @@ class TestFileReplacer:
             config = DEFAULT_CONFIG
             new_version = Tag("v2.0.0", 2, 0, 0)
             replacer = FileReplacer(config, new_version)
-            replace_file = TomlReplaceFile(name="file.toml", key="version")
+            replace_file = TomlReplaceFile(name="file.toml", key="version", format="%M.%m.%p")
             mock_toml.load.return_value = {
                 "version": "something",
                 "other_key": "untouched",
@@ -225,7 +225,7 @@ class TestFileReplacer:
             mock_builtin_open.assert_called_with("file.toml", "w")
             # Assert first arg of first call is this:
             assert mock_toml.dump.call_args_list[0][0][0] == {
-                "version": "v2.0.0",
+                "version": "2.0.0",
                 "other_key": "untouched",
             }
 
@@ -237,7 +237,7 @@ class TestFileReplacer:
             new_version = Tag("v2.0.0", 2, 0, 0)
             replacer = FileReplacer(config, new_version)
             replace_file = TomlReplaceFile(
-                name="file.toml", key="project.metadata.version"
+                name="file.toml", key="project.metadata.version", format="%M.%m.%p"
             )
             mock_toml.load.return_value = {
                 "project": {
@@ -257,7 +257,7 @@ class TestFileReplacer:
             assert mock_toml.dump.call_args_list[0][0][0] == {
                 "project": {
                     "metadata": {
-                        "version": "v2.0.0",
+                        "version": "2.0.0",
                     },
                 },
                 "other_key": "untouched",
@@ -271,7 +271,7 @@ class TestFileReplacer:
             config = DEFAULT_CONFIG
             new_version = Tag("v2.0.0", 2, 0, 0)
             replacer = FileReplacer(config, new_version)
-            replace_file = YamlReplaceFile(name="file.yaml", key="version")
+            replace_file = YamlReplaceFile(name="file.yaml", key="version", format="%M.%m.%p")
             mock_yaml.safe_load.return_value = {
                 "version": "something",
                 "other_key": "untouched",
@@ -284,7 +284,7 @@ class TestFileReplacer:
             mock_builtin_open.assert_called_with("file.yaml", "w")
             # Assert first arg of first call is this:
             assert mock_yaml.dump.call_args_list[0][0][0] == {
-                "version": "v2.0.0",
+                "version": "2.0.0",
                 "other_key": "untouched",
             }
 
@@ -296,7 +296,7 @@ class TestFileReplacer:
             new_version = Tag("v2.0.0", 2, 0, 0)
             replacer = FileReplacer(config, new_version)
             replace_file = YamlReplaceFile(
-                name="file.yaml", key="project.metadata.version"
+                name="file.yaml", key="project.metadata.version", format="%M.%m.%p"
             )
             mock_yaml.safe_load.return_value = {
                 "project": {
@@ -316,7 +316,7 @@ class TestFileReplacer:
             assert mock_yaml.dump.call_args_list[0][0][0] == {
                 "project": {
                     "metadata": {
-                        "version": "v2.0.0",
+                        "version": "2.0.0",
                     },
                 },
                 "other_key": "untouched",
