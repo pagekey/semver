@@ -22,6 +22,10 @@ changelog_path: docs/CHANGELOG.md
 Any directories along the way will be created for you. For example, if the `docs/` directory does not exist when using the above config, it will be created when you run `pagekey-semver`.
 
 
+### Environment Variable Override
+
+You can override this config item by setting the `SEMVER_changelog_path` variable.
+
 ## Changelog Writer
 
 The default changelog writer is quite simple - for each version, it adds a level-2 header for the version and below it, each commit as a bullet.
@@ -59,6 +63,10 @@ Hello v1.0.0
 > feat: Add some feature
 ```
 
+### Environment Variable Override
+
+You can override this config item by setting the `SEMVER_changelog_writer` variable.
+
 
 ## Prefixes
 
@@ -75,6 +83,20 @@ prefixes:
 ```
 
 With the above config and a project with a latest tag of `v0.1.0`, adding the commit `micro: Fix a bug` would create `v0.1.1`, adding `mini: Add feature` would create `v0.2.0`, and adding `huge: Break everything` would create `v1.0.0`.
+
+Specifying the `prefixes:` list in your config file will override all default prefixes, so be sure to include at least one option for `major`, `minor`, and `patch`.
+
+
+### Environment Variable Override
+
+You can add additional prefixes using environment variables. To do this, set the `SEMVER_prefixes_YOURLABEL` to either `major`, `minor`, or `patch`. For example, setting the `SEMVER_prefixes_custom` to `patch` will be equivalent to adding the following prefix:
+
+```yaml
+  - label: custom
+    type: patch
+```
+
+When using this method, your additional prefixes are added onto the existing prefixes, which are either the default values or overridden by a config file.
 
 
 ## Replace Files
@@ -93,6 +115,29 @@ Documentation and examples are available for each type of replace file:
 - [SED Replace File](./replace_files/sed.md)
 - [TOML Replace File](./replace_files/toml.md)
 - [YAML Replace File](./replace_files/yaml.md)
+
+
+### Environment Variable Override
+
+You can use environment variables to set additional replace files. To do so, you **must** set **three** environment variables per replace file (`name`, `type`, and `key` or `script`). Setting only one or two fields will result in an error - you must set all three.
+
+You must create an arbitrary index for your replace file. This is used only when parsing environment variables, then it is discarded. This can be any string or even an index number. The example below uses index `0`.
+
+If you set the following three environment variables:
+
+- `SEMVER_replace_files__0__name=my_file.json`
+- `SEMVER_replace_files__0__type=json`
+- `SEMVER_replace_files__0__key=version`
+
+Setting these variables will add the following replace file to your configuration:
+
+```yaml
+  - name: my_file.json
+    type: patch
+    key: version
+```
+
+Refer to the docs for each specific type of replace file to ensure that you're including the required fields.
 
 
 ## Tag Format
@@ -114,3 +159,7 @@ If you prefer dahses over dots, you can write:
 ```yaml
 format: "v%M-%m-%p
 ```
+
+### Environment Variable Override
+
+You can override this config item by setting the `SEMVER_tag_format` variable.
