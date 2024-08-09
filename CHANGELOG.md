@@ -11,3 +11,7 @@
 
 - fix: Add pyproject.toml to replace_files (3e5480038e2c9d0134f11dfae3bcb28ecca547d0)
 
+## v0.3.0
+
+- feat: Add "format" to json, toml, yaml replacers (66b1c76e2f0c0ef3375d892f54abd6cc963880af)
+
