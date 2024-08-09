@@ -67,6 +67,10 @@ def test_default_config(tmp_path):
     """
     # Arrange.
     setup_git_repo(tmp_path)
+    # Make additional commit that does not trigger release.
+    os.system("touch package2.json")
+    os.system("git add package2.json")
+    os.system("git commit -m 'Add package2.json'")
 
     # Act.
     # Invoke semver.

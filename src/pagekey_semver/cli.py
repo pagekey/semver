@@ -46,21 +46,24 @@ def cli_entrypoint(args=sys.argv[1:]):
         hash = max_tag.name
     commits = manager.get_commit_messages_since(hash)
     release_type = release.compute_release_type(commits)
-    next_version = release.compute_next_version(release_type, tags)
+    next_version: Tag = release.compute_next_version(release_type, tags)
 
-    # Write to changelog.
-    writer.update_changelog(next_version, commits)
     print("Next version:", next_version, flush=True)
-
-    # Apply tag if appropriate.
-    if not dry_run:
-        # Replace files
-        file_replacer = FileReplacer(config, next_version)
-        file_replacer.replace_all()
-        # Apply tag, commit, push
-        manager.apply_tag(tags, next_version)
+    if max_tag == next_version:
+        print("No new release (nothing to do).")
     else:
-        print("Dry run mode - not applying version.", flush=True)
+        # Apply tag if appropriate.
+        if not dry_run:
+            print("Applying version.")
+            # Write to changelog.
+            writer.update_changelog(next_version, commits)
+            # Replace files
+            file_replacer = FileReplacer(config, next_version)
+            file_replacer.replace_all()
+            # Apply tag, commit, push
+            manager.apply_tag(tags, next_version)
+        else:
+            print("Dry run mode - not applying version.", flush=True)
 
 
 if __name__ == "__main__":
