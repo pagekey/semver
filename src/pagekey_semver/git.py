@@ -23,22 +23,28 @@ class GitManager:
         Raises:
             CalledProcessError if there is an issue calling Git to check these values.
         """
-        result = subprocess.run(
-            ["git", "config", "user.email"],
-            check=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True,
-        )
-        email = result.stdout.strip()
-        result = subprocess.run(
-            ["git", "config", "user.name"],
-            check=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True,
-        )
-        name = result.stdout.strip()
+        try:
+            result = subprocess.run(
+                ["git", "config", "user.email"],
+                check=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+            )
+            email = result.stdout.strip()
+        except subprocess.CalledProcessError as e:
+            email = ""
+        try:
+            result = subprocess.run(
+                ["git", "config", "user.name"],
+                check=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+            )
+            name = result.stdout.strip()
+        except subprocess.CalledProcessError as e:
+            name = ""
         return GitConfig(name=name, email=email)
 
     def get_git_tags(self) -> List[str]:
@@ -117,9 +123,11 @@ class GitManager:
                 f"git tag {new_tag.name}",
                 f"git push origin {new_tag.name}",
                 f"git push origin HEAD",
-                f'git config user.email "{original_git_config.email}"',
-                f'git config user.name "{original_git_config.name}"',
             ]
+            if len(original_git_config.email) > 0:
+                commands.append(f'git config user.email "{original_git_config.email}"')
+            if len(original_git_config.email) > 0:
+                commands.append(f'git config user.name "{original_git_config.name}"')
             for command in commands:
                 print("Running:", command, flush=True)
                 exit_code = os.system(command)
