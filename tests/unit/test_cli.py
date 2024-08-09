@@ -39,7 +39,7 @@ def test_cli_entrypoint_with_no_args_calls_all_functions(
     mock_file_replacer = mock_file_replacer_cls.return_value
 
     # Act.
-    cli_entrypoint()
+    cli_entrypoint(["apply"])
 
     # Assert.
     mock_git_manager_cls.assert_called_with(config)
@@ -86,7 +86,7 @@ def test_cli_entrypoint_with_dry_run_does_not_push(
     mock_changelog_writer = mock_changelog_writer_cls.from_config.return_value
 
     # Act.
-    cli_entrypoint(["--dry-run"])
+    cli_entrypoint(["plan"])
 
     # Assert.
     mock_git_manager_cls.assert_called_with(config)

@@ -1,7 +1,8 @@
 """Module for CLI."""
 
-from pathlib import Path
+import argparse
 import sys
+from pathlib import Path
 
 from pagekey_semver.changelog import ChangelogWriter
 from pagekey_semver.file_replacer import FileReplacer
@@ -16,7 +17,20 @@ def cli_entrypoint(args=sys.argv[1:]):
     Args:
         args: List of command-line args passed by user, or fake args for testing purposes.
     """
-    dry_run = "--dry-run" in args
+    parser = argparse.ArgumentParser(description="PageKey Semver")
+    subparsers = parser.add_subparsers(title="Commands", dest="command")
+    subparsers.add_parser("plan", help="Compute which version would be created. (Dry-run)")
+    subparsers.add_parser("apply", help="Compute version, then commit, tag, and push.")
+    parsed_args = parser.parse_args(args)
+
+    if parsed_args.command == "plan":
+        dry_run = True
+    elif parsed_args.command == "apply":
+        dry_run = False
+    else:
+        parser.print_usage()
+        return
+
     config = load_config(Path(".semver"))
 
     # Init classes.

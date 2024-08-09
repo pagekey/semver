@@ -70,7 +70,7 @@ def test_default_config(tmp_path):
 
     # Act.
     # Invoke semver.
-    cli_entrypoint()
+    cli_entrypoint(["apply"])
 
     # Assert.
     assert os.path.exists("CHANGELOG.md")
@@ -169,7 +169,7 @@ class CustomChangelogWriter(ChangelogWriter):
 
     # Act.
     # Invoke semver.
-    cli_entrypoint()
+    cli_entrypoint(["apply"])
 
     # Assert.
     assert os.path.exists("docs/CHANGELOG.md")
@@ -276,7 +276,7 @@ def test_env_overrides(tmp_path):
     # Act.
     # Invoke semver.
     with mock.patch.dict(os.environ, env_overrides):
-        cli_entrypoint()
+        cli_entrypoint(["apply"])
 
     # Assert.
     # Check CHANGELOG.
