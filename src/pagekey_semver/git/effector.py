@@ -2,6 +2,8 @@
 
 import abc
 
+from pagekey_semver.util.command_runner import CommandRunner, SubprocessCommandRunner
+
 
 class GitEffector(abc.ABC):
     """Make changes to the current Git repo."""
@@ -43,3 +45,24 @@ class GitEffector(abc.ABC):
             remote: Where to push.
             ref: Which commit, branch, or tag to push.
         """
+
+class CommandGitEffector(GitEffector):
+    """Use the Git CLI to make changes to Git."""
+    
+    def __init__(self, command_runner: CommandRunner = SubprocessCommandRunner()):
+        self._runner = command_runner
+
+    def set_config_item(self, key: str, value: str) -> None:
+        self._runner.run(f'git config {key} "{value}"')
+
+    def add_all(self) -> None:
+        pass
+
+    def create_commit(self, message: str) -> None:
+        pass
+
+    def create_tag(self, name: str) -> None:
+        pass
+
+    def push(self, remote: str, ref: str) -> None:
+        pass
