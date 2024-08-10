@@ -5,8 +5,8 @@ on: [push]
 jobs:
   version:
     uses: ./.github/workflows/semver.yml
-    with:
-      SEMVER_TOKEN: ${{ secrets.SEMVER_TOKEN }}
+    secrets:
+      SEMVER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
   test:
     runs-on: ubuntu-latest
