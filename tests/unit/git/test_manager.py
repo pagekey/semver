@@ -103,11 +103,17 @@ class TestGitManager:
                 manager, "get_existing_git_info", return_value=local_git_options
             )
             mock_get_existing_git_info.start()
+            mock_set_git_remote = patch.object(
+                manager, "set_git_remote"
+            )
+            mock_set_git_remote.start()
 
             # Act.
-            manager.apply_tag(existing_tags, new_tag)
+            with patch.object(manager, "set_git_remote") as mock_set_git_remote:
+                manager.apply_tag(existing_tags, new_tag)
 
             # Assert.
+                mock_set_git_remote.assert_called()
             mock_git_effector.set_config_item.assert_has_calls(
                 [
                     call("user.email", "semver@pagekey.io"),

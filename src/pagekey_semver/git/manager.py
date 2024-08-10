@@ -131,4 +131,3 @@ class GitManager:
             self._effector.set_config_item("remote.origin.url", new_remote)
         else:
             print("Warning: SEMVER_USER and/or SEMVER_TOKEN not defined. Consider defining them for push authorization.")
-
