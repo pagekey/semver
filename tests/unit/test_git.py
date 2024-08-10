@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, call, patch
 
 from pagekey_semver.config import DEFAULT_CONFIG
 from pagekey_semver.models import GitConfig, SemverConfig
-from pagekey_semver.git import GitManager
+from pagekey_semver.git import GitManager, LocalGitOptions
 from pagekey_semver.release import Tag
 
 
@@ -22,9 +22,12 @@ class TestGitManager:
             mock_result_email.stdout = "email@email.com\n"
             mock_result_name = MagicMock()
             mock_result_name.stdout = "me\n"
+            mock_result_remote = MagicMock()
+            mock_result_remote.stdout = "some_remote\n"
             mock_run.side_effect = [
                 mock_result_email,
                 mock_result_name,
+                mock_result_remote,
             ]
             manager = GitManager(DEFAULT_CONFIG)
 
@@ -47,9 +50,17 @@ class TestGitManager:
                     stderr=-1,
                     text=True,
                 ),
+                call(
+                    "git config remote.origin.url".split(),
+                    check=True,
+                    stdout=-1,
+                    stderr=-1,
+                    text=True,
+                ),
             ])
             assert result.email == "email@email.com"
             assert result.name == "me"
+            assert result.remote == "some_remote"
 
 
     class Test_get_git_tags:
@@ -126,7 +137,12 @@ class TestGitManager:
             new_tag = Tag("v4.0.0", 4, 0, 0)
             mock_system.return_value = 0  # exit code
             manager = GitManager(DEFAULT_CONFIG)
-            mock_get_existing_git_info = patch.object(manager, 'get_existing_git_info', return_value=GitConfig(name="original", email="original@email.com"))
+            local_git_options = LocalGitOptions(
+                name="original",
+                email="original@email.com",
+                remote="git@repo:user/project.git",
+            )
+            mock_get_existing_git_info = patch.object(manager, 'get_existing_git_info', return_value=local_git_options)
             mock_get_existing_git_info.start()
 
             # Act.
@@ -143,6 +159,7 @@ class TestGitManager:
                 f"git push origin HEAD",
                 f'git config user.email "original@email.com"',
                 f'git config user.name "original"',
+                f'git config remote.origin.url "git@repo:user/project.git"',
             ]
             mock_system.assert_has_calls([call(command) for command in commands])
             mock_get_existing_git_info.stop()

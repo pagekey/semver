@@ -1,10 +1,19 @@
 """Module for interacting with Git."""
 
+from dataclasses import dataclass
 import os
 import subprocess
 from typing import List, Optional
-from pagekey_semver.models import GitConfig, SemverConfig
+from pagekey_semver.models import SemverConfig
 from pagekey_semver.release import Commit, Tag
+
+
+@dataclass
+class LocalGitOptions:
+    """Any Git options that will be changes by this package."""
+    name: str
+    email: str
+    remote: str
 
 
 class GitManager:
@@ -14,11 +23,15 @@ class GitManager:
         """Initialize Git manager."""
         self._config = config
 
-    def get_existing_git_info(self) -> Optional[GitConfig]:
+    def get_existing_git_info(self) -> LocalGitOptions:
         """Determine exisitng Git config information.
         
+        This will allow the original configuration to be restored after run,
+        which is important to avoid messing up the user's configuration when
+        running locally.
+
         Returns:
-            GitConfig containing Git user.name and user.email.
+            LocalGitOptions representing any Git options that may get changed.
         
         Raises:
             CalledProcessError if there is an issue calling Git to check these values.
@@ -45,7 +58,18 @@ class GitManager:
             name = result.stdout.strip()
         except subprocess.CalledProcessError as e:
             name = ""
-        return GitConfig(name=name, email=email)
+        try:
+            result = subprocess.run(
+                ["git", "config", "remote.origin.url"],
+                check=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+            )
+            remote = result.stdout.strip()
+        except subprocess.CalledProcessError as e:
+            remote = ""
+        return LocalGitOptions(name=name, email=email, remote=remote)
 
     def get_git_tags(self) -> List[str]:
         """Get a list of all Git tags for the current repo.
@@ -117,6 +141,7 @@ class GitManager:
         if new_tag not in existing_tags:
             print(f"Tagging/pushing new tag: {new_tag}", flush=True)
             original_git_config = self.get_existing_git_info()
+            self.set_git_remote()
             commands = [
                 f'git config user.email "{self._config.git.email}"',
                 f'git config user.name "{self._config.git.name}"',
@@ -130,6 +155,8 @@ class GitManager:
                 commands.append(f'git config user.email "{original_git_config.email}"')
             if len(original_git_config.email) > 0:
                 commands.append(f'git config user.name "{original_git_config.name}"')
+            if len(original_git_config.email) > 0:
+                commands.append(f'git config remote.origin.url "{original_git_config.remote}"')
             for command in commands:
                 print("Running:", command, flush=True)
                 exit_code = os.system(command)
@@ -137,3 +164,7 @@ class GitManager:
                     raise ValueError(f"Command failed: {command}")
         else:
             print(f"Tag {new_tag} already exists - skipping tag/push.", flush=True)
+
+    def set_git_remote(self):
+        """."""
+        pass
