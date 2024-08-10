@@ -35,4 +35,4 @@ class YamlReplaceFile(ReplaceFile):
         
         # Write the new file contents back to the same file.
         with open(self.name, "w") as file_handle:
-            yaml.dump(contents)
+            yaml.dump(contents, file_handle)

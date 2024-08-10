@@ -34,4 +34,4 @@ class TomlReplaceFile(ReplaceFile):
         
         # Write the new file contents back to the same file.
         with open(self.name, "w") as file_handle:
-            toml.dump(contents)
+            toml.dump(contents, file_handle)

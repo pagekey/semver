@@ -34,4 +34,4 @@ class JsonReplaceFile(ReplaceFile):
         
         # Write the new file contents back to the same file.
         with open(self.name, "w") as file_handle:
-            json.dump(contents)
+            json.dump(contents, file_handle)
