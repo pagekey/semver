@@ -16,6 +16,12 @@ class LocalGitOptions:
     remote: str
 
 
+class GitQuerier:
+    pass
+
+class GitEffector:
+    pass
+
 class GitManager:
     """Class to handle all communications with Git executable."""
 
