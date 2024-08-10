@@ -5,7 +5,7 @@ from unittest.mock import MagicMock, call, patch
 import pytest
 
 from pagekey_semver.config import DEFAULT_CONFIG, SemverConfig
-from pagekey_semver.git.manager import GitManager, LocalGitOptions
+from pagekey_semver.git.manager import GitManager, GitManagerException, LocalGitOptions
 from pagekey_semver.models import GitConfig, Tag
 
 
@@ -177,12 +177,12 @@ class TestGitManager:
             [
                 # SSH with .git
                 (
-                    "git@github.com/pagekey/semver.git",
+                    "git@github.com:pagekey/semver.git",
                     "https://user:token@github.com/pagekey/semver.git",
                 ),
                 # SSH without .git
                 (
-                    "git@github.com/pagekey/semver",
+                    "git@github.com:pagekey/semver",
                     "https://user:token@github.com/pagekey/semver",
                 ),
                 # HTTPS with .git, no creds
@@ -222,3 +222,22 @@ class TestGitManager:
                 "remote.origin.url",
                 expected_remote,
             )
+
+        @patch(f"{MODULE_UNDER_TEST}.os")
+        def test_with_unknown_remote_format_raises_error(self, mock_os):
+            # Arrange.
+            mock_os.getenv.side_effect = [
+                "user",  # SEMVER_USER
+                "token", # SEMVER_TOKEN
+            ]
+            mock_git_querier = MagicMock()
+            mock_git_querier.get_config_item.return_value = "unknown-format://me:me@github.com/pagekey/semver.git"
+            mock_git_effector = MagicMock()
+            manager = GitManager(DEFAULT_CONFIG, mock_git_querier, mock_git_effector)
+
+            # Act.
+            with pytest.raises(GitManagerException):
+                manager.set_git_remote()
+
+            # Assert.
+            mock_git_effector.set_config_item.assert_not_called()

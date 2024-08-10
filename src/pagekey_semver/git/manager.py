@@ -1,6 +1,7 @@
 """Module for interacting with Git."""
 import os
 from dataclasses import dataclass
+import re
 from typing import List, Optional
 from pagekey_semver.git.effector import CommandGitEffector, GitEffector
 from pagekey_semver.git.querier import CommandGitQuerier, GitQuerier
@@ -15,6 +16,10 @@ class LocalGitOptions:
     name: str
     email: str
     remote: str
+
+
+class GitManagerException(Exception):
+    """Exception managing Git."""
 
 
 class GitManager:
@@ -109,7 +114,20 @@ class GitManager:
         token = os.getenv("SEMVER_TOKEN", "")
         if len(user) > 0 and len(token) > 0:
             existing_remote = self._querier.get_config_item("remote.origin.url")
-            new_remote = existing_remote.replace("git@", f"https://{user}:{token}@")
+            if existing_remote.startswith("git@"):
+                # Replace SSH url.
+                new_remote = existing_remote.replace(":", "/").replace("git@", f"https://{user}:{token}@")
+            elif existing_remote.startswith("https://"):
+                HTTPS_WITH_CREDENTIALS_PATTERN = r"https\://[^:@]+:[^:@]+@"
+                if re.search(HTTPS_WITH_CREDENTIALS_PATTERN, existing_remote):
+                    # Replace HTTPS with existing auth.
+                    new_remote = re.sub(HTTPS_WITH_CREDENTIALS_PATTERN, f"https://{user}:{token}@", existing_remote)
+                else:
+                    # Add auth to HTTPS without any credentials.
+                    new_remote = existing_remote.replace("https://", f"https://{user}:{token}@")
+            else:
+                raise GitManagerException(f"Unsupported remote URL format: {existing_remote}")
+            # Set the new remote.
             self._effector.set_config_item("remote.origin.url", new_remote)
         else:
             print("Warning: SEMVER_USER and/or SEMVER_TOKEN not defined. Consider defining them for push authorization.")
