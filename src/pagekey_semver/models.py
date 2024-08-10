@@ -32,6 +32,7 @@ class Prefix(BaseModel):
         """Convert ReleaseType to a string when serializing."""
         return type.value
 
+
 @dataclass
 class Commit:
     """Represents a Git commit."""

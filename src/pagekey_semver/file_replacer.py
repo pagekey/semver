@@ -5,16 +5,16 @@ import os
 import shutil
 import toml
 import yaml
-from pagekey_semver.replace_file import (
-    JsonReplaceFile,
+from pagekey_semver.replace_file.base import (
+    ReplaceFile,
     ReplaceFileType,
-    ReplaceFileUnion,
-    SedReplaceFile,
-    TomlReplaceFile,
-    YamlReplaceFile,
 )
 from pagekey_semver.config import SemverConfig
 from pagekey_semver.models import Tag
+from pagekey_semver.replace_file.json import JsonReplaceFile
+from pagekey_semver.replace_file.sed import SedReplaceFile
+from pagekey_semver.replace_file.toml import TomlReplaceFile
+from pagekey_semver.replace_file.yaml import YamlReplaceFile
 from pagekey_semver.util.update_dict import set_dict_value
 
 
@@ -36,7 +36,7 @@ class FileReplacer:
         for replace_file in self._config.replace_files:
             self.replace_one(replace_file)
 
-    def replace_one(self, file: ReplaceFileUnion) -> None:
+    def replace_one(self, file: ReplaceFile) -> None:
         """Given a ReplaceFile, perform replace based on its type."""
         if file.type == ReplaceFileType.JSON:
             self.replace_json(file)

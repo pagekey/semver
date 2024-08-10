@@ -28,11 +28,13 @@ class TestGitManager:
             result = manager.get_existing_git_info()
 
             # Assert.
-            mock_git_querier.get_config_item.assert_has_calls([
-                call("user.name"),
-                call("user.email"),
-                call("remote.origin.url"),
-            ])
+            mock_git_querier.get_config_item.assert_has_calls(
+                [
+                    call("user.name"),
+                    call("user.email"),
+                    call("remote.origin.url"),
+                ]
+            )
             assert result.email == "email@email.com"
             assert result.name == "me"
             assert result.remote == "some_remote"
@@ -104,13 +106,15 @@ class TestGitManager:
             manager.apply_tag(existing_tags, new_tag)
 
             # Assert.
-            mock_git_effector.set_config_item.assert_has_calls([
-                call("user.email", "semver@pagekey.io"),
-                call("user.name", "PageKey Semver"),
-                call("user.email", "original@email.com"),
-                call("user.name", "original"),
-                call("remote.origin.url", "git@repo:user/project.git"),
-            ])
+            mock_git_effector.set_config_item.assert_has_calls(
+                [
+                    call("user.email", "semver@pagekey.io"),
+                    call("user.name", "PageKey Semver"),
+                    call("user.email", "original@email.com"),
+                    call("user.name", "original"),
+                    call("remote.origin.url", "git@repo:user/project.git"),
+                ]
+            )
             mock_git_effector.add_all.assert_called_once()
             mock_git_effector.create_commit.assert_called_with(new_tag.name)
             mock_git_effector.create_tag.assert_called_with(new_tag.name)
@@ -140,7 +144,9 @@ class TestGitManager:
             manager.apply_tag(existing_tags, new_tag)
 
             # Assert.
-            mock_git_effector.set_config_item.assert_has_calls([
-                call("user.email", "some@email.com"),
-                call("user.name", "some name"),
-            ])
+            mock_git_effector.set_config_item.assert_has_calls(
+                [
+                    call("user.email", "some@email.com"),
+                    call("user.name", "some name"),
+                ]
+            )

@@ -53,7 +53,7 @@ class CommandGitQuerier(GitQuerier):
         return result.stdout.strip()
 
     def get_tag_names(self) -> List[str]:
-        result = self._runner.run(f"git tag")
+        result = self._runner.run("git tag")
         # Filter out empty strings and return.
         return [tag for tag in result.stdout.split() if len(tag) > 0]
 
@@ -72,8 +72,10 @@ class CommandGitQuerier(GitQuerier):
                 continue
             # Separate the hash from the commit message.
             fields = commit_log.split()
-            commits.append(Commit(
-                hash=fields[0],
-                message=' '.join(fields[1:]),
-            ))
+            commits.append(
+                Commit(
+                    hash=fields[0],
+                    message=" ".join(fields[1:]),
+                )
+            )
         return commits

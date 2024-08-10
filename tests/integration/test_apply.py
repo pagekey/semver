@@ -16,13 +16,10 @@ import yaml
 from pagekey_semver.cli import cli_entrypoint
 from pagekey_semver.config import SemverConfig
 from pagekey_semver.models import GitConfig, Prefix
-
-from pagekey_semver.replace_file import (
-    JsonReplaceFile,
-    SedReplaceFile,
-    TomlReplaceFile,
-    YamlReplaceFile,
-)
+from pagekey_semver.replace_file.json import JsonReplaceFile
+from pagekey_semver.replace_file.sed import SedReplaceFile
+from pagekey_semver.replace_file.toml import TomlReplaceFile
+from pagekey_semver.replace_file.yaml import YamlReplaceFile
 
 
 def setup_git_repo(tmp_path):

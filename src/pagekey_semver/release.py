@@ -1,6 +1,5 @@
 """Module for computing release logic. related to computing release."""
 
-from dataclasses import dataclass
 import re
 from typing import List, Optional
 

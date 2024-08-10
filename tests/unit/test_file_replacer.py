@@ -4,14 +4,12 @@ from unittest.mock import MagicMock, call, mock_open, patch
 
 import pytest
 from pagekey_semver.config import DEFAULT_CONFIG, DEFAULT_CONFIG_DICT, SemverConfig
-from pagekey_semver.replace_file import (
-    JsonReplaceFile,
-    SedReplaceFile,
-    TomlReplaceFile,
-    YamlReplaceFile,
-)
 from pagekey_semver.file_replacer import FileReplacer
 from pagekey_semver.models import Tag
+from pagekey_semver.replace_file.json import JsonReplaceFile
+from pagekey_semver.replace_file.sed import SedReplaceFile
+from pagekey_semver.replace_file.toml import TomlReplaceFile
+from pagekey_semver.replace_file.yaml import YamlReplaceFile
 
 
 MODULE_UNDER_TEST = "pagekey_semver.file_replacer"

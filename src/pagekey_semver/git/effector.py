@@ -46,9 +46,10 @@ class GitEffector(abc.ABC):
             ref: Which commit, branch, or tag to push.
         """
 
+
 class CommandGitEffector(GitEffector):
     """Use the Git CLI to make changes to Git."""
-    
+
     def __init__(self, command_runner: CommandRunner = SubprocessCommandRunner()):
         self._runner = command_runner
 

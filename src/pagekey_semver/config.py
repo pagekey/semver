@@ -2,15 +2,23 @@
 
 import os
 from pathlib import Path
-from typing import List
+from typing import List, Union
 
 from pydantic import BaseModel, Field
 import yaml
 
 from pagekey_semver.models import GitConfig, Prefix
-from pagekey_semver.replace_file import ReplaceFileUnion
+from pagekey_semver.replace_file.json import JsonReplaceFile
+from pagekey_semver.replace_file.sed import SedReplaceFile
+from pagekey_semver.replace_file.toml import TomlReplaceFile
+from pagekey_semver.replace_file.yaml import YamlReplaceFile
 from pagekey_semver.util.env_to_dict import convert_env_to_dict
 from pagekey_semver.util.update_dict import merge_dicts
+
+
+ReplaceFileUnion = Union[
+    JsonReplaceFile, SedReplaceFile, TomlReplaceFile, YamlReplaceFile
+]
 
 
 class SemverConfig(BaseModel):

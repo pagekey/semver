@@ -63,7 +63,6 @@ class TestCommandGitQuerier:
                 Commit(hash="123456", message="Initial commit"),
             ]
 
-
         def test_with_ref_returns_since_ref(self):
             # Arrange.
             runner = MagicMock()
@@ -78,7 +77,9 @@ class TestCommandGitQuerier:
             result = querier.get_commits("v1.0.0")
 
             # Assert.
-            runner.run.assert_called_with('git log --pretty="format:%H %s" v1.0.0..HEAD')
+            runner.run.assert_called_with(
+                'git log --pretty="format:%H %s" v1.0.0..HEAD'
+            )
             assert result == [
                 Commit(hash="abcdef", message="fix: Some commit"),
                 Commit(hash="123456", message="Initial commit"),

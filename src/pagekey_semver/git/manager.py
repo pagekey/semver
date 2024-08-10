@@ -20,8 +20,9 @@ class LocalGitOptions:
 class GitManager:
     """Class to handle all communications with Git executable."""
 
-    def __init__(self,
-        config: SemverConfig, 
+    def __init__(
+        self,
+        config: SemverConfig,
         querier: GitQuerier = CommandGitQuerier(),
         effector: GitEffector = CommandGitEffector(),
     ):
@@ -44,7 +45,7 @@ class GitManager:
             CalledProcessError if there is an issue calling Git to check these values.
         """
         return LocalGitOptions(
-            name=self._querier.get_config_item("user.name"), 
+            name=self._querier.get_config_item("user.name"),
             email=self._querier.get_config_item("user.email"),
             remote=self._querier.get_config_item("remote.origin.url"),
         )
@@ -57,7 +58,6 @@ class GitManager:
         """
         return self._querier.get_tag_names()
 
-
     def get_commit_messages_since(self, commit_hash: Optional[str]) -> List[Commit]:
         """Return a  list of commit messages since a commit ref.
 
@@ -69,7 +69,6 @@ class GitManager:
             All commit messages if `commit_hash` is None.
         """
         return self._querier.get_commits(commit_hash)
-
 
     def apply_tag(self, existing_tags: List[Tag], new_tag: Tag) -> None:
         """Commit, tag, and push.
@@ -98,7 +97,9 @@ class GitManager:
             if len(original_git_config.email) > 0:
                 self._effector.set_config_item("user.name", original_git_config.name)
             if len(original_git_config.email) > 0:
-                self._effector.set_config_item("remote.origin.url", original_git_config.remote)
+                self._effector.set_config_item(
+                    "remote.origin.url", original_git_config.remote
+                )
         else:
             print(f"Tag {new_tag} already exists - skipping tag/push.", flush=True)
 
