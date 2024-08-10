@@ -47,7 +47,6 @@ class SubprocessCommandRunner(CommandRunner):
     """Use the subprocess module to run commands."""
 
     def run(self, command: str, raise_on_command_fail: bool = True) -> CommandResult:
-        """Run the command on the system using subprocess."""
         # Invoke the command on the system.
         subprocess_result = subprocess.run(
             command,
