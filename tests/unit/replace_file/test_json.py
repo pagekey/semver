@@ -1,7 +1,6 @@
 """Module to test JSON file replacer."""
 
-import json
-from unittest.mock import MagicMock, call, mock_open, patch
+from unittest.mock import mock_open, patch
 from pagekey_semver.models import Tag
 from pagekey_semver.replace_file.json import JsonReplaceFile
 
