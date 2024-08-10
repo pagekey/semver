@@ -12,7 +12,7 @@ from pagekey_semver.util.update_dict import merge_dicts
 
 DEFAULT_CONFIG = SemverConfig(
     changelog_path="CHANGELOG.md",
-    changelog_writer="pagekey_semver.changelog:DefaultChangelogWriter",
+    changelog_writer="pagekey_semver.changelog_writer:DefaultChangelogWriter",
     format="v%M.%m.%p",
     git=GitConfig(
         name="PageKey Semver",
@@ -31,10 +31,10 @@ DEFAULT_CONFIG_DICT = DEFAULT_CONFIG.model_dump()
 
 def load_config(config_path: Path) -> SemverConfig:
     """Load config from default, file, environment (in that order).
-    
+
     Args:
         config_path: Path to config to parse.
-    
+
     Returns:
         SemverConfig representing merged config from defaults, config file, and environment settings.
     """

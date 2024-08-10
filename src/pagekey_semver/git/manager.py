@@ -11,6 +11,7 @@ from pagekey_semver.release import Commit, Tag
 @dataclass
 class LocalGitOptions:
     """Any Git options that will be changes by this package."""
+
     name: str
     email: str
     remote: str
@@ -19,8 +20,10 @@ class LocalGitOptions:
 class GitQuerier:
     pass
 
+
 class GitEffector:
     pass
+
 
 class GitManager:
     """Class to handle all communications with Git executable."""
@@ -31,14 +34,14 @@ class GitManager:
 
     def get_existing_git_info(self) -> LocalGitOptions:
         """Determine exisitng Git config information.
-        
+
         This will allow the original configuration to be restored after run,
         which is important to avoid messing up the user's configuration when
         running locally.
 
         Returns:
             LocalGitOptions representing any Git options that may get changed.
-        
+
         Raises:
             CalledProcessError if there is an issue calling Git to check these values.
         """
@@ -79,7 +82,7 @@ class GitManager:
 
     def get_git_tags(self) -> List[str]:
         """Get a list of all Git tags for the current repo.
-        
+
         Returns:
             List of each tag name as a string.
         """
@@ -100,10 +103,10 @@ class GitManager:
 
     def get_commit_messages_since(self, commit_hash: Optional[str]) -> List[Commit]:
         """Return a  list of commit messages since a commit ref.
-        
+
         Args:
             commit_hash: Reference to a commit to pull messages since, or None.
-        
+
         Returns:
             Commit messages since `commit_hash` if provided.
             All commit messages if `commit_hash` is None.
@@ -139,7 +142,7 @@ class GitManager:
 
         Changes Git username, email based on config
         and restores them to what they were previously when done.
-        
+
         Args:
             existing_tags: List of pre-existing Git tags in repo.
             new_tag: Tag to be added, if it does not already exist.
@@ -162,7 +165,9 @@ class GitManager:
             if len(original_git_config.email) > 0:
                 commands.append(f'git config user.name "{original_git_config.name}"')
             if len(original_git_config.email) > 0:
-                commands.append(f'git config remote.origin.url "{original_git_config.remote}"')
+                commands.append(
+                    f'git config remote.origin.url "{original_git_config.remote}"'
+                )
             for command in commands:
                 print("Running:", command, flush=True)
                 exit_code = os.system(command)

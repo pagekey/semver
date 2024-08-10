@@ -23,7 +23,7 @@ class FileReplacer:
 
     def __init__(self, config: SemverConfig, new_version: Tag) -> None:
         """Initialize file replacer.
-        
+
         Args:
             config: Settings for semver application.
             new_version: Latest version to replace file values with.
@@ -49,16 +49,18 @@ class FileReplacer:
 
     def replace_json(self, replace_file: JsonReplaceFile) -> None:
         """Replace a JSON file's key with the new_version's name.
-        
+
         Parses to JSON file into a dict, replaces the key,
         and dumps the result back into the original file.
         """
         with open(replace_file.name, "r") as replace_file_handle:
             contents = json.load(replace_file_handle)
 
-        new_version_str = replace_file.format.replace("%M", str(self._new_version.major)) \
-            .replace("%m", str(self._new_version.minor)) \
+        new_version_str = (
+            replace_file.format.replace("%M", str(self._new_version.major))
+            .replace("%m", str(self._new_version.minor))
             .replace("%p", str(self._new_version.patch))
+        )
         set_dict_value(contents, replace_file.key, new_version_str)
 
         with open(replace_file.name, "w") as replace_file_handle:
@@ -66,7 +68,7 @@ class FileReplacer:
 
     def replace_sed(self, replace_file: SedReplaceFile):
         """Use sed to make an arbitrary replacement based on new version.
-        
+
         Replaces %M/%m/%p with new_version's major/minor/patch,
         then calls sed with the provided `script`.
         """
@@ -86,16 +88,18 @@ class FileReplacer:
 
     def replace_toml(self, replace_file: TomlReplaceFile):
         """Replace a TOML file's key with the new_version's name.
-        
+
         Parses to TOML file into a dict, replaces the key,
         and dumps the result back into the original file.
         """
         with open(replace_file.name, "r") as replace_file_handle:
             contents = toml.load(replace_file_handle)
 
-        new_version_str = replace_file.format.replace("%M", str(self._new_version.major)) \
-            .replace("%m", str(self._new_version.minor)) \
+        new_version_str = (
+            replace_file.format.replace("%M", str(self._new_version.major))
+            .replace("%m", str(self._new_version.minor))
             .replace("%p", str(self._new_version.patch))
+        )
         set_dict_value(contents, replace_file.key, new_version_str)
 
         with open(replace_file.name, "w") as replace_file_handle:
@@ -103,16 +107,18 @@ class FileReplacer:
 
     def replace_yaml(self, replace_file: YamlReplaceFile):
         """Replace a YAML file's key with the new_version's name.
-        
+
         Parses to YAML file into a dict, replaces the key,
         and dumps the result back into the original file.
         """
         with open(replace_file.name, "r") as replace_file_handle:
             contents = yaml.safe_load(replace_file_handle)
 
-        new_version_str = replace_file.format.replace("%M", str(self._new_version.major)) \
-            .replace("%m", str(self._new_version.minor)) \
+        new_version_str = (
+            replace_file.format.replace("%M", str(self._new_version.major))
+            .replace("%m", str(self._new_version.minor))
             .replace("%p", str(self._new_version.patch))
+        )
         set_dict_value(contents, replace_file.key, new_version_str)
 
         with open(replace_file.name, "w") as replace_file_handle:

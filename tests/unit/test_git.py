@@ -12,9 +12,7 @@ MODULE_UNDER_TEST = "pagekey_semver.git.manager"
 
 
 class TestGitManager:
-
     class Test_get_existing_git_info:
-
         @patch("subprocess.run")
         def test_with_successful_call_returns_gitconfig(self, mock_run):
             # Arrange.
@@ -35,33 +33,34 @@ class TestGitManager:
             result = manager.get_existing_git_info()
 
             # Assert.
-            mock_run.assert_has_calls([
-                call(
-                    "git config user.email".split(),
-                    check=True,
-                    stdout=-1,
-                    stderr=-1,
-                    text=True,
-                ),
-                call(
-                    "git config user.name".split(),
-                    check=True,
-                    stdout=-1,
-                    stderr=-1,
-                    text=True,
-                ),
-                call(
-                    "git config remote.origin.url".split(),
-                    check=True,
-                    stdout=-1,
-                    stderr=-1,
-                    text=True,
-                ),
-            ])
+            mock_run.assert_has_calls(
+                [
+                    call(
+                        "git config user.email".split(),
+                        check=True,
+                        stdout=-1,
+                        stderr=-1,
+                        text=True,
+                    ),
+                    call(
+                        "git config user.name".split(),
+                        check=True,
+                        stdout=-1,
+                        stderr=-1,
+                        text=True,
+                    ),
+                    call(
+                        "git config remote.origin.url".split(),
+                        check=True,
+                        stdout=-1,
+                        stderr=-1,
+                        text=True,
+                    ),
+                ]
+            )
             assert result.email == "email@email.com"
             assert result.name == "me"
             assert result.remote == "some_remote"
-
 
     class Test_get_git_tags:
         @patch("subprocess.run")
@@ -142,7 +141,9 @@ class TestGitManager:
                 email="original@email.com",
                 remote="git@repo:user/project.git",
             )
-            mock_get_existing_git_info = patch.object(manager, 'get_existing_git_info', return_value=local_git_options)
+            mock_get_existing_git_info = patch.object(
+                manager, "get_existing_git_info", return_value=local_git_options
+            )
             mock_get_existing_git_info.start()
 
             # Act.
@@ -171,7 +172,7 @@ class TestGitManager:
             mock_system.return_value = 0  # exit code
             config = SemverConfig(
                 changelog_path="CHANGELOG.md",
-                changelog_writer="pagekey_semver.changelog:ChangelogWriter",
+                changelog_writer="pagekey_semver.changelog_writer:ChangelogWriter",
                 format="v%M.%m.%p",
                 git=GitConfig(
                     name="some name",

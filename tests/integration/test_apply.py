@@ -27,7 +27,7 @@ from pagekey_semver.models import (
 
 def setup_git_repo(tmp_path):
     """Initialize a git repo given a temp path.
-    
+
     Sets up remote and adds first commit.
 
     Helper method for the integration tests below.
@@ -58,7 +58,7 @@ def setup_git_repo(tmp_path):
 
 def test_default_config(tmp_path):
     """Test using with default options.
-    
+
     Use case:
 
     1. User creates a git repo.
@@ -95,7 +95,7 @@ def test_default_config(tmp_path):
 
 def test_custom_config_and_changelog_writer(tmp_path):
     """Test using custm config and custom changelog writer.
-    
+
     Use case:
 
     1. User creates a git repo.
@@ -109,7 +109,7 @@ def test_custom_config_and_changelog_writer(tmp_path):
     # Create custom changelog writer.
     with open("custom_changelog_writer.py", "w") as writer_src:
         writer_src.write("""
-from pagekey_semver.changelog import ChangelogWriter
+from pagekey_semver.changelog_writer import ChangelogWriter
 class CustomChangelogWriter(ChangelogWriter):
     def write_changelog(self, changelog_file, version, commits):
         changelog_file.write("Hello " + version.name + "\\n")
@@ -155,13 +155,19 @@ class CustomChangelogWriter(ChangelogWriter):
             Prefix(label="custom", type="major"),
         ],
         replace_files=[
-            JsonReplaceFile(name="replace_file.json", key="my.version", format="%M.%m.%p"),
+            JsonReplaceFile(
+                name="replace_file.json", key="my.version", format="%M.%m.%p"
+            ),
             SedReplaceFile(
                 name="replace_file.md",
                 script="s/^This/This is version %M.%m.%p of the project./g",
             ),
-            TomlReplaceFile(name="replace_file.toml", key="my_version", format="%M.%m.%p"),
-            YamlReplaceFile(name="replace_file.yaml", key="my_version", format="%M.%m.%p"),
+            TomlReplaceFile(
+                name="replace_file.toml", key="my_version", format="%M.%m.%p"
+            ),
+            YamlReplaceFile(
+                name="replace_file.yaml", key="my_version", format="%M.%m.%p"
+            ),
         ],
     )
 
@@ -243,7 +249,7 @@ class CustomChangelogWriter(ChangelogWriter):
 
 def test_env_overrides(tmp_path):
     """Test using environment variable overrides.
-    
+
     Use case:
 
     1. User creates a git repo.

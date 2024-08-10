@@ -42,11 +42,11 @@ RELEASE_TYPE_PRIORITIES = {
 
 def release_greater(a: ReleaseType, b: ReleaseType) -> bool:
     """Determine which of the two release types is greater in priority.
-    
+
     Args:
         a: The first release type to compare.
         b: The second release type to compare.
-    
+
     Returns:
         True if release b is greater than release a.
         False otherwise.
@@ -61,7 +61,7 @@ class SemverRelease:
 
     def __init__(self, config: SemverConfig):
         """Initialize SemverRelease object.
-        
+
         Args:
             config: The SemverConfig to dictate behavior.
         """
@@ -69,10 +69,10 @@ class SemverRelease:
 
     def compute_release_type(self, commits: List[Commit]) -> ReleaseType:
         """Compute release type (major/minor/patch) based on commits.
-        
+
         Args:
             commits: List of commits since last tag.
-        
+
         Returns:
             ReleaseType that should be generated based on these commits.
         """
@@ -87,13 +87,13 @@ class SemverRelease:
 
     def get_matching_tags(self, tags: List[str]) -> List[Tag]:
         """Parse git tags and return Tag objects.
-        
+
         Only Git tags that match the `tag_format` in the config
         will be returned.
 
         Args:
             tags: Full list of Git tags for current repo.
-        
+
         Returns:
             List of relevant tags, parsed into Tag objects.
         """
@@ -119,10 +119,10 @@ class SemverRelease:
 
     def get_biggest_tag(self, tags: List[str]) -> Optional[Tag]:
         """Among existing tags, determine which is newest.
-        
+
         Args:
             tags: Full list of Git tags.
-        
+
         Returns:
             Largest tag if at least one tag was provided.
             None if the `tags` arg was an empty list.
@@ -143,15 +143,13 @@ class SemverRelease:
                 max_tag = tag
         return max_tag
 
-    def compute_next_version(
-        self, release_type: ReleaseType, tags: List[Tag]
-    ) -> Tag:
+    def compute_next_version(self, release_type: ReleaseType, tags: List[Tag]) -> Tag:
         """Given the release type and tags, determine new tag (if any).
-        
+
         Args:
             release_type: ReleaseType for next version.
             tags: List of Git tags in repo.
-        
+
         Returns:
             Tag representing new version if new release needed.
             Biggest tag among existing tags if no need release needed.

@@ -1,4 +1,5 @@
 """Module for running commands on the system."""
+
 import abc
 import subprocess
 from dataclasses import dataclass
@@ -26,15 +27,15 @@ class CommandRunnerException(Exception):
 
 class CommandRunner(abc.ABC):
     """Run commands on the system and return relevant info."""
-    
+
     @abc.abstractmethod
     def run(self, command: str, raise_on_command_fail: bool = True) -> CommandResult:
         """Run the command on the system.
-        
+
         Args:
             command: The command to run.
             raise_on_command_fail: Whether to raise an error if the command is not successful.
-        
+
         Raises:
             CommandFailedException when the command returns a nonzero exit code and raise_on_command_fail is True.
         """
@@ -42,7 +43,7 @@ class CommandRunner(abc.ABC):
 
 class SubprocessCommandRunner(CommandRunner):
     """Use the subprocess module to run commands."""
-    
+
     def run(self, command: str, raise_on_command_fail: bool = True) -> CommandResult:
         """Run the command on the system using subprocess."""
         # Invoke the command on the system.

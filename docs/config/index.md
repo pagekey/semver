@@ -40,7 +40,7 @@ The default changelog writer is quite simple - for each version, it adds a level
 If you don't like this format, override the default changelog writer with your own class. You can do this by adding a `changelog_writer.py` and populate it with the following:
 
 ```python
-from pagekey_semver.changelog import ChangelogWriter
+from pagekey_semver.changelog_writer import ChangelogWriter
 
 class CustomChangelogWriter(ChangelogWriter):
     def write_changelog(self, changelog_file, version, commits):

@@ -11,7 +11,7 @@ def dynamic_import(path: str) -> Any:
 
     Note that this function automatically adds the current directory to `sys.path`,
     which allows `.py` files in the current directory to be imported.
-    
+
     Args:
         path: A string representing a module import.
             A colon is used to separate the module from the object with it being imported.

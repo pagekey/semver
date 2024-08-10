@@ -1,4 +1,5 @@
 """Module for writing changelogs."""
+
 from __future__ import annotations
 import abc
 import os
@@ -15,15 +16,15 @@ class ChangelogWriter(abc.ABC):
     @staticmethod
     def from_config(config: SemverConfig) -> ChangelogWriter:
         """Create a ChangelogWriter from a config file.
-        
+
         Uses the `changelog_writer` string to dynamically import a Changelog class for use.
 
         Args:
             Config that defines where the ChangelogWriter class is.
-        
+
         Returns:
             ChangelogWriter instance with imported class, initialized with config.
-        
+
         Raises:
             ImportError, AttributeError if the import string is not valid.
         """
@@ -32,7 +33,7 @@ class ChangelogWriter(abc.ABC):
 
     def __init__(self, config: SemverConfig):
         """Initialize the writer.
-        
+
         Args:
             config: Semver application config.
         """
@@ -40,7 +41,7 @@ class ChangelogWriter(abc.ABC):
 
     def update_changelog(self, version: Tag, commits: List[Commit]) -> None:
         """Update changelog.
-        
+
         This is the method called by the CLI to perform the update.
 
         It contains a few additional methods to simplify the implementation
@@ -57,10 +58,10 @@ class ChangelogWriter(abc.ABC):
 
     def _filter_commits(self, commits: List[Commit]) -> List[Commit]:
         """Filter out any commits that do not start with a valid prefix.
-        
+
         Args:
             commits: Full list of commits since last release.
-        
+
         Returns:
             List of commits that start with a prefix defined in config.
         """
@@ -91,7 +92,7 @@ class ChangelogWriter(abc.ABC):
 
 class DefaultChangelogWriter(ChangelogWriter):
     """Default concrete implementation of ChangelogWriter.
-    
+
     Writes a simple CHANGELOG file with a level-2 header for each release
     and a bullet containing message and commit hash for each commit in the release.
     """

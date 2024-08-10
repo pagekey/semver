@@ -13,7 +13,7 @@ def convert_env_to_dict(variables: Dict[str, str]) -> Dict:
     re-hydrates them into a valid config dict.
 
     To learn more about the expected inputs and outputs, check out the tests for this function or the docs.
-    
+
     Args:
         variables: Dict with keys/values that represent environment variables.
 

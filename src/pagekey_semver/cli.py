@@ -4,7 +4,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from pagekey_semver.changelog import ChangelogWriter
+from pagekey_semver.changelog_writer import ChangelogWriter
 from pagekey_semver.file_replacer import FileReplacer
 from pagekey_semver.git.manager import GitManager
 from pagekey_semver.release import SemverRelease, Tag
@@ -13,13 +13,15 @@ from pagekey_semver.config import load_config
 
 def cli_entrypoint(args=sys.argv[1:]):
     """Runs pagekey-semver when called from the command-line.
-    
+
     Args:
         args: List of command-line args passed by user, or fake args for testing purposes.
     """
     parser = argparse.ArgumentParser(description="PageKey Semver")
     subparsers = parser.add_subparsers(title="Commands", dest="command")
-    subparsers.add_parser("plan", help="Compute which version would be created. (Dry-run)")
+    subparsers.add_parser(
+        "plan", help="Compute which version would be created. (Dry-run)"
+    )
     subparsers.add_parser("apply", help="Compute version, then commit, tag, and push.")
     parsed_args = parser.parse_args(args)
 
