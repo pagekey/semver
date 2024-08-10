@@ -116,7 +116,7 @@ class TestFileReplacer:
     class Test_replace_json:
         @patch(f"{MODULE_UNDER_TEST}.json")
         @patch("builtins.open", new_callable=mock_open)
-        def test_with_top_level_key_replaces(self, mock_builtin_open, mock_json):
+        def test_with_top_level_key_replaces(self, mock_builtins_open, mock_json):
             # Arrange.
             config = DEFAULT_CONFIG
             new_version = Tag("v2.0.0", 2, 0, 0)
@@ -133,7 +133,7 @@ class TestFileReplacer:
             replacer.replace_json(replace_file)
 
             # Assert.
-            mock_builtin_open.assert_called_with("file.json", "w")
+            mock_builtins_open.assert_called_with("file.json", "w")
             # Assert first arg of first call is this:
             assert mock_json.dump.call_args_list[0][0][0] == {
                 "version": "2.0.0",
@@ -142,7 +142,7 @@ class TestFileReplacer:
 
         @patch(f"{MODULE_UNDER_TEST}.json")
         @patch("builtins.open", new_callable=mock_open)
-        def test_with_nested_key_replaces(self, mock_builtin_open, mock_json):
+        def test_with_nested_key_replaces(self, mock_builtins_open, mock_json):
             # Arrange.
             config = DEFAULT_CONFIG
             new_version = Tag("v2.0.0", 2, 0, 0)
@@ -163,7 +163,7 @@ class TestFileReplacer:
             replacer.replace_json(replace_file)
 
             # Assert.
-            mock_builtin_open.assert_called_with("file.json", "w")
+            mock_builtins_open.assert_called_with("file.json", "w")
             # Assert first arg of first call is this:
             assert mock_json.dump.call_args_list[0][0][0] == {
                 "project": {
@@ -242,7 +242,7 @@ class TestFileReplacer:
     class Test_replace_toml:
         @patch(f"{MODULE_UNDER_TEST}.toml")
         @patch("builtins.open", new_callable=mock_open)
-        def test_with_top_level_key_replaces(self, mock_builtin_open, mock_toml):
+        def test_with_top_level_key_replaces(self, mock_builtins_open, mock_toml):
             # Arrange.
             config = DEFAULT_CONFIG
             new_version = Tag("v2.0.0", 2, 0, 0)
@@ -259,7 +259,7 @@ class TestFileReplacer:
             replacer.replace_toml(replace_file)
 
             # Assert.
-            mock_builtin_open.assert_called_with("file.toml", "w")
+            mock_builtins_open.assert_called_with("file.toml", "w")
             # Assert first arg of first call is this:
             assert mock_toml.dump.call_args_list[0][0][0] == {
                 "version": "2.0.0",
@@ -268,7 +268,7 @@ class TestFileReplacer:
 
         @patch(f"{MODULE_UNDER_TEST}.toml")
         @patch("builtins.open", new_callable=mock_open)
-        def test_with_nested_key_replaces(self, mock_builtin_open, mock_toml):
+        def test_with_nested_key_replaces(self, mock_builtins_open, mock_toml):
             # Arrange.
             config = DEFAULT_CONFIG
             new_version = Tag("v2.0.0", 2, 0, 0)
@@ -289,7 +289,7 @@ class TestFileReplacer:
             replacer.replace_toml(replace_file)
 
             # Assert.
-            mock_builtin_open.assert_called_with("file.toml", "w")
+            mock_builtins_open.assert_called_with("file.toml", "w")
             # Assert first arg of first call is this:
             assert mock_toml.dump.call_args_list[0][0][0] == {
                 "project": {
@@ -303,7 +303,7 @@ class TestFileReplacer:
     class Test_replace_yaml:
         @patch(f"{MODULE_UNDER_TEST}.yaml")
         @patch("builtins.open", new_callable=mock_open)
-        def test_with_top_level_key_replaces(self, mock_builtin_open, mock_yaml):
+        def test_with_top_level_key_replaces(self, mock_builtins_open, mock_yaml):
             # Arrange.
             config = DEFAULT_CONFIG
             new_version = Tag("v2.0.0", 2, 0, 0)
@@ -320,7 +320,7 @@ class TestFileReplacer:
             replacer.replace_yaml(replace_file)
 
             # Assert.
-            mock_builtin_open.assert_called_with("file.yaml", "w")
+            mock_builtins_open.assert_called_with("file.yaml", "w")
             # Assert first arg of first call is this:
             assert mock_yaml.dump.call_args_list[0][0][0] == {
                 "version": "2.0.0",
@@ -329,7 +329,7 @@ class TestFileReplacer:
 
         @patch(f"{MODULE_UNDER_TEST}.yaml")
         @patch("builtins.open", new_callable=mock_open)
-        def test_with_nested_key_replaces(self, mock_builtin_open, mock_yaml):
+        def test_with_nested_key_replaces(self, mock_builtins_open, mock_yaml):
             # Arrange.
             config = DEFAULT_CONFIG
             new_version = Tag("v2.0.0", 2, 0, 0)
@@ -350,7 +350,7 @@ class TestFileReplacer:
             replacer.replace_yaml(replace_file)
 
             # Assert.
-            mock_builtin_open.assert_called_with("file.yaml", "w")
+            mock_builtins_open.assert_called_with("file.yaml", "w")
             # Assert first arg of first call is this:
             assert mock_yaml.dump.call_args_list[0][0][0] == {
                 "project": {

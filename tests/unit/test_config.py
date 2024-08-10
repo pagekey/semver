@@ -30,12 +30,12 @@ class Test_load_config:
 
     @patch("builtins.open", new_callable=mock_open)
     @patch(f"{MODULE_UNDER_TEST}.os")
-    def test_with_config_file_returns_merged_config(self, mock_os, mock_builtin_open):
+    def test_with_config_file_returns_merged_config(self, mock_os, mock_builtins_open):
         # Arrange.
         mock_os.environ = {}
         config_path = MagicMock()
         config_path.is_file.return_value = True
-        mock_builtin_open.return_value.read.return_value = yaml.safe_dump(
+        mock_builtins_open.return_value.read.return_value = yaml.safe_dump(
             {
                 "prefixes": [
                     {
@@ -68,11 +68,11 @@ class Test_load_config:
         assert config.prefixes[0] == Prefix(label="fix", type="patch")
 
     @patch("builtins.open", new_callable=mock_open)
-    def test_with_git_user_override_parses_config(self, mock_builtin_open):
+    def test_with_git_user_override_parses_config(self, mock_builtins_open):
         # Arrange.
         mock_path = MagicMock()
         mock_path.is_file.return_value = True
-        mock_file = mock_builtin_open.return_value
+        mock_file = mock_builtins_open.return_value
         mock_file.read.return_value = yaml.safe_dump(
             {
                 "git": {
@@ -90,11 +90,11 @@ class Test_load_config:
         assert config.git.email == "steve@pagekey.io"
 
     @patch("builtins.open", new_callable=mock_open)
-    def test_with_tag_format_parses_config(self, mock_builtin_open):
+    def test_with_tag_format_parses_config(self, mock_builtins_open):
         # Arrange.
         mock_path = MagicMock()
         mock_path.is_file.return_value = True
-        mock_file = mock_builtin_open.return_value
+        mock_file = mock_builtins_open.return_value
         mock_file.read.return_value = yaml.safe_dump(
             {
                 "format": "ver_%M-%m-%p",
@@ -108,11 +108,11 @@ class Test_load_config:
         assert config.format == "ver_%M-%m-%p"
 
     @patch("builtins.open", new_callable=mock_open)
-    def test_with_changelog_path_parses_config(self, mock_builtin_open):
+    def test_with_changelog_path_parses_config(self, mock_builtins_open):
         # Arrange.
         mock_path = MagicMock()
         mock_path.is_file.return_value = True
-        mock_file = mock_builtin_open.return_value
+        mock_file = mock_builtins_open.return_value
         mock_file.read.return_value = yaml.safe_dump(
             {
                 "changelog_path": "docs/CHANGELOG.md",
@@ -126,11 +126,11 @@ class Test_load_config:
         assert config.changelog_path == "docs/CHANGELOG.md"
 
     @patch("builtins.open", new_callable=mock_open)
-    def test_with_changelog_writer_parses_config(self, mock_builtin_open):
+    def test_with_changelog_writer_parses_config(self, mock_builtins_open):
         # Arrange.
         mock_path = MagicMock()
         mock_path.is_file.return_value = True
-        mock_file = mock_builtin_open.return_value
+        mock_file = mock_builtins_open.return_value
         mock_file.read.return_value = yaml.safe_dump(
             {
                 "changelog_writer": "my_package:MyWriter",
@@ -144,11 +144,11 @@ class Test_load_config:
         assert config.changelog_writer == "my_package:MyWriter"
 
     @patch("builtins.open", new_callable=mock_open)
-    def test_with_replace_files_parses_config(self, mock_builtin_open):
+    def test_with_replace_files_parses_config(self, mock_builtins_open):
         # Arrange.
         mock_path = MagicMock()
         mock_path.is_file.return_value = True
-        mock_file = mock_builtin_open.return_value
+        mock_file = mock_builtins_open.return_value
         mock_file.read.return_value = yaml.safe_dump(
             {
                 "replace_files": [

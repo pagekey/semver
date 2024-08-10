@@ -1,7 +1,9 @@
+import json
 from typing import Literal
 
 from pagekey_semver.models import Tag
 from pagekey_semver.replace_file.base import ReplaceFile, ReplaceFileType
+from pagekey_semver.util.update_dict import set_dict_value
 
 
 class JsonReplaceFile(ReplaceFile):
@@ -17,3 +19,19 @@ class JsonReplaceFile(ReplaceFile):
         Args:
             tag: Version tag to replace key with.
         """
+        # Read the file.
+        with open(self.name, "r") as file_handle:
+            contents = json.load(file_handle)
+        
+        # Compute the value based on format and tag.
+        new_version_str = (
+            self.format.replace("%M", str(tag.major))
+            .replace("%m", str(tag.minor))
+            .replace("%p", str(tag.patch))
+        )
+        # Replace the key with the computed value.
+        set_dict_value(contents, self.key, new_version_str)
+        
+        # Write the new file contents back to the same file.
+        with open(self.name, "w") as file_handle:
+            json.dump(contents)
