@@ -15,3 +15,7 @@
 
 - feat: Add "format" to json, toml, yaml replacers (66b1c76e2f0c0ef3375d892f54abd6cc963880af)
 
+## v0.3.1
+
+- fix: Update README with details on SEMVER_ creds (0831295f167e20564956477f463f90bc57566e45)
+
