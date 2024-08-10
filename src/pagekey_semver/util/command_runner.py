@@ -57,8 +57,8 @@ class SubprocessCommandRunner(CommandRunner):
         # Create the result object.
         command_result = CommandResult(
             exit_code=subprocess_result.returncode,
-            stdout=subprocess_result.stdout,
-            stderr=subprocess_result.stderr,
+            stdout=subprocess_result.stdout.decode(),
+            stderr=subprocess_result.stderr.decode(),
         )
         # Check exit code and fail if appropriate.
         if subprocess_result.returncode != 0 and raise_on_command_fail:

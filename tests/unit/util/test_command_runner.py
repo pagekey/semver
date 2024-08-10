@@ -22,8 +22,8 @@ class TestSubprocessCommandRunner:
             mock_subp.run.return_value = CompletedProcess(
                 args="echo hello world",
                 returncode=0,
-                stdout="hello world\n",
-                stderr="none\n",
+                stdout=b"hello world\n",
+                stderr=b"none\n",
             )
 
             # Act.
@@ -42,8 +42,8 @@ class TestSubprocessCommandRunner:
             mock_subp.run.return_value = CompletedProcess(
                 args="echo hello world",
                 returncode=1,
-                stdout="hello world\n",
-                stderr="none\n",
+                stdout=b"hello world\n",
+                stderr=b"none\n",
             )
 
             # Act, Assert.
@@ -59,8 +59,8 @@ class TestSubprocessCommandRunner:
             mock_subp.run.return_value = CompletedProcess(
                 args="echo hello world",
                 returncode=1,
-                stdout="hello world\n",
-                stderr="none\n",
+                stdout=b"hello world\n",
+                stderr=b"none\n",
             )
 
             # Act, Assert.

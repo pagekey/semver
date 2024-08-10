@@ -4,6 +4,8 @@ from dataclasses import dataclass
 import os
 import subprocess
 from typing import List, Optional
+from pagekey_semver.git.effector import CommandGitEffector, GitEffector
+from pagekey_semver.git.querier import CommandGitQuerier, GitQuerier
 from pagekey_semver.models import SemverConfig, Commit, Tag
 
 
@@ -16,16 +18,18 @@ class LocalGitOptions:
     remote: str
 
 
-class GitEffector:
-    pass
-
-
 class GitManager:
     """Class to handle all communications with Git executable."""
 
-    def __init__(self, config: SemverConfig):
+    def __init__(self,
+        config: SemverConfig, 
+        querier: GitQuerier = CommandGitQuerier(),
+        effector: GitEffector = CommandGitEffector(),
+    ):
         """Initialize Git manager."""
         self._config = config
+        self._querier = querier
+        self._effector = effector
 
     def get_existing_git_info(self) -> LocalGitOptions:
         """Determine exisitng Git config information.
@@ -40,40 +44,11 @@ class GitManager:
         Raises:
             CalledProcessError if there is an issue calling Git to check these values.
         """
-        try:
-            result = subprocess.run(
-                ["git", "config", "user.email"],
-                check=True,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-            )
-            email = result.stdout.strip()
-        except subprocess.CalledProcessError as e:
-            email = ""
-        try:
-            result = subprocess.run(
-                ["git", "config", "user.name"],
-                check=True,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-            )
-            name = result.stdout.strip()
-        except subprocess.CalledProcessError as e:
-            name = ""
-        try:
-            result = subprocess.run(
-                ["git", "config", "remote.origin.url"],
-                check=True,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-            )
-            remote = result.stdout.strip()
-        except subprocess.CalledProcessError as e:
-            remote = ""
-        return LocalGitOptions(name=name, email=email, remote=remote)
+        return LocalGitOptions(
+            name=self._querier.get_config_item("user.name"), 
+            email=self._querier.get_config_item("user.email"),
+            remote=self._querier.get_config_item("remote.origin.url"),
+        )
 
     def get_git_tags(self) -> List[str]:
         """Get a list of all Git tags for the current repo.
@@ -81,20 +56,8 @@ class GitManager:
         Returns:
             List of each tag name as a string.
         """
-        try:
-            result = subprocess.run(
-                ["git", "tag"],
-                check=True,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-            )
-            # Split the output into lines (each tag is on a new line)
-            tags = result.stdout.strip().split("\n")
-            return tags
-        except subprocess.CalledProcessError as e:
-            print(f"Error getting git tags: {e.stderr}", flush=True)
-            return []
+        return self._querier.get_tag_names()
+
 
     def get_commit_messages_since(self, commit_hash: Optional[str]) -> List[Commit]:
         """Return a  list of commit messages since a commit ref.
@@ -106,31 +69,8 @@ class GitManager:
             Commit messages since `commit_hash` if provided.
             All commit messages if `commit_hash` is None.
         """
-        try:
-            if commit_hash is None:
-                args = ["git", "log", "--pretty=format:%H %s"]
-            else:
-                args = ["git", "log", f"{commit_hash}..HEAD", "--pretty=format:%H %s"]
-            result = subprocess.run(
-                args,
-                check=True,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-            )
-            # Split the output into lines (each line is a commit message)
-            commit_lines = result.stdout.strip().split("\n")
-            commits = []
-            for line in commit_lines:
-                if len(line) < 1:
-                    continue
-                hash = line.split()[0]
-                message = line.replace(hash + " ", "")
-                commits.append(Commit(hash, message))
-            return commits
-        except subprocess.CalledProcessError as e:
-            print(f"Error getting commit messages: {e.stderr}", flush=True)
-            return []
+        return self._querier.get_commits(commit_hash)
+
 
     def apply_tag(self, existing_tags: List[Tag], new_tag: Tag) -> None:
         """Commit, tag, and push.
@@ -146,28 +86,20 @@ class GitManager:
             print(f"Tagging/pushing new tag: {new_tag}", flush=True)
             original_git_config = self.get_existing_git_info()
             self.set_git_remote()
-            commands = [
-                f'git config user.email "{self._config.git.email}"',
-                f'git config user.name "{self._config.git.name}"',
-                f"git add --all",
-                f"git commit -m '{new_tag.name}'",
-                f"git tag {new_tag.name}",
-                f"git push origin {new_tag.name}",
-                f"git push origin HEAD",
-            ]
+            self._effector.set_config_item("user.email", self._config.git.email)
+            self._effector.set_config_item("user.name", self._config.git.name)
+            self._effector.add_all()
+            self._effector.create_commit(new_tag.name)
+            self._effector.create_tag(new_tag.name)
+            self._effector.push("origin", new_tag.name)
+            self._effector.push("origin", "HEAD")
+            # Restore original Git config
             if len(original_git_config.email) > 0:
-                commands.append(f'git config user.email "{original_git_config.email}"')
+                self._effector.set_config_item("user.email", original_git_config.email)
             if len(original_git_config.email) > 0:
-                commands.append(f'git config user.name "{original_git_config.name}"')
+                self._effector.set_config_item("user.name", original_git_config.name)
             if len(original_git_config.email) > 0:
-                commands.append(
-                    f'git config remote.origin.url "{original_git_config.remote}"'
-                )
-            for command in commands:
-                print("Running:", command, flush=True)
-                exit_code = os.system(command)
-                if exit_code != 0:
-                    raise ValueError(f"Command failed: {command}")
+                self._effector.set_config_item("remote.origin.url", original_git_config.remote)
         else:
             print(f"Tag {new_tag} already exists - skipping tag/push.", flush=True)
 
