@@ -2,6 +2,8 @@
 
 from unittest.mock import MagicMock, call, patch
 
+import pytest
+
 from pagekey_semver.config import DEFAULT_CONFIG, SemverConfig
 from pagekey_semver.git.manager import GitManager, LocalGitOptions
 from pagekey_semver.models import GitConfig, Tag
@@ -149,4 +151,74 @@ class TestGitManager:
                     call("user.email", "some@email.com"),
                     call("user.name", "some name"),
                 ]
+            )
+
+    class Test_set_git_remote:
+
+        @patch(f"{MODULE_UNDER_TEST}.os")
+        def test_with_no_creds_changes_nothing(self, mock_os):
+            # Arrange.
+            mock_os.getenv.side_effect = [
+                "",  # SEMVER_USER
+                "",  # SEMVER_TOKEN
+            ]
+            mock_git_querier = MagicMock()
+            mock_git_effector = MagicMock()
+            manager = GitManager(DEFAULT_CONFIG, mock_git_querier, mock_git_effector)
+
+            # Act.
+            manager.set_git_remote()
+
+            # Assert.
+            mock_git_effector.set_config_item.assert_not_called()
+
+        @pytest.mark.parametrize(
+            "original_remote, expected_remote",
+            [
+                # SSH with .git
+                (
+                    "git@github.com/pagekey/semver.git",
+                    "https://user:token@github.com/pagekey/semver.git",
+                ),
+                # SSH without .git
+                (
+                    "git@github.com/pagekey/semver",
+                    "https://user:token@github.com/pagekey/semver",
+                ),
+                # HTTPS with .git, no creds
+                (
+                    "https://github.com/pagekey/semver.git",
+                    "https://user:token@github.com/pagekey/semver.git",
+                ),
+                # HTTPS without .git
+                (
+                    "https://github.com/pagekey/semver",
+                    "https://user:token@github.com/pagekey/semver",
+                ),
+                # HTTPS with existing creds
+                (
+                    "https://me:me@github.com/pagekey/semver.git",
+                    "https://user:token@github.com/pagekey/semver.git",
+                ),
+            ],
+        )
+        @patch(f"{MODULE_UNDER_TEST}.os")
+        def test_with_creds_sets_https_remote(self, mock_os, original_remote, expected_remote):
+            # Arrange.
+            mock_os.getenv.side_effect = [
+                "user",  # SEMVER_USER
+                "token", # SEMVER_TOKEN
+            ]
+            mock_git_querier = MagicMock()
+            mock_git_querier.get_config_item.return_value = original_remote
+            mock_git_effector = MagicMock()
+            manager = GitManager(DEFAULT_CONFIG, mock_git_querier, mock_git_effector)
+
+            # Act.
+            manager.set_git_remote()
+
+            # Assert.
+            mock_git_effector.set_config_item.assert_called_with(
+                "remote.origin.url",
+                expected_remote,
             )

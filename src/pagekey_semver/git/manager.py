@@ -1,5 +1,5 @@
 """Module for interacting with Git."""
-
+import os
 from dataclasses import dataclass
 from typing import List, Optional
 from pagekey_semver.git.effector import CommandGitEffector, GitEffector
@@ -103,6 +103,14 @@ class GitManager:
         else:
             print(f"Tag {new_tag} already exists - skipping tag/push.", flush=True)
 
-    def set_git_remote(self):
-        """."""
-        pass
+    def set_git_remote(self) -> None:
+        """Set push remote based on SEMVER_USER and SEMVER_TOKEN env vars."""
+        user = os.getenv("SEMVER_USER", "")
+        token = os.getenv("SEMVER_TOKEN", "")
+        if len(user) > 0 and len(token) > 0:
+            existing_remote = self._querier.get_config_item("remote.origin.url")
+            new_remote = existing_remote.replace("git@", f"https://{user}:{token}@")
+            self._effector.set_config_item("remote.origin.url", new_remote)
+        else:
+            print("Warning: SEMVER_USER and/or SEMVER_TOKEN not defined. Consider defining them for push authorization.")
+
