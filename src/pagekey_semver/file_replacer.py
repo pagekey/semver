@@ -14,7 +14,7 @@ from pagekey_semver.models import (
     TomlReplaceFile,
     YamlReplaceFile,
 )
-from pagekey_semver.release import Tag
+from pagekey_semver.models import Tag
 from pagekey_semver.util.update_dict import set_dict_value
 
 

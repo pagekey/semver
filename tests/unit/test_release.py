@@ -4,12 +4,10 @@ import pytest
 from pagekey_semver.config import DEFAULT_CONFIG, DEFAULT_CONFIG_DICT
 from pagekey_semver.models import SemverConfig
 from pagekey_semver.release import (
-    Commit,
-    ReleaseType,
     SemverRelease,
-    Tag,
     release_greater,
 )
+from pagekey_semver.models import Commit, Tag, ReleaseType
 
 
 @pytest.mark.parametrize(

@@ -12,7 +12,7 @@ from pagekey_semver.models import (
     YamlReplaceFile,
 )
 from pagekey_semver.file_replacer import FileReplacer
-from pagekey_semver.release import Tag
+from pagekey_semver.models import Tag
 
 
 MODULE_UNDER_TEST = "pagekey_semver.file_replacer"

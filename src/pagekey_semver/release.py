@@ -4,29 +4,7 @@ from dataclasses import dataclass
 import re
 from typing import List, Optional
 
-from pagekey_semver.models import ReleaseType, SemverConfig
-
-
-@dataclass
-class Commit:
-    """Represents a Git commit."""
-
-    hash: str
-    message: str
-
-
-@dataclass
-class Tag:
-    """Represents a Semver logical tag."""
-
-    # The formatted tag name as it appears in Git.
-    name: str
-    # The major part of the version.
-    major: int
-    # The minor part of the version.
-    minor: int
-    # The patch part of the version.
-    patch: int
+from pagekey_semver.models import Commit, ReleaseType, SemverConfig, Tag
 
 
 # This variable assigns a numeric priority to each ReleaseType,

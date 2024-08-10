@@ -3,7 +3,7 @@
 from pathlib import Path
 from unittest.mock import patch
 from pagekey_semver.cli import cli_entrypoint
-from pagekey_semver.release import ReleaseType, Tag
+from pagekey_semver.models import ReleaseType, Tag
 
 
 MODULE_UNDER_TEST = "pagekey_semver.cli"

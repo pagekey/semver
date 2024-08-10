@@ -4,8 +4,7 @@ from dataclasses import dataclass
 import os
 import subprocess
 from typing import List, Optional
-from pagekey_semver.models import SemverConfig
-from pagekey_semver.release import Commit, Tag
+from pagekey_semver.models import SemverConfig, Commit, Tag
 
 
 @dataclass
@@ -15,10 +14,6 @@ class LocalGitOptions:
     name: str
     email: str
     remote: str
-
-
-class GitQuerier:
-    pass
 
 
 class GitEffector:

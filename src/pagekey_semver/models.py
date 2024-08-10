@@ -1,5 +1,6 @@
 """Module containg data types imported throughout."""
 
+from dataclasses import dataclass
 import enum
 from typing import List, Literal, Union
 from pydantic import BaseModel, Field, field_serializer
@@ -99,3 +100,25 @@ class SemverConfig(BaseModel):
     git: GitConfig
     prefixes: List[Prefix]
     replace_files: List[ReplaceFileUnion] = Field(discriminator="type")
+
+
+@dataclass
+class Commit:
+    """Represents a Git commit."""
+
+    hash: str
+    message: str
+
+
+@dataclass
+class Tag:
+    """Represents a Semver logical tag."""
+
+    # The formatted tag name as it appears in Git.
+    name: str
+    # The major part of the version.
+    major: int
+    # The minor part of the version.
+    minor: int
+    # The patch part of the version.
+    patch: int
