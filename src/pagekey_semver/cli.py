@@ -6,7 +6,7 @@ from pathlib import Path
 
 from pagekey_semver.changelog import ChangelogWriter
 from pagekey_semver.file_replacer import FileReplacer
-from pagekey_semver.git import GitManager
+from pagekey_semver.git.manager import GitManager
 from pagekey_semver.release import SemverRelease, Tag
 from pagekey_semver.config import load_config
 
