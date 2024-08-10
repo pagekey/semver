@@ -2,12 +2,26 @@
 
 import os
 from pathlib import Path
+from typing import List
 
+from pydantic import BaseModel, Field
 import yaml
 
-from pagekey_semver.models import GitConfig, Prefix, SemverConfig
+from pagekey_semver.models import GitConfig, Prefix
+from pagekey_semver.replace_file import ReplaceFileUnion
 from pagekey_semver.util.env_to_dict import convert_env_to_dict
 from pagekey_semver.util.update_dict import merge_dicts
+
+
+class SemverConfig(BaseModel):
+    """Represents config options for entire application."""
+
+    changelog_path: str
+    changelog_writer: str
+    format: str
+    git: GitConfig
+    prefixes: List[Prefix]
+    replace_files: List[ReplaceFileUnion] = Field(discriminator="type")
 
 
 DEFAULT_CONFIG = SemverConfig(

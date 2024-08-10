@@ -5,15 +5,15 @@ import os
 import shutil
 import toml
 import yaml
-from pagekey_semver.models import (
+from pagekey_semver.replace_file import (
     JsonReplaceFile,
     ReplaceFileType,
     ReplaceFileUnion,
     SedReplaceFile,
-    SemverConfig,
     TomlReplaceFile,
     YamlReplaceFile,
 )
+from pagekey_semver.config import SemverConfig
 from pagekey_semver.models import Tag
 from pagekey_semver.util.update_dict import set_dict_value
 

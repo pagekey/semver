@@ -2,10 +2,9 @@
 
 from unittest.mock import MagicMock, call, patch
 
-from pagekey_semver.config import DEFAULT_CONFIG
-from pagekey_semver.models import GitConfig, SemverConfig
+from pagekey_semver.config import DEFAULT_CONFIG, SemverConfig
 from pagekey_semver.git.manager import GitManager, LocalGitOptions
-from pagekey_semver.models import Tag
+from pagekey_semver.models import GitConfig, Tag
 
 
 MODULE_UNDER_TEST = "pagekey_semver.git.manager"

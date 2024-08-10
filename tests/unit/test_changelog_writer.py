@@ -3,7 +3,7 @@
 from unittest.mock import call, mock_open, patch
 from pagekey_semver.changelog_writer import ChangelogWriter, DefaultChangelogWriter
 from pagekey_semver.config import DEFAULT_CONFIG, DEFAULT_CONFIG_DICT
-from pagekey_semver.models import SemverConfig
+from pagekey_semver.config import SemverConfig
 from pagekey_semver.models import Commit, Tag
 
 

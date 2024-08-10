@@ -1,12 +1,11 @@
 """Module for interacting with Git."""
 
 from dataclasses import dataclass
-import os
-import subprocess
 from typing import List, Optional
 from pagekey_semver.git.effector import CommandGitEffector, GitEffector
 from pagekey_semver.git.querier import CommandGitQuerier, GitQuerier
-from pagekey_semver.models import SemverConfig, Commit, Tag
+from pagekey_semver.config import SemverConfig
+from pagekey_semver.models import Commit, Tag
 
 
 @dataclass

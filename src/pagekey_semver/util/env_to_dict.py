@@ -29,6 +29,7 @@ def convert_env_to_dict(variables: Dict[str, str]) -> Dict:
 
     result = {}
 
+    # Parse each environment variable.
     for variable, value in variables.items():
         parts = variable.split("__")
         # Create a nested dictionary structure

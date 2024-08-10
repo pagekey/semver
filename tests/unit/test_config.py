@@ -5,9 +5,9 @@ from unittest.mock import MagicMock, mock_open, patch
 import yaml
 
 from pagekey_semver.config import DEFAULT_CONFIG, load_config
-from pagekey_semver.models import (
+from pagekey_semver.models import Prefix
+from pagekey_semver.replace_file import (
     JsonReplaceFile,
-    Prefix,
     SedReplaceFile,
     TomlReplaceFile,
     YamlReplaceFile,

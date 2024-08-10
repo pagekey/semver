@@ -14,12 +14,12 @@ import toml
 import yaml
 
 from pagekey_semver.cli import cli_entrypoint
-from pagekey_semver.models import (
-    GitConfig,
+from pagekey_semver.config import SemverConfig
+from pagekey_semver.models import GitConfig, Prefix
+
+from pagekey_semver.replace_file import (
     JsonReplaceFile,
-    Prefix,
     SedReplaceFile,
-    SemverConfig,
     TomlReplaceFile,
     YamlReplaceFile,
 )

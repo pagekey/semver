@@ -3,11 +3,10 @@
 from unittest.mock import MagicMock, call, mock_open, patch
 
 import pytest
-from pagekey_semver.config import DEFAULT_CONFIG, DEFAULT_CONFIG_DICT
-from pagekey_semver.models import (
+from pagekey_semver.config import DEFAULT_CONFIG, DEFAULT_CONFIG_DICT, SemverConfig
+from pagekey_semver.replace_file import (
     JsonReplaceFile,
     SedReplaceFile,
-    SemverConfig,
     TomlReplaceFile,
     YamlReplaceFile,
 )

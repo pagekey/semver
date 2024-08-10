@@ -4,7 +4,8 @@ from dataclasses import dataclass
 import re
 from typing import List, Optional
 
-from pagekey_semver.models import Commit, ReleaseType, SemverConfig, Tag
+from pagekey_semver.config import SemverConfig
+from pagekey_semver.models import Commit, ReleaseType, Tag
 
 
 # This variable assigns a numeric priority to each ReleaseType,
