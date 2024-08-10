@@ -1,8 +1,9 @@
 """Module for querying Git."""
 
-
 import abc
 from typing import List, Optional
+
+from pagekey_semver.util.command_runner import CommandRunner, SubprocessCommandRunner
 
 
 class GitQuerier(abc.ABC):
@@ -11,10 +12,10 @@ class GitQuerier(abc.ABC):
     @abc.abstractmethod
     def get_config_item(self, key: str) -> str:
         """Get the Git config stored for the provided key.
-        
+
         Args:
             key: Config key to retrieve.
-        
+
         Returns:
             The value of the config key.
         """
@@ -38,3 +39,22 @@ class GitQuerier(abc.ABC):
             Commits since `commit_hash` if provided.
             All commits if `commit_hash` is None.
         """
+
+
+class CommandGitQuerier(GitQuerier):
+    """Use the Git CLI to query Git."""
+
+    def __init__(self, command_runner: CommandRunner = SubprocessCommandRunner()):
+        self._runner = command_runner
+
+    def get_config_item(self, key: str):
+        result = self._runner.run(f"git config {key}")
+        return result.stdout.strip()
+
+    def get_tag_names(self) -> List[str]:
+        result = self._runner.run(f"git tag")
+        # Filter out empty strings and return.
+        return [tag for tag in result.stdout.split() if len(tag) > 0]
+
+    def get_commits(self, since_ref: Optional[str] = None) -> List[str]:
+        pass

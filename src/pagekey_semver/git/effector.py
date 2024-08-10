@@ -1,6 +1,5 @@
 """Module for making changes to Git."""
 
-
 import abc
 
 
@@ -10,7 +9,7 @@ class GitEffector(abc.ABC):
     @abc.abstractmethod
     def set_config_item(self, key: str, value: str) -> None:
         """Set the Git config stored for the provided key.
-        
+
         Args:
             key: Config key to set.
             value: Value to set.
@@ -39,7 +38,7 @@ class GitEffector(abc.ABC):
     @abc.abstractmethod
     def push(self, remote: str, ref: str) -> None:
         """Push a ref to a remote.
-        
+
         Args:
             remote: Where to push.
             ref: Which commit, branch, or tag to push.

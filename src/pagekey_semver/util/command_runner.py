@@ -7,6 +7,8 @@ from dataclasses import dataclass
 
 @dataclass
 class CommandResult:
+    """Information returned when executing a command."""
+
     exit_code: int
     stdout: str
     stderr: str
