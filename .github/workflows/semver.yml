@@ -3,11 +3,10 @@ name: PageKey Semver
 on:
   # This key makes it reusable.
   workflow_call:
-    inputs:
+    secrets:
       SEMVER_TOKEN:
         description: 'The token used to authenticate when pushing Git.'
         required: true
-        type: secret
 
 jobs:
   run-release:
