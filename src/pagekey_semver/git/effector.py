@@ -56,13 +56,13 @@ class CommandGitEffector(GitEffector):
         self._runner.run(f'git config {key} "{value}"')
 
     def add_all(self) -> None:
-        pass
+        self._runner.run("git add --all")
 
     def create_commit(self, message: str) -> None:
-        pass
+        self._runner.run(f'git commit -m "{message}"')
 
     def create_tag(self, name: str) -> None:
-        pass
+        self._runner.run(f"git tag {name}")
 
     def push(self, remote: str, ref: str) -> None:
-        pass
+        self._runner.run(f"git push {remote} {ref}")
