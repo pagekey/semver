@@ -106,15 +106,15 @@ You can specify "replace files," which PageKey Semver will process and replace t
 You can provide a list of any number of files you need to replace in the config. By default, none are specified:
 
 ```yaml
-replace_files: []
+file_replacers: []
 ```
 
 Documentation and examples are available for each type of replace file:
 
-- [JSON Replace File](./replace_files/json.md)
-- [SED Replace File](./replace_files/sed.md)
-- [TOML Replace File](./replace_files/toml.md)
-- [YAML Replace File](./replace_files/yaml.md)
+- [JSON Replace File](./file_replacers/json.md)
+- [SED Replace File](./file_replacers/sed.md)
+- [TOML Replace File](./file_replacers/toml.md)
+- [YAML Replace File](./file_replacers/yaml.md)
 
 
 ### Environment Variable Override
@@ -125,10 +125,10 @@ You must create an arbitrary index for your replace file. This is used only when
 
 If you set the following three environment variables:
 
-- `SEMVER_replace_files__0__name=my_file.json`
-- `SEMVER_replace_files__0__type=json`
-- `SEMVER_replace_files__0__key=version`
-- `SEMVER_replace_files__0__format=%M.%m.%p`
+- `SEMVER_file_replacers__0__name=my_file.json`
+- `SEMVER_file_replacers__0__type=json`
+- `SEMVER_file_replacers__0__key=version`
+- `SEMVER_file_replacers__0__format=%M.%m.%p`
 
 Setting these variables will add the following replace file to your configuration:
 

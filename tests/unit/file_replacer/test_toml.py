@@ -2,20 +2,22 @@
 
 from unittest.mock import mock_open, patch
 from pagekey_semver.models import Tag
-from pagekey_semver.replace_file.toml import TomlReplaceFile
+from pagekey_semver.file_replacer.toml import TomlFileReplacer
 
 
-MODULE_UNDER_TEST = "pagekey_semver.replace_file.toml"
+MODULE_UNDER_TEST = "pagekey_semver.file_replacer.toml"
 
-class TestTomlReplaceFile:
+
+class TestTomlFileReplacer:
     class Test_perform_replace:
-
         @patch(f"{MODULE_UNDER_TEST}.toml")
         @patch("builtins.open", new_callable=mock_open)
-        def test_with_simple_tag_uses_format_to_replace(self, mock_builtins_open, mock_toml):
+        def test_with_simple_tag_uses_format_to_replace(
+            self, mock_builtins_open, mock_toml
+        ):
             # Arrange.
             tag = Tag("v4.0.0", 4, 0, 0)
-            replacer = TomlReplaceFile(
+            replacer = TomlFileReplacer(
                 name="some_file.toml",
                 key="version",
                 format="%M.%m.%p",
@@ -40,10 +42,12 @@ class TestTomlReplaceFile:
 
         @patch(f"{MODULE_UNDER_TEST}.toml")
         @patch("builtins.open", new_callable=mock_open)
-        def test_with_nested_tag_uses_format_to_replace(self, mock_builtins_open, mock_toml):
+        def test_with_nested_tag_uses_format_to_replace(
+            self, mock_builtins_open, mock_toml
+        ):
             # Arrange.
             tag = Tag("v4.0.0", 4, 0, 0)
-            replacer = TomlReplaceFile(
+            replacer = TomlFileReplacer(
                 name="some_file.toml",
                 key="project.metadata.version",
                 format="%M.%m.%p",

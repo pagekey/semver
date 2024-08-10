@@ -5,8 +5,8 @@ from pydantic import BaseModel, field_serializer
 from pagekey_semver.models import Tag
 
 
-class ReplaceFileType(str, enum.Enum):
-    """File types supported for `replace_files` in config."""
+class FileReplacerType(str, enum.Enum):
+    """File types supported for `file_replacers` in config."""
 
     JSON = "json"
     SED = "sed"
@@ -14,11 +14,11 @@ class ReplaceFileType(str, enum.Enum):
     YAML = "yaml"
 
 
-class ReplaceFile(BaseModel, abc.ABC):
+class FileReplacer(BaseModel, abc.ABC):
     """File to be replaced on new release."""
 
     name: str
-    type: ReplaceFileType
+    type: FileReplacerType
 
     @field_serializer("type")
     def get_enum_value(self, v, info) -> str:

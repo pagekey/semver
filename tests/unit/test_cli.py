@@ -23,7 +23,7 @@ def test_cli_entrypoint_with_no_args_calls_all_functions(
     replacer1 = MagicMock()
     replacer2 = MagicMock()
     config = mock_load_config.return_value
-    config.replace_files = [replacer1, replacer2]
+    config.file_replacers = [replacer1, replacer2]
     tags = ["v1.0.0", "v3.0.0", "v2.0.0"]
     mock_git_manager = mock_git_manager_cls.return_value
     mock_git_manager.get_git_tags.return_value = tags
@@ -71,7 +71,7 @@ def test_cli_entrypoint_with_dry_run_does_not_push(
     replacer1 = MagicMock()
     replacer2 = MagicMock()
     config = mock_load_config.return_value
-    config.replace_files = [replacer1, replacer2]
+    config.file_replacers = [replacer1, replacer2]
     tags = ["v1.0.0", "v3.0.0", "v2.0.0"]
     mock_git_manager = mock_git_manager_cls.return_value
     mock_git_manager.get_git_tags.return_value = tags

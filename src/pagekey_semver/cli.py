@@ -60,7 +60,7 @@ def cli_entrypoint(args=sys.argv[1:]):
             # Write to changelog.
             writer.update_changelog(next_version, commits)
             # Replace files
-            for file_replacer in config.replace_files:
+            for file_replacer in config.file_replacers:
                 file_replacer.perform_replace(next_version)
             # Apply tag, commit, push
             manager.apply_tag(tags, next_version)

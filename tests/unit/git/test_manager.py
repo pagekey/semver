@@ -134,7 +134,7 @@ class TestGitManager:
                     email="some@email.com",
                 ),
                 prefixes=[],
-                replace_files=[],
+                file_replacers=[],
             )
             mock_git_querier = MagicMock()
             mock_git_effector = MagicMock()

@@ -8,16 +8,16 @@ from pydantic import BaseModel, Field
 import yaml
 
 from pagekey_semver.models import GitConfig, Prefix
-from pagekey_semver.replace_file.json import JsonReplaceFile
-from pagekey_semver.replace_file.sed import SedReplaceFile
-from pagekey_semver.replace_file.toml import TomlReplaceFile
-from pagekey_semver.replace_file.yaml import YamlReplaceFile
+from pagekey_semver.file_replacer.json import JsonFileReplacer
+from pagekey_semver.file_replacer.sed import SedFileReplacer
+from pagekey_semver.file_replacer.toml import TomlFileReplacer
+from pagekey_semver.file_replacer.yaml import YamlFileReplacer
 from pagekey_semver.util.env_to_dict import convert_env_to_dict
 from pagekey_semver.util.update_dict import merge_dicts
 
 
-ReplaceFileUnion = Union[
-    JsonReplaceFile, SedReplaceFile, TomlReplaceFile, YamlReplaceFile
+FileReplacersUnion = Union[
+    JsonFileReplacer, SedFileReplacer, TomlFileReplacer, YamlFileReplacer
 ]
 
 
@@ -29,7 +29,7 @@ class SemverConfig(BaseModel):
     format: str
     git: GitConfig
     prefixes: List[Prefix]
-    replace_files: List[ReplaceFileUnion] = Field(discriminator="type")
+    file_replacers: List[FileReplacersUnion] = Field(discriminator="type")
 
 
 DEFAULT_CONFIG = SemverConfig(
@@ -46,7 +46,7 @@ DEFAULT_CONFIG = SemverConfig(
         Prefix(label="feat", type="minor"),
         Prefix(label="fix", type="patch"),
     ],
-    replace_files=[],
+    file_replacers=[],
 )
 DEFAULT_CONFIG_DICT = DEFAULT_CONFIG.model_dump()
 

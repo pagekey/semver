@@ -2,20 +2,22 @@
 
 from unittest.mock import mock_open, patch
 from pagekey_semver.models import Tag
-from pagekey_semver.replace_file.json import JsonReplaceFile
+from pagekey_semver.file_replacer.json import JsonFileReplacer
 
 
-MODULE_UNDER_TEST = "pagekey_semver.replace_file.json"
+MODULE_UNDER_TEST = "pagekey_semver.file_replacer.json"
 
-class TestJsonReplaceFile:
+
+class TestJsonFileReplacer:
     class Test_perform_replace:
-
         @patch(f"{MODULE_UNDER_TEST}.json")
         @patch("builtins.open", new_callable=mock_open)
-        def test_with_simple_tag_uses_format_to_replace(self, mock_builtins_open, mock_json):
+        def test_with_simple_tag_uses_format_to_replace(
+            self, mock_builtins_open, mock_json
+        ):
             # Arrange.
             tag = Tag("v4.0.0", 4, 0, 0)
-            replacer = JsonReplaceFile(
+            replacer = JsonFileReplacer(
                 name="some_file.json",
                 key="version",
                 format="%M.%m.%p",
@@ -40,10 +42,12 @@ class TestJsonReplaceFile:
 
         @patch(f"{MODULE_UNDER_TEST}.json")
         @patch("builtins.open", new_callable=mock_open)
-        def test_with_nested_tag_uses_format_to_replace(self, mock_builtins_open, mock_json):
+        def test_with_nested_tag_uses_format_to_replace(
+            self, mock_builtins_open, mock_json
+        ):
             # Arrange.
             tag = Tag("v4.0.0", 4, 0, 0)
-            replacer = JsonReplaceFile(
+            replacer = JsonFileReplacer(
                 name="some_file.json",
                 key="project.metadata.version",
                 format="%M.%m.%p",

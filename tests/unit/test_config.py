@@ -6,10 +6,10 @@ import yaml
 
 from pagekey_semver.config import DEFAULT_CONFIG, load_config
 from pagekey_semver.models import Prefix
-from pagekey_semver.replace_file.json import JsonReplaceFile
-from pagekey_semver.replace_file.sed import SedReplaceFile
-from pagekey_semver.replace_file.toml import TomlReplaceFile
-from pagekey_semver.replace_file.yaml import YamlReplaceFile
+from pagekey_semver.file_replacer.json import JsonFileReplacer
+from pagekey_semver.file_replacer.sed import SedFileReplacer
+from pagekey_semver.file_replacer.toml import TomlFileReplacer
+from pagekey_semver.file_replacer.yaml import YamlFileReplacer
 
 MODULE_UNDER_TEST = "pagekey_semver.config"
 
@@ -144,14 +144,14 @@ class Test_load_config:
         assert config.changelog_writer == "my_package:MyWriter"
 
     @patch("builtins.open", new_callable=mock_open)
-    def test_with_replace_files_parses_config(self, mock_builtins_open):
+    def test_with_file_replacers_parses_config(self, mock_builtins_open):
         # Arrange.
         mock_path = MagicMock()
         mock_path.is_file.return_value = True
         mock_file = mock_builtins_open.return_value
         mock_file.read.return_value = yaml.safe_dump(
             {
-                "replace_files": [
+                "file_replacers": [
                     {
                         "name": "myfile.json",
                         "type": "json",
@@ -183,15 +183,15 @@ class Test_load_config:
         config = load_config(mock_path)
 
         # Assert.
-        assert config.replace_files[0] == JsonReplaceFile(
+        assert config.file_replacers[0] == JsonFileReplacer(
             name="myfile.json", key="version", format="%M.%m.%p"
         )
-        assert config.replace_files[1] == SedReplaceFile(
+        assert config.file_replacers[1] == SedFileReplacer(
             name="myfile.md", script="s/some/pattern/g"
         )
-        assert config.replace_files[2] == TomlReplaceFile(
+        assert config.file_replacers[2] == TomlFileReplacer(
             name="myfile.toml", key="version", format="%M.%m.%p"
         )
-        assert config.replace_files[3] == YamlReplaceFile(
+        assert config.file_replacers[3] == YamlFileReplacer(
             name="myfile.yaml", key="version", format="%M.%m.%p"
         )

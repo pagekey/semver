@@ -1,17 +1,19 @@
 from typing import Literal
 
 from pagekey_semver.models import Tag
-from pagekey_semver.replace_file.base import ReplaceFile, ReplaceFileType
+from pagekey_semver.file_replacer.base import FileReplacer, FileReplacerType
 from pagekey_semver.util.command_runner import CommandRunner, SubprocessCommandRunner
 
 
-class SedReplaceFile(ReplaceFile):
+class SedFileReplacer(FileReplacer):
     """Represents a file to replaced using `sed` on new release."""
 
-    type: Literal[ReplaceFileType.SED] = ReplaceFileType.SED
+    type: Literal[FileReplacerType.SED] = FileReplacerType.SED
     script: str
 
-    def perform_replace(self, tag: Tag, runner: CommandRunner = SubprocessCommandRunner()) -> str:
+    def perform_replace(
+        self, tag: Tag, runner: CommandRunner = SubprocessCommandRunner()
+    ) -> str:
         """Run the sed program to replace a tag in a file.
 
         Replaces %M/%m/%p with tag's major/minor/patch,

@@ -53,9 +53,9 @@ def convert_env_to_dict(variables: Dict[str, str]) -> Dict:
                 }
             )
         result["prefixes"] = new_prefixes
-    if "replace_files" in result:
+    if "file_replacers" in result:
         # Simply discard the keys to convert to list.
-        new_replace_files = list(result["replace_files"].values())
-        result["replace_files"] = new_replace_files
+        new_file_replacers = list(result["file_replacers"].values())
+        result["file_replacers"] = new_file_replacers
 
     return result

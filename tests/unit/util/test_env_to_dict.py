@@ -22,9 +22,9 @@ class Test_convert_env_to_dict:
                     "SEMVER_git__name": "me",
                     "SEMVER_prefixes__testing": "minor",
                     "SEMVER_prefixes__testing2": "major",
-                    "SEMVER_replace_files__0__name": "file.md",
-                    "SEMVER_replace_files__0__type": "sed",
-                    "SEMVER_replace_files__0__script": "pattern/pattern",
+                    "SEMVER_file_replacers__0__name": "file.md",
+                    "SEMVER_file_replacers__0__type": "sed",
+                    "SEMVER_file_replacers__0__script": "pattern/pattern",
                     "SOME_OTHER_VAR": "irrelevant",
                 },
                 {
@@ -42,7 +42,7 @@ class Test_convert_env_to_dict:
                             "type": "major",
                         },
                     ],
-                    "replace_files": [
+                    "file_replacers": [
                         {
                             "type": "sed",
                             "name": "file.md",

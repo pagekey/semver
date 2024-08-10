@@ -1,16 +1,17 @@
 """Module to test SED file replacer."""
 
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import pytest
 from pagekey_semver.models import Tag
-from pagekey_semver.replace_file.sed import SedReplaceFile
+from pagekey_semver.file_replacer.sed import SedFileReplacer
 from pagekey_semver.util.command_runner import CommandResult, CommandRunnerException
 
 
-MODULE_UNDER_TEST = "pagekey_semver.replace_file.sed"
+MODULE_UNDER_TEST = "pagekey_semver.file_replacer.sed"
 
-class TestSedReplaceFile:
+
+class TestSedFileReplacer:
     class Test_perform_replace:
         def test_with_sed_not_installed_raises_error(self):
             # Arrange.
@@ -21,7 +22,7 @@ class TestSedReplaceFile:
                 stdout="",
                 stderr="",
             )
-            replacer = SedReplaceFile(
+            replacer = SedFileReplacer(
                 name="file.md",
                 script="s/something/other/g",
             )
@@ -29,10 +30,9 @@ class TestSedReplaceFile:
             # Act, Assert.
             with pytest.raises(EnvironmentError):
                 replacer.perform_replace(tag, runner)
-            
+
             # Assert.
             runner.run.assert_called_with("which sed", raise_on_command_fail=False)
-
 
         @pytest.mark.parametrize(
             "input_script, tag, expected_command",
@@ -76,7 +76,7 @@ class TestSedReplaceFile:
                     stderr="",
                 ),
             ]
-            replacer = SedReplaceFile(
+            replacer = SedFileReplacer(
                 name="file.md",
                 script=input_script,
             )
@@ -90,7 +90,7 @@ class TestSedReplaceFile:
         def test_with_failed_sed_raises_error(self):
             # Arrange.
             tag = Tag("v2.0.0", 2, 0, 0)
-            replacer = SedReplaceFile(
+            replacer = SedFileReplacer(
                 name="some_file.md", script="some_invalid_script"
             )
 

@@ -16,10 +16,10 @@ import yaml
 from pagekey_semver.cli import cli_entrypoint
 from pagekey_semver.config import SemverConfig
 from pagekey_semver.models import GitConfig, Prefix
-from pagekey_semver.replace_file.json import JsonReplaceFile
-from pagekey_semver.replace_file.sed import SedReplaceFile
-from pagekey_semver.replace_file.toml import TomlReplaceFile
-from pagekey_semver.replace_file.yaml import YamlReplaceFile
+from pagekey_semver.file_replacer.json import JsonFileReplacer
+from pagekey_semver.file_replacer.sed import SedFileReplacer
+from pagekey_semver.file_replacer.toml import TomlFileReplacer
+from pagekey_semver.file_replacer.yaml import YamlFileReplacer
 
 
 def setup_git_repo(tmp_path):
@@ -114,7 +114,7 @@ class CustomChangelogWriter(ChangelogWriter):
             changelog_file.write("> " + commit.message + "\\n")
 """)
     # Add files to be replaced
-    with open("replace_file.json", "w") as file_handle:
+    with open("file_replacer.json", "w") as file_handle:
         json.dump(
             {
                 "my": {
@@ -124,9 +124,9 @@ class CustomChangelogWriter(ChangelogWriter):
             },
             file_handle,
         )
-    with open("replace_file.md", "w") as file_handle:
+    with open("file_replacer.md", "w") as file_handle:
         file_handle.write("# Some Project\n\nThis is version 0.0.0 of the project.\n")
-    with open("replace_file.toml", "w") as file_handle:
+    with open("file_replacer.toml", "w") as file_handle:
         toml.dump(
             {
                 "my_version": "hello",
@@ -134,7 +134,7 @@ class CustomChangelogWriter(ChangelogWriter):
             },
             file_handle,
         )
-    with open("replace_file.yaml", "w") as file_handle:
+    with open("file_replacer.yaml", "w") as file_handle:
         yaml.dump(
             {
                 "my_version": "hello",
@@ -151,19 +151,19 @@ class CustomChangelogWriter(ChangelogWriter):
         prefixes=[
             Prefix(label="custom", type="major"),
         ],
-        replace_files=[
-            JsonReplaceFile(
-                name="replace_file.json", key="my.version", format="%M.%m.%p"
+        file_replacers=[
+            JsonFileReplacer(
+                name="file_replacer.json", key="my.version", format="%M.%m.%p"
             ),
-            SedReplaceFile(
-                name="replace_file.md",
+            SedFileReplacer(
+                name="file_replacer.md",
                 script="s/^This/This is version %M.%m.%p of the project./g",
             ),
-            TomlReplaceFile(
-                name="replace_file.toml", key="my_version", format="%M.%m.%p"
+            TomlFileReplacer(
+                name="file_replacer.toml", key="my_version", format="%M.%m.%p"
             ),
-            YamlReplaceFile(
-                name="replace_file.yaml", key="my_version", format="%M.%m.%p"
+            YamlFileReplacer(
+                name="file_replacer.yaml", key="my_version", format="%M.%m.%p"
             ),
         ],
     )
@@ -209,19 +209,19 @@ class CustomChangelogWriter(ChangelogWriter):
         text=True,
     )
     assert result.stdout.strip() == "my@email.com"
-    # Make sure replace_file stuff worked.
-    with open("replace_file.json") as file_handle:
+    # Make sure file_replacer stuff worked.
+    with open("file_replacer.json") as file_handle:
         the_dict = json.load(file_handle)
         assert the_dict["my"]["version"] == "0.1.0"
         assert the_dict["something"] == "else"
-    with open("replace_file.md") as file_handle:
+    with open("file_replacer.md") as file_handle:
         the_contents = file_handle.read()
         assert "This is version 0.1.0 of the project." in the_contents
-    with open("replace_file.toml") as file_handle:
+    with open("file_replacer.toml") as file_handle:
         the_dict = toml.load(file_handle)
         assert the_dict["my_version"] == "0.1.0"
         assert the_dict["something"] == "else"
-    with open("replace_file.yaml") as file_handle:
+    with open("file_replacer.yaml") as file_handle:
         the_dict = yaml.safe_load(file_handle)
         assert the_dict["my_version"] == "0.1.0"
         assert the_dict["something"] == "else"
@@ -265,10 +265,10 @@ def test_env_overrides(tmp_path):
         # Prefix
         "SEMVER_prefixes__custom": "minor",
         # Replace File
-        "SEMVER_replace_files__0__name": "test.json",
-        "SEMVER_replace_files__0__type": "json",
-        "SEMVER_replace_files__0__key": "version",
-        "SEMVER_replace_files__0__format": "%M.%m.%p",
+        "SEMVER_file_replacers__0__name": "test.json",
+        "SEMVER_file_replacers__0__type": "json",
+        "SEMVER_file_replacers__0__key": "version",
+        "SEMVER_file_replacers__0__format": "%M.%m.%p",
     }
     # Make a test commit.
     with open("test.json", "w") as file_handle:
