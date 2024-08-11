@@ -1,6 +1,9 @@
 name: Run CI/CD for PageKey Semver package.
 
-on: [push]
+on:
+  push:
+    tags: ["*"]
+    branches: ["*"]
 
 jobs:
   version:
