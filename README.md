@@ -69,4 +69,3 @@ This package is intended to run on a Linux system with the `bash` shell installe
 ## Configuration
 
 See [here](./docs/config/index.md) for more information on how to configure the tool.
-

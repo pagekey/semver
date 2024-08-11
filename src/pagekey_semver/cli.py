@@ -56,7 +56,7 @@ def cli_entrypoint(args=sys.argv[1:]):
     else:
         # Apply tag if appropriate.
         if not dry_run:
-            print("Applying version.")
+            print(f"Applying version {next_version.name}.")
             # Write to changelog.
             writer.update_changelog(next_version, commits)
             # Replace files
@@ -65,6 +65,7 @@ def cli_entrypoint(args=sys.argv[1:]):
             # Apply tag, commit, push
             manager.apply_tag(tags, next_version)
         else:
+            print(f"Would apply version {next_version.name}.", flush=True)
             print("Dry run mode - not applying version.", flush=True)
 
 
