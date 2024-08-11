@@ -27,3 +27,7 @@
 
 - fix: Try running on all tags and branches (1f07060c945072172c090c96b8ff65fd53093d35)
 
+## v0.3.4
+
+- fix: Trigger release (8bc4f2010218cfdc802574e20632b1fb8265a6cd)
+
