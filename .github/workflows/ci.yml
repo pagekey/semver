@@ -6,6 +6,7 @@ jobs:
   version:
     uses: ./.github/workflows/semver.yml
     secrets:
+      SEMVER_USER: ${{ secrets.SEMVER_USER }}
       SEMVER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
   test:

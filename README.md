@@ -36,20 +36,20 @@ Follow these steps to use PageKey Semver with GitHub Actions.
 
 2. Add the token to your repo or organization as the `SEMVER_TOKEN` secret. See [this guide](https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions) for more info on how to do that.
 
-3. Add the following workflow in your repo at `.github/workflows/ci.yml`:
+3. Add a `SEMVER_USER` secret containing your username. If you'd rather not use your personal account, use a bot account.
+
+4. Add the following workflow in your repo at `.github/workflows/ci.yml`:
 
 ```yaml
 name: Run semantic version process.
 
-on:
-  push:
-    branches-ignore:
-      - 'refs/tags/*'
+on: [push]
 
 jobs:
   version:
     uses: pagekey/semver/.github/workflows/semver.yml@main
     with:
+      SEMVER_USER: ${{ secrets.SEMVER_USER }}
       SEMVER_TOKEN: ${{ secrets.SEMVER_TOKEN }}
 ```
 
