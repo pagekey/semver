@@ -19,3 +19,7 @@
 
 - fix: Update README with details on SEMVER_ creds (0831295f167e20564956477f463f90bc57566e45)
 
+## v0.3.2
+
+- fix: Add SEMVER_USER (d668af802db2ca5b2b25db3690a06ff5b132420d)
+
