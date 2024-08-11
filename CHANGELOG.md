@@ -23,3 +23,7 @@
 
 - fix: Add SEMVER_USER (d668af802db2ca5b2b25db3690a06ff5b132420d)
 
+## v0.3.3
+
+- fix: Try running on all tags and branches (1f07060c945072172c090c96b8ff65fd53093d35)
+
