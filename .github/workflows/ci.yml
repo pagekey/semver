@@ -32,6 +32,13 @@ jobs:
       - name: Run tests
         run: poetry run pytest
 
+  publish2:
+    runs-on: ubuntu-latest
+    needs: version
+    steps:
+      - name: Placeholder
+        run: echo release var is $SEMVER_NEW_RELEASE
+
   publish:
     runs-on: ubuntu-latest
     needs: version
