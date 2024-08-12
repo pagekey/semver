@@ -38,15 +38,15 @@ jobs:
     steps:
       - name: Placeholder
         env:
-          SEMVER_NEW_RELEASE: ${{ needs.version.outputs.semver_new_release }}
+          SEMVER_NEW_RELEASE: ${{ needs.run-release.outputs.semver_new_release }}
         run: |
           echo release var is $SEMVER_NEW_RELEASE
-          echo '${{ toJSON(needs.version.outputs) }}'
+          echo '${{ toJSON(needs.run-release.outputs) }}'
 
   publish:
     runs-on: ubuntu-latest
     needs: version
-    if: ${{ needs.version.outputs.semver_new_release == 'true' }}
+    if: ${{ needs.run-release.outputs.semver_new_release == 'true' }}
     steps:
       - name: Placeholder
         run: echo Coming soon.

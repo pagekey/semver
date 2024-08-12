@@ -39,7 +39,7 @@ jobs:
       - name: Run semver dry-run when not on main
         if: github.ref != 'refs/heads/main'
         run: pagekey-semver plan
-  job2:
+  job2: # TODO remove
     runs-on: ubuntu-latest
     needs: [run-release]
     steps:
