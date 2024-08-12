@@ -54,4 +54,4 @@ jobs:
           git pull
           pip install poetry
           poetry install --with dev
-          poetry publish --build
+          poetry publish --build --username __token__ --password $PYPI_TOKEN
