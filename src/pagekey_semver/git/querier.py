@@ -49,8 +49,12 @@ class CommandGitQuerier(GitQuerier):
         self._runner = command_runner
 
     def get_config_item(self, key: str):
-        result = self._runner.run(f"git config {key}")
-        return result.stdout.strip()
+        try:
+            result = self._runner.run(f"git config {key}")
+            return result.stdout.strip()
+        except:
+            print(f"Failed to retrieve git config key {key}")
+            return ""
 
     def get_tag_names(self) -> List[str]:
         result = self._runner.run("git tag")

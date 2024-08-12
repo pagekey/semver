@@ -34,7 +34,7 @@ def test_cli_entrypoint_with_no_args_calls_all_functions(
     mock_git_manager.get_commit_messages_since.return_value = commits
     release_type = ReleaseType.MINOR
     mock_release.compute_release_type.return_value = release_type
-    next_version = "v3.1.0"
+    next_version = Tag("v3.1.0", 3, 1, 0)
     mock_release.compute_next_version.return_value = next_version
     mock_changelog_writer = mock_changelog_writer_cls.from_config.return_value
 
@@ -82,7 +82,7 @@ def test_cli_entrypoint_with_dry_run_does_not_push(
     mock_git_manager.get_commit_messages_since.return_value = commits
     release_type = ReleaseType.MINOR
     mock_release.compute_release_type.return_value = release_type
-    next_version = "v3.1.0"
+    next_version = Tag("v3.1.0", 3, 1, 0)
     mock_release.compute_next_version.return_value = next_version
     mock_changelog_writer = mock_changelog_writer_cls.from_config.return_value
 
