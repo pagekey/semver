@@ -52,7 +52,6 @@ jobs:
       - name: Placeholder
         run: |
           git pull
-          git log -n2
           pip install poetry
-          poetry install --with dev # TODO reduce duplication somehow
+          poetry install --with dev
           poetry publish --build
