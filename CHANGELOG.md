@@ -64,3 +64,7 @@
 
 - fix: Trigger release (a6a5edd4879901b7a1052a8b00a4e35d1bb55fd6)
 
+## v0.3.13
+
+- fix: Add checkout step to publish job (882dc6c63a97bdf79b25beb281cfefe554205c25)
+
