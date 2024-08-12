@@ -13,7 +13,6 @@ jobs:
       SEMVER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
   test:
-    needs: version
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
