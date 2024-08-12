@@ -35,9 +35,4 @@ jobs:
 
       - name: Run semver dry-run when not on main
         if: github.ref != 'refs/heads/main'
-        run: pagekey-semver plan | tee semver.log
-
-      - name: Set env var based on whether new release was generated
-        id: check_log
-        run: |
-          echo "checking SEMVER_NEW_RELEASE: $SEMVER_NEW_RELEASE"
+        run: pagekey-semver plan
