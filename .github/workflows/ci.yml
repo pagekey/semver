@@ -50,6 +50,8 @@ jobs:
         with:
           fetch-depth: 0  # fetch all commits instead of just current one
       - name: Placeholder
+        env:
+          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
         run: |
           git pull
           pip install poetry
