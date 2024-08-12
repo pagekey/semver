@@ -44,3 +44,7 @@
 
 - fix: Add conditional publish job (2712c5483b3b465c92e346ec56be6193559edd17)
 
+## v0.3.8
+
+- fix: Set new release var to true (97b032b372c0cfd3135065d594b0edc8f60590fe)
+
