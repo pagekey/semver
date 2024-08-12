@@ -80,3 +80,7 @@
 
 - fix: Specify username, password for publish (0f737459576419e3dcf5ff1c370dc3de9fdf9f0e)
 
+## v0.3.17
+
+- fix: Add PYPI_TOKEN to step (3801c4653316283b2a7ad97b72757432755a37c2)
+
