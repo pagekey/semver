@@ -10,6 +10,10 @@ on:
       SEMVER_TOKEN:
         description: 'The token used to authenticate when pushing Git.'
         required: true
+    outputs:
+      semver_release:
+        description: "Whether or not a release occurred."
+        value: ${{ jobs.run-release.outputs.SEMVER_NEW_RELEASE }}
 
 jobs:
   run-release:
@@ -39,8 +43,3 @@ jobs:
       - name: Run semver dry-run when not on main
         if: github.ref != 'refs/heads/main'
         run: pagekey-semver plan
-  job2: # TODO remove
-    runs-on: ubuntu-latest
-    needs: [run-release]
-    steps:
-      - run: echo '${{ toJSON(needs.run-release.outputs) }}'
