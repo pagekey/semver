@@ -72,3 +72,7 @@
 
 - fix: Add poetry version publish (cb8032b019eec63cef40d2911b66a814784467e0)
 
+## v0.3.15
+
+- fix: Clean up publish commands (9ee4667fe22901fa3c11a27f5a9d4df4ebe7d81a)
+
