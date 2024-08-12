@@ -52,3 +52,7 @@
 
 - fix: Add publish2 job (261ec9410fc022914d999e1a19135f07ae9046a8)
 
+## v0.3.10
+
+- fix: Update CI file to get var to print (8fe8e8c7379a5f6240897263714f03d67887f079)
+
