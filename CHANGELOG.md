@@ -68,3 +68,7 @@
 
 - fix: Add checkout step to publish job (882dc6c63a97bdf79b25beb281cfefe554205c25)
 
+## v0.3.14
+
+- fix: Add poetry version publish (cb8032b019eec63cef40d2911b66a814784467e0)
+
