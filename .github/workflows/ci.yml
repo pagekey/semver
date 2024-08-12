@@ -37,7 +37,7 @@ jobs:
     needs: version
     steps:
       - name: Placeholder
-        with:
+        env:
           SEMVER_NEW_RELEASE: needs.version.outputs.semver_new_release
         run: echo release var is $SEMVER_NEW_RELEASE
 
