@@ -31,3 +31,8 @@
 
 - fix: Trigger release (8bc4f2010218cfdc802574e20632b1fb8265a6cd)
 
+## v0.3.5
+
+- fix: Get tests passing (2b11577e608f7446d8ad7484a32a7a012139a6c9)
+- fix: Add better print statements (c7254d34031a6d5ce00ba93488487fdd50c53b3a)
+
