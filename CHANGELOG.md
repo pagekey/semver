@@ -48,3 +48,7 @@
 
 - fix: Set new release var to true (97b032b372c0cfd3135065d594b0edc8f60590fe)
 
+## v0.3.9
+
+- fix: Add publish2 job (261ec9410fc022914d999e1a19135f07ae9046a8)
+
