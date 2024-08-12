@@ -1,6 +1,7 @@
 """Module for CLI."""
 
 import argparse
+import os
 import sys
 from pathlib import Path
 
@@ -66,9 +67,12 @@ def cli_entrypoint(args=sys.argv[1:]):
                 file_replacer.perform_replace(next_version)
             # Apply tag, commit, push
             manager.apply_tag(tags, next_version)
+            # Set an env var for subsequent steps in GitHub Actions.
+            os.environ["SEMVER_NEW_RELEASE"] = "true"
         else:
             print(f"Would apply version {next_version.name}.", flush=True)
             print("Dry run mode - not applying version.", flush=True)
+            os.environ["SEMVER_NEW_RELEASE"] = "false"
 
 
 if __name__ == "__main__":

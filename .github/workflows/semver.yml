@@ -43,6 +43,7 @@ jobs:
       - name: Set env var based on whether new release was generated
         id: check_log
         run: |
+          echo "checking SEMVER_NEW_VERSION: $SEMVER_NEW_VERSION"
           if grep -q "Applying version" semver.log; then
             echo "Detected new release."
           else
