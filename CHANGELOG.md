@@ -84,3 +84,7 @@
 
 - fix: Add PYPI_TOKEN to step (3801c4653316283b2a7ad97b72757432755a37c2)
 
+## v0.3.18
+
+- fix: Specify README in pyproject.toml (6823916a3387ffb0278dfa07bc6f4fcd15145fde)
+
