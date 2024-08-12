@@ -49,4 +49,9 @@ jobs:
     if: ${{ needs.version.outputs.semver_new_release == 'true' }}
     steps:
       - name: Placeholder
-        run: echo Coming soon.
+        run: |
+          echo Coming soon.
+          git log -n2
+          git pull
+          git log -n2
+      # TODO twine? pull? print log?
