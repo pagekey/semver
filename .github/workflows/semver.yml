@@ -26,19 +26,16 @@ jobs:
           python-version: '3.x'
       
       - name: Install semver
-        run: pip3 install pagekey-semver
+        # run: pip3 install pagekey-semver # TODO uncomment
+        run: pip3 install . # TODO remove
 
       - name: Run semver live when on main
         if: github.ref == 'refs/heads/main'
-        run: |
-          set -o pipefail
-          pagekey-semver apply | tee semver.log
+        run: pagekey-semver apply
 
       - name: Run semver dry-run when not on main
         if: github.ref != 'refs/heads/main'
-        run: |
-          set -o pipefail
-          pagekey-semver plan | tee semver.log
+        run: pagekey-semver plan | tee semver.log
 
       - name: Set env var based on whether new release was generated
         id: check_log
