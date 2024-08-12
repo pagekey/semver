@@ -39,7 +39,9 @@ jobs:
       - name: Placeholder
         env:
           SEMVER_NEW_RELEASE: ${{ needs.version.outputs.semver_new_release }}
-        run: echo release var is $SEMVER_NEW_RELEASE
+        run: |
+          echo release var is $SEMVER_NEW_RELEASE
+          echo '${{ toJSON(needs.job1.outputs) }}'
 
   publish:
     runs-on: ubuntu-latest
