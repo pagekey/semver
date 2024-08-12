@@ -51,9 +51,8 @@ jobs:
           fetch-depth: 0  # fetch all commits instead of just current one
       - name: Placeholder
         run: |
-          echo Coming soon.
-          git log -n2
           git pull
           git log -n2
-      # TODO twine? pull? print log?
-
+          pip install poetry
+          poetry install --with dev # TODO reduce duplication somehow
+          poetry publish --build
