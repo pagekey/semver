@@ -76,3 +76,7 @@
 
 - fix: Clean up publish commands (9ee4667fe22901fa3c11a27f5a9d4df4ebe7d81a)
 
+## v0.3.16
+
+- fix: Specify username, password for publish (0f737459576419e3dcf5ff1c370dc3de9fdf9f0e)
+
