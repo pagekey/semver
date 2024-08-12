@@ -40,3 +40,7 @@
 
 - fix: Add print for file replacers (6b3506a36dcc00eb8f6d2bd564e4ec025cd1a43b)
 
+## v0.3.7
+
+- fix: Add conditional publish job (2712c5483b3b465c92e346ec56be6193559edd17)
+
