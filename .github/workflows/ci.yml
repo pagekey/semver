@@ -14,7 +14,7 @@ jobs:
   
   test:
     needs: version
-    if: needs.run-release.outputs.semver_new_release == "true"
+    if: needs.run-release.outputs.semver_new_release == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
