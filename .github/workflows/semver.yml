@@ -13,6 +13,8 @@ on:
 
 jobs:
   run-release:
+    outputs:
+      semver_new_release: ${{ steps.apply.outputs.SEMVER_NEW_RELEASE }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -32,6 +34,7 @@ jobs:
       - name: Run semver live when on main
         if: github.ref == 'refs/heads/main'
         run: pagekey-semver apply
+        id: apply
 
       - name: Run semver dry-run when not on main
         if: github.ref != 'refs/heads/main'

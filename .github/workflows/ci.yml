@@ -13,8 +13,9 @@ jobs:
       SEMVER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
   test:
+    needs: version
+    if: needs.run-release.outputs.semver_new_release == "true"
     runs-on: ubuntu-latest
-    if: env.SEMVER_NEW_RELEASE == "true"
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
