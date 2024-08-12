@@ -7,6 +7,7 @@ name = "pagekey-semver"
 description = "Simple, opinionated semantic versioning package."
 version = "0.3.17"
 authors = [ "steve",]
+readme = "README.md"
 
 [tool.poetry.scripts]
 pagekey-semver = "pagekey_semver.cli:cli_entrypoint"
