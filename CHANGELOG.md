@@ -56,3 +56,7 @@
 
 - fix: Update CI file to get var to print (8fe8e8c7379a5f6240897263714f03d67887f079)
 
+## v0.3.11
+
+- fix: Add some debug text to publish (9a57de7fb02ccfe632e26dc34e6116cdd7a56685)
+
