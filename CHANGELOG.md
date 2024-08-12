@@ -36,3 +36,7 @@
 - fix: Get tests passing (2b11577e608f7446d8ad7484a32a7a012139a6c9)
 - fix: Add better print statements (c7254d34031a6d5ce00ba93488487fdd50c53b3a)
 
+## v0.3.6
+
+- fix: Add print for file replacers (6b3506a36dcc00eb8f6d2bd564e4ec025cd1a43b)
+
