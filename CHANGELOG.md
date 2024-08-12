@@ -60,3 +60,7 @@
 
 - fix: Add some debug text to publish (9a57de7fb02ccfe632e26dc34e6116cdd7a56685)
 
+## v0.3.12
+
+- fix: Trigger release (a6a5edd4879901b7a1052a8b00a4e35d1bb55fd6)
+
