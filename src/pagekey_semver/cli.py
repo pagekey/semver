@@ -54,8 +54,7 @@ def cli_entrypoint(args=sys.argv[1:]):
     print("Next version:", next_version, flush=True)
     if max_tag == next_version:
         print("No new release (nothing to do).")
-        with open(os.environ["GITHUB_ENV"], "w") as f:
-            f.write("SEMVER_NEW_RELEASE=false")
+        print("::set-output name=SEMVER_NEW_RELEASE=false")
     else:
         # Apply tag if appropriate.
         if not dry_run:
@@ -70,14 +69,11 @@ def cli_entrypoint(args=sys.argv[1:]):
             # Apply tag, commit, push
             manager.apply_tag(tags, next_version)
             # Set an env var for subsequent steps in GitHub Actions.
-            with open(os.environ["GITHUB_ENV"], "w") as f:
-                f.write("SEMVER_NEW_RELEASE=true")
-                print("SEMVER_NEW_RELEASE=true")
+            print("::set-output name=SEMVER_NEW_RELEASE=true")
         else:
             print(f"Would apply version {next_version.name}.", flush=True)
             print("Dry run mode - not applying version.", flush=True)
-            with open(os.environ["GITHUB_ENV"], "w") as f:
-                f.write("SEMVER_NEW_RELEASE=false")
+            print("::set-output name=SEMVER_NEW_RELEASE=false")
 
 
 if __name__ == "__main__":
