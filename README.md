@@ -30,15 +30,19 @@ As you'll see below, it's highly recommended to set the `SEMVER_TOKEN` variable 
 
 ### GitHub Actions
 
-Follow these steps to use PageKey Semver with GitHub Actions.
+The simplest way to get started is to paste the following workflow into a file such as `.github/workflows/ci.yml`.
 
-1. Generate a GitHub Personal Access Token. Follow [this guide](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) if you're not sure how.
+```yaml
+name: Run semantic version process.
 
-2. Add the token to your repo or organization as the `SEMVER_TOKEN` secret. See [this guide](https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions) for more info on how to do that.
+on: [push]
 
-3. Add a `SEMVER_USER` secret containing your username. If you'd rather not use your personal account, use a bot account.
+jobs:
+  version:
+    uses: pagekey/semver/.github/workflows/semver.yml@main
+```
 
-4. Add the following workflow in your repo at `.github/workflows/ci.yml`:
+If you want to specify which user is used to push, you can use the following snippet. You must create the `SEMVER_USER` and `SEMVER_TOKEN` secrets. You can use a [GitHub Personal Access Token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) set as a repo or organization [secret](https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions). If you'd rather not use your personal account for the PAT, you can use a bot account.
 
 ```yaml
 name: Run semantic version process.
@@ -53,6 +57,24 @@ jobs:
       SEMVER_TOKEN: ${{ secrets.SEMVER_TOKEN }}
 ```
 
+Beware that GitHub does **not** trigger a pipeline on tags pushed from Actions (or at least, I couldn't figure out how to get it to do that.)
+
+If you want to trigger another workflow only when a tag has been created, you can use the following, combining `needs` and `if` to check:
+
+```yaml
+jobs:
+  # ...
+  # omitting inclusion of semver.yml shown above
+  # ...
+
+  publish:
+    needs: version
+    if: ${{ needs.version.outputs.semver_release_occurred == 'true' }}
+    steps:
+      # Do anything that should only occur on new tags, such as publishing/deploying your code.
+      - name: Checkout code
+        uses: actions/checkout@v4
+```
 
 ### GitLab CI/CD
 
