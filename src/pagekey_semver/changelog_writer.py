@@ -106,7 +106,7 @@ class DefaultChangelogWriter(ChangelogWriter):
             version: The new version being added.
             commits: The commits associated with the new version.
         """
-        # Write changelog
+        # Write changelog.
         changelog_file.write(f"## {version.name}\n\n")
         for commit in commits:
             changelog_file.write(f"- {commit.message} ({commit.hash})\n")

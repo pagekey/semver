@@ -11,14 +11,14 @@ on:
         description: 'The token used to authenticate when pushing Git.'
         required: false
     outputs:
-      semver_release:
+      semver_release_occurred:
         description: "Whether or not a release occurred."
-        value: ${{ jobs.run-release.outputs.SEMVER_NEW_RELEASE }}
+        value: ${{ jobs.run-release.outputs.semver_release_occurred }}
 
 jobs:
   run-release:
     outputs:
-      semver_new_release: ${{ steps.apply.outputs.SEMVER_NEW_RELEASE }}
+      semver_release_occurred: ${{ steps.apply.outputs.semver_release_occurred }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code

@@ -56,7 +56,7 @@ def cli_entrypoint(args=sys.argv[1:]):
         print("No new release (nothing to do).")
         if "GITHUB_OUTPUT" in os.environ:
             with open(os.environ["GITHUB_OUTPUT"], "w") as f:
-                f.write("SEMVER_NEW_RELEASE=false")
+                f.write("semver_release_occurred=false")
     else:
         # Apply tag if appropriate.
         if not dry_run:
@@ -73,13 +73,13 @@ def cli_entrypoint(args=sys.argv[1:]):
             # Set an env var for subsequent steps in GitHub Actions.
             if "GITHUB_OUTPUT" in os.environ:
                 with open(os.environ["GITHUB_OUTPUT"], "w") as f:
-                    f.write("SEMVER_NEW_RELEASE=true")
+                    f.write("semver_release_occurred=true")
         else:
             print(f"Would apply version {next_version.name}.", flush=True)
             print("Dry run mode - not applying version.", flush=True)
             if "GITHUB_OUTPUT" in os.environ:
                 with open(os.environ["GITHUB_OUTPUT"], "w") as f:
-                    f.write("SEMVER_NEW_RELEASE=false")
+                    f.write("semver_release_occurred=false")
 
 
 if __name__ == "__main__":
