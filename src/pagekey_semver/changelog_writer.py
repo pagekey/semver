@@ -56,15 +56,18 @@ class ChangelogWriter(abc.ABC):
         self._create_dirs()
         filtered_commits = self._filter_commits(commits)
         # Write new version info to temp file.
-        with tempfile.NamedTemporaryFile(mode="w") as temp_file:
+        with tempfile.NamedTemporaryFile(mode="w", delete=False) as temp_file:
             self.write_changelog(temp_file, version, filtered_commits)
             # Write remainder of changelog to temp file.
             with open(self._config.changelog_path, "r") as changelog_file:
                 temp_file.write(changelog_file.read())
+            temp_file_name = temp_file.name
+        with open(temp_file_name, "r") as temp_file:
             # Copy temp file to changelog, effectively prepending.
-            temp_file.seek(0)
             with open(self._config.changelog_path, "w") as changelog_file:
                 changelog_file.write(temp_file.read())
+        # Delete temp_file
+        os.unlink(temp_file_name)
 
     def _filter_commits(self, commits: List[Commit]) -> List[Commit]:
         """Filter out any commits that do not start with a valid prefix.
