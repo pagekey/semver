@@ -93,3 +93,7 @@
 - fix: Get tests, lint passing (272f2ce2ea0124c814b40c1967b48dc8ba891012)
 - fix: Clean up pipeline (8250b8a781da5e51631d38eaf1baaf2b712c54ac)
 
+## v0.3.20
+
+- fix: Rename CI var to semver_release_occurred (8e1e1b6fe890e3c93f0626cb66ab7b2851c93c65)
+
