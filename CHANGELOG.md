@@ -88,3 +88,8 @@
 
 - fix: Specify README in pyproject.toml (6823916a3387ffb0278dfa07bc6f4fcd15145fde)
 
+## v0.3.19
+
+- fix: Get tests, lint passing (272f2ce2ea0124c814b40c1967b48dc8ba891012)
+- fix: Clean up pipeline (8250b8a781da5e51631d38eaf1baaf2b712c54ac)
+
