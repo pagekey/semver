@@ -53,7 +53,7 @@ class TestDefaultChangelogWriter:
 
         # Assert.
         mock_makedirs.assert_called_with("docs", exist_ok=True)
-        mock_open.assert_called_with("docs/CHANGELOG.md", "a")
+        mock_open.assert_called_with("docs/CHANGELOG.md", "w")
         mock_file.write.assert_has_calls(
             [
                 call(f"## {version.name}\n\n"),

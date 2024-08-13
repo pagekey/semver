@@ -3,7 +3,6 @@
 from __future__ import annotations
 import abc
 import os
-import shutil
 import tempfile
 from typing import List, TextIO
 
@@ -58,9 +57,10 @@ class ChangelogWriter(abc.ABC):
         # Write new version info to temp file.
         with tempfile.NamedTemporaryFile(mode="w", delete=False) as temp_file:
             self.write_changelog(temp_file, version, filtered_commits)
-            # Write remainder of changelog to temp file.
-            with open(self._config.changelog_path, "r") as changelog_file:
-                temp_file.write(changelog_file.read())
+            # Write existing changelog to temp file.
+            if os.path.exists(self._config.changelog_path):
+                with open(self._config.changelog_path, "r") as changelog_file:
+                    temp_file.write(changelog_file.read())
             temp_file_name = temp_file.name
         with open(temp_file_name, "r") as temp_file:
             # Copy temp file to changelog, effectively prepending.
