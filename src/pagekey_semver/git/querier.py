@@ -4,7 +4,11 @@ import abc
 from typing import List, Optional
 
 from pagekey_semver.models import Commit
-from pagekey_semver.util.command_runner import CommandRunner, SubprocessCommandRunner
+from pagekey_semver.util.command_runner import (
+    CommandRunner,
+    CommandRunnerException,
+    SubprocessCommandRunner,
+)
 
 
 class GitQuerier(abc.ABC):
@@ -52,7 +56,7 @@ class CommandGitQuerier(GitQuerier):
         try:
             result = self._runner.run(f"git config {key}")
             return result.stdout.strip()
-        except:
+        except CommandRunnerException:
             print(f"Failed to retrieve git config key {key}")
             return ""
 

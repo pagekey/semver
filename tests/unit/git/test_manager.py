@@ -103,16 +103,14 @@ class TestGitManager:
                 manager, "get_existing_git_info", return_value=local_git_options
             )
             mock_get_existing_git_info.start()
-            mock_set_git_remote = patch.object(
-                manager, "set_git_remote"
-            )
+            mock_set_git_remote = patch.object(manager, "set_git_remote")
             mock_set_git_remote.start()
 
             # Act.
             with patch.object(manager, "set_git_remote") as mock_set_git_remote:
                 manager.apply_tag(existing_tags, new_tag)
 
-            # Assert.
+                # Assert.
                 mock_set_git_remote.assert_called()
             mock_git_effector.set_config_item.assert_has_calls(
                 [
@@ -160,7 +158,6 @@ class TestGitManager:
             )
 
     class Test_set_git_remote:
-
         @patch(f"{MODULE_UNDER_TEST}.os")
         def test_with_no_creds_changes_nothing(self, mock_os):
             # Arrange.
@@ -209,11 +206,13 @@ class TestGitManager:
             ],
         )
         @patch(f"{MODULE_UNDER_TEST}.os")
-        def test_with_creds_sets_https_remote(self, mock_os, original_remote, expected_remote):
+        def test_with_creds_sets_https_remote(
+            self, mock_os, original_remote, expected_remote
+        ):
             # Arrange.
             mock_os.getenv.side_effect = [
                 "user",  # SEMVER_USER
-                "token", # SEMVER_TOKEN
+                "token",  # SEMVER_TOKEN
             ]
             mock_git_querier = MagicMock()
             mock_git_querier.get_config_item.return_value = original_remote
@@ -234,10 +233,12 @@ class TestGitManager:
             # Arrange.
             mock_os.getenv.side_effect = [
                 "user",  # SEMVER_USER
-                "token", # SEMVER_TOKEN
+                "token",  # SEMVER_TOKEN
             ]
             mock_git_querier = MagicMock()
-            mock_git_querier.get_config_item.return_value = "unknown-format://me:me@github.com/pagekey/semver.git"
+            mock_git_querier.get_config_item.return_value = (
+                "unknown-format://me:me@github.com/pagekey/semver.git"
+            )
             mock_git_effector = MagicMock()
             manager = GitManager(DEFAULT_CONFIG, mock_git_querier, mock_git_effector)
 
