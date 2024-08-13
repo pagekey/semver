@@ -3,6 +3,8 @@
 from __future__ import annotations
 import abc
 import os
+import shutil
+import tempfile
 from typing import List, TextIO
 
 from pagekey_semver.util.dynamic_import import dynamic_import
@@ -53,8 +55,16 @@ class ChangelogWriter(abc.ABC):
         """
         self._create_dirs()
         filtered_commits = self._filter_commits(commits)
-        with open(self._config.changelog_path, "a") as changelog_file:
-            self.write_changelog(changelog_file, version, filtered_commits)
+        # Write new version info to temp file.
+        with tempfile.NamedTemporaryFile(mode="w") as temp_file:
+            self.write_changelog(temp_file, version, filtered_commits)
+            # Write remainder of changelog to temp file.
+            with open(self._config.changelog_path, "r") as changelog_file:
+                temp_file.write(changelog_file.read())
+            # Copy temp file to changelog, effectively prepending.
+            temp_file.seek(0)
+            with open(self._config.changelog_path, "w") as changelog_file:
+                changelog_file.write(temp_file.read())
 
     def _filter_commits(self, commits: List[Commit]) -> List[Commit]:
         """Filter out any commits that do not start with a valid prefix.
