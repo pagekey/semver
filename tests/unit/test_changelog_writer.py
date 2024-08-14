@@ -27,10 +27,11 @@ class TestChangelogWriter:
 
 
 class TestDefaultChangelogWriter:
-    @patch(f"{MODULE_UNDER_TEST}.os.makedirs")
+    @patch(f"{MODULE_UNDER_TEST}.os")
+    @patch(f"{MODULE_UNDER_TEST}.tempfile.NamedTemporaryFile", new_callable=mock_open)
     @patch("builtins.open", new_callable=mock_open)
     def test_update_changelog_with_commits_updates_changelog_file(
-        self, mock_open, mock_makedirs
+        self, mock_open, mock_tempfile, mock_os
     ):
         # Arrange.
         version = Tag("v1.0.0", 1, 0, 0)
@@ -42,7 +43,7 @@ class TestDefaultChangelogWriter:
             Commit(hash="aaaaa5", message="major: Wow this is a big deal"),
             Commit(hash="aaaaa6", message="some other commit"),
         ]
-        mock_file = mock_open.return_value
+        mock_file = mock_tempfile.return_value
         config = SemverConfig(
             **{**DEFAULT_CONFIG_DICT, "changelog_path": "docs/CHANGELOG.md"}
         )
@@ -52,7 +53,6 @@ class TestDefaultChangelogWriter:
         writer.update_changelog(version, commits)
 
         # Assert.
-        mock_makedirs.assert_called_with("docs", exist_ok=True)
         mock_open.assert_called_with("docs/CHANGELOG.md", "w")
         mock_file.write.assert_has_calls(
             [
