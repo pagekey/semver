@@ -1,0 +1,15 @@
+semver-dry-run:
+  stage: version
+  image: python:3.10
+  except: [main, tags]
+  script:
+    - pip install pagekey-semver
+    - pagekey-semver plan
+
+semver:
+  stage: version
+  image: python:3.10
+  only: [main]
+  script:
+    - pip install pagekey-semver
+    - pagekey-semver plan
