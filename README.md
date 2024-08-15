@@ -78,7 +78,31 @@ jobs:
 
 ### GitLab CI/CD
 
-Coming soon.
+GitLab CI/CD is a bit more straightforward than GitHub Actions for this package. There is no restriction on running pipelines that have been created automatically, so a tag pipeline will run when the package pushes. Use the following snippet in your `.gitlab-ci.yml` file to get started. Be sure to set `SEMVER_USER` and `SEMVER_TOKEN`. For user, you can use `oauth2`, `gitlab-ci-token`, or your username. For the token, use a personal or group access token.
+
+Note that `only` and `except` are deprecated, but are included here for simplicity. You can migrate to `rules` if you would like.
+
+```yaml
+stages:
+  - version
+
+
+semver-dry-run:
+  stage: version
+  image: python:3.10
+  except: [main, tags]
+  script:
+    - pip install pagekey-semver
+    - pagekey-semver plan
+
+semver:
+  stage: version
+  image: python:3.10
+  only: [main]
+  script:
+    - pip install pagekey-semver
+    - pagekey-semver plan
+```
 
 
 ## Philosophy
