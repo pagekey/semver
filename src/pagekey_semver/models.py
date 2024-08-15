@@ -33,37 +33,6 @@ class Prefix(BaseModel):
         return type.value
 
 
-class GitHubReleaseConfig(BaseModel):
-    """Config for creating GitHub releases."""
-
-    enabled: bool
-
-
-class GitLabReleaseConfig(BaseModel):
-    """Config for creating GitLab releases."""
-
-    enabled: bool
-
-
-class GitHubIntegrationConfig(BaseModel):
-    """Configuration for any GitHub-specific integrations."""
-
-    create_release: GitHubReleaseConfig
-
-
-class GitLabIntegrationConfig(BaseModel):
-    """Configuration for any GitLab-specific integrations."""
-
-    create_release: GitLabReleaseConfig
-
-
-class IntegrationsConfig(BaseModel):
-    """Holds all configs for integrating with external services."""
-
-    github: GitHubIntegrationConfig
-    gitlab: GitLabIntegrationConfig
-
-
 @dataclass
 class Commit:
     """Represents a Git commit."""

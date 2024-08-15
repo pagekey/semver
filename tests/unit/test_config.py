@@ -5,9 +5,9 @@ from unittest.mock import MagicMock, mock_open, patch
 import yaml
 
 from pagekey_semver.config import DEFAULT_CONFIG_DICT, load_config
+from pagekey_semver.integrations.github import GitHubReleaseConfig
+from pagekey_semver.integrations.gitlab import GitLabReleaseConfig
 from pagekey_semver.models import (
-    GitHubReleaseConfig,
-    GitLabReleaseConfig,
     Prefix,
 )
 from pagekey_semver.file_replacer.json import JsonFileReplacer
