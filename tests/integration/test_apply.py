@@ -15,7 +15,15 @@ import yaml
 
 from pagekey_semver.cli import cli_entrypoint
 from pagekey_semver.config import SemverConfig
-from pagekey_semver.models import GitConfig, Prefix
+from pagekey_semver.models import (
+    GitConfig,
+    GitHubIntegrationConfig,
+    GitHubReleaseConfig,
+    GitLabIntegrationConfig,
+    GitLabReleaseConfig,
+    IntegrationsConfig,
+    Prefix,
+)
 from pagekey_semver.file_replacer.json import JsonFileReplacer
 from pagekey_semver.file_replacer.sed import SedFileReplacer
 from pagekey_semver.file_replacer.toml import TomlFileReplacer
@@ -166,6 +174,14 @@ class CustomChangelogWriter(ChangelogWriter):
                 name="file_replacer.yaml", key="my_version", format="%M.%m.%p"
             ),
         ],
+        integrations=IntegrationsConfig(
+            github=GitHubIntegrationConfig(
+                create_release=GitHubReleaseConfig(enabled=False)
+            ),
+            gitlab=GitLabIntegrationConfig(
+                create_release=GitLabReleaseConfig(enabled=False)
+            ),
+        ),
     )
 
     # Make test commit.

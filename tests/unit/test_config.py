@@ -4,8 +4,12 @@ from unittest.mock import MagicMock, mock_open, patch
 
 import yaml
 
-from pagekey_semver.config import DEFAULT_CONFIG, load_config
-from pagekey_semver.models import Prefix
+from pagekey_semver.config import DEFAULT_CONFIG_DICT, load_config
+from pagekey_semver.models import (
+    GitHubReleaseConfig,
+    GitLabReleaseConfig,
+    Prefix,
+)
 from pagekey_semver.file_replacer.json import JsonFileReplacer
 from pagekey_semver.file_replacer.sed import SedFileReplacer
 from pagekey_semver.file_replacer.toml import TomlFileReplacer
@@ -26,7 +30,7 @@ class Test_load_config:
         config = load_config(config_path)
 
         # Assert.
-        assert config == DEFAULT_CONFIG
+        assert config.model_dump() == DEFAULT_CONFIG_DICT
 
     @patch("builtins.open", new_callable=mock_open)
     @patch(f"{MODULE_UNDER_TEST}.os")
@@ -194,4 +198,38 @@ class Test_load_config:
         )
         assert config.file_replacers[3] == YamlFileReplacer(
             name="myfile.yaml", key="version", format="%M.%m.%p"
+        )
+
+    @patch("builtins.open", new_callable=mock_open)
+    def test_with_integrations_parses_config(self, mock_builtins_open):
+        # Arrange.
+        mock_path = MagicMock()
+        mock_path.is_file.return_value = True
+        mock_file = mock_builtins_open.return_value
+        mock_file.read.return_value = yaml.safe_dump(
+            {
+                "integrations": {
+                    "github": {
+                        "create_release": {
+                            "enabled": "true",
+                        },
+                    },
+                    "gitlab": {
+                        "create_release": {
+                            "enabled": "true",
+                        },
+                    },
+                },
+            },
+        )
+
+        # Act.
+        config = load_config(mock_path)
+
+        # Assert.
+        assert config.integrations.github.create_release == GitHubReleaseConfig(
+            enabled=True
+        )
+        assert config.integrations.gitlab.create_release == GitLabReleaseConfig(
+            enabled=True
         )

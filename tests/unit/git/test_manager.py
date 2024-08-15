@@ -4,9 +4,9 @@ from unittest.mock import MagicMock, call, patch
 
 import pytest
 
-from pagekey_semver.config import DEFAULT_CONFIG, SemverConfig
+from pagekey_semver.config import DEFAULT_CONFIG
 from pagekey_semver.git.manager import GitManager, GitManagerException, LocalGitOptions
-from pagekey_semver.models import GitConfig, Tag
+from pagekey_semver.models import Tag
 
 
 MODULE_UNDER_TEST = "pagekey_semver.git.manager"
@@ -131,17 +131,9 @@ class TestGitManager:
             existing_tags = ["v0.1.0", "v3.0.0", "v2.0.0"]
             new_tag = Tag("v4.0.0", 4, 0, 0)
             mock_system.return_value = 0  # exit code
-            config = SemverConfig(
-                changelog_path="CHANGELOG.md",
-                changelog_writer="pagekey_semver.changelog_writer:ChangelogWriter",
-                format="v%M.%m.%p",
-                git=GitConfig(
-                    name="some name",
-                    email="some@email.com",
-                ),
-                prefixes=[],
-                file_replacers=[],
-            )
+            config = DEFAULT_CONFIG
+            config.git.name = "some name"
+            config.git.email = "some@email.com"
             mock_git_querier = MagicMock()
             mock_git_effector = MagicMock()
             manager = GitManager(config, mock_git_querier, mock_git_effector)

@@ -7,7 +7,15 @@ from typing import List, Union
 from pydantic import BaseModel, Field
 import yaml
 
-from pagekey_semver.models import GitConfig, Prefix
+from pagekey_semver.models import (
+    GitConfig,
+    GitHubIntegrationConfig,
+    GitHubReleaseConfig,
+    GitLabIntegrationConfig,
+    GitLabReleaseConfig,
+    IntegrationsConfig,
+    Prefix,
+)
 from pagekey_semver.file_replacer.json import JsonFileReplacer
 from pagekey_semver.file_replacer.sed import SedFileReplacer
 from pagekey_semver.file_replacer.toml import TomlFileReplacer
@@ -30,6 +38,7 @@ class SemverConfig(BaseModel):
     git: GitConfig
     prefixes: List[Prefix]
     file_replacers: List[FileReplacersUnion] = Field(discriminator="type")
+    integrations: IntegrationsConfig
 
 
 DEFAULT_CONFIG = SemverConfig(
@@ -47,6 +56,14 @@ DEFAULT_CONFIG = SemverConfig(
         Prefix(label="fix", type="patch"),
     ],
     file_replacers=[],
+    integrations=IntegrationsConfig(
+        github=GitHubIntegrationConfig(
+            create_release=GitHubReleaseConfig(enabled=False)
+        ),
+        gitlab=GitLabIntegrationConfig(
+            create_release=GitLabReleaseConfig(enabled=False)
+        ),
+    ),
 )
 DEFAULT_CONFIG_DICT = DEFAULT_CONFIG.model_dump()
 
