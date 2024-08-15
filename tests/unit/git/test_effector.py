@@ -1,3 +1,5 @@
+"""Test Git Effector module."""
+
 from unittest.mock import MagicMock
 from pagekey_semver.git.effector import CommandGitEffector
 

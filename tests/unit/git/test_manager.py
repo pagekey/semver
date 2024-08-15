@@ -1,4 +1,4 @@
-"""Test Git module."""
+"""Test Git Manager module."""
 
 from unittest.mock import MagicMock, call, patch
 

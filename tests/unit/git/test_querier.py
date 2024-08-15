@@ -1,3 +1,5 @@
+"""Test Git Querier module."""
+
 from unittest.mock import MagicMock
 from pagekey_semver.git.querier import CommandGitQuerier
 from pagekey_semver.models import Commit

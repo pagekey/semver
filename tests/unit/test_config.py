@@ -5,8 +5,7 @@ from unittest.mock import MagicMock, mock_open, patch
 import yaml
 
 from pagekey_semver.config import DEFAULT_CONFIG_DICT, load_config
-from pagekey_semver.integrations.github import GitHubReleaseConfig
-from pagekey_semver.integrations.gitlab import GitLabReleaseConfig
+from pagekey_semver.integrations.release_creator import CreateReleaseConfig
 from pagekey_semver.models import (
     Prefix,
 )
@@ -211,12 +210,18 @@ class Test_load_config:
                 "integrations": {
                     "github": {
                         "create_release": {
-                            "enabled": "true",
+                            "project": "my/project",
+                            "token_variable": "GITHUB_TOKEN",
+                            "title_format": "%M-%m-%p",
+                            "body": "my body",
                         },
                     },
                     "gitlab": {
                         "create_release": {
-                            "enabled": "true",
+                            "project": "my/project",
+                            "token_variable": "GITLAB_TOKEN",
+                            "title_format": "%M-%m-%p",
+                            "body": "my body",
                         },
                     },
                 },
@@ -227,9 +232,15 @@ class Test_load_config:
         config = load_config(mock_path)
 
         # Assert.
-        assert config.integrations.github.create_release == GitHubReleaseConfig(
-            enabled=True
+        assert config.integrations.github.create_release == CreateReleaseConfig(
+            project="my/project",
+            token_variable="GITHUB_TOKEN",
+            title_format="%M-%m-%p",
+            body="my body",
         )
-        assert config.integrations.gitlab.create_release == GitLabReleaseConfig(
-            enabled=True
+        assert config.integrations.gitlab.create_release == CreateReleaseConfig(
+            project="my/project",
+            token_variable="GITLAB_TOKEN",
+            title_format="%M-%m-%p",
+            body="my body",
         )
