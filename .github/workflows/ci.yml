@@ -83,5 +83,5 @@ jobs:
           GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
         run: |
           git remote add gitlab https://$GITLAB_USER:$GITLAB_TOKEN@gitlab.com/pagekey/semver.git
-          git config remote.origin.push "+refs/heads/*:+refs/heads/*:+refs/tags/*"
+          git remote remove origin
           git push --mirror gitlab
