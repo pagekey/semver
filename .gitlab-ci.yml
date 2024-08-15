@@ -1,3 +1,7 @@
+stages:
+  - version
+
+
 semver-dry-run:
   stage: version
   image: python:3.10
