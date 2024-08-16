@@ -7,8 +7,7 @@ from typing import List, Union
 from pydantic import BaseModel, Field
 import yaml
 
-from pagekey_semver.integrations.release_creator.github import GitHubIntegrationConfig
-from pagekey_semver.integrations.release_creator.gitlab import GitLabIntegrationConfig
+from pagekey_semver.integrations.release_creator import GitHubIntegrationConfig, GitLabIntegrationConfig
 from pagekey_semver.models import (
     GitConfig,
     Prefix,
