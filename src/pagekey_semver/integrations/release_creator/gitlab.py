@@ -1,7 +1,7 @@
 from typing import Optional
 from pydantic import BaseModel
 
-from pagekey_semver.integrations.release_creator import CreateReleaseConfig
+from pagekey_semver.integrations.release_creator.base import CreateReleaseConfig
 
 
 class GitLabIntegrationConfig(BaseModel):

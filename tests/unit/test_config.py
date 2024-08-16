@@ -5,7 +5,7 @@ from unittest.mock import MagicMock, mock_open, patch
 import yaml
 
 from pagekey_semver.config import DEFAULT_CONFIG_DICT, load_config
-from pagekey_semver.integrations.release_creator import CreateReleaseConfig
+from pagekey_semver.integrations.release_creator.base import CreateReleaseConfig
 from pagekey_semver.models import (
     Prefix,
 )
