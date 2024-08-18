@@ -60,6 +60,7 @@ class GitHubReleaseCreator(ReleaseCreator):
             },
         )
         print(f"Status: {request.status_code}")
+        print(f"Body: {request.content.decode()}")
 
 
 class GitLabReleaseCreator(ReleaseCreator):
@@ -85,3 +86,4 @@ class GitLabReleaseCreator(ReleaseCreator):
             },
         )
         print(f"Status: {request.status_code}")
+        print(f"Body: {request.content.decode()}")
