@@ -1,3 +1,7 @@
+## v0.3.29
+
+- fix: Trigger release (d58ca4b1)
+
 ## v0.3.28
 
 - fix: Turn on semver user/token secrets (b87b1905)
