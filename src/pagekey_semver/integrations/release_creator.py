@@ -39,9 +39,11 @@ class GitLabIntegrationConfig(BaseModel):
 class GitHubReleaseCreator(ReleaseCreator):
     def create_release(self, release_config: CreateReleaseConfig, tag: Tag):
         token = os.getenv("GITHUB_TOKEN")
-        release_title = release_config.title_format.replace("%M", str(tag.major)) \
-            .replace("%m", str(tag.minor)) \
+        release_title = (
+            release_config.title_format.replace("%M", str(tag.major))
+            .replace("%m", str(tag.minor))
             .replace("%p", str(tag.patch))
+        )
         requests.post(
             f"https://api.github.com/repos/{release_config.project}/releases",
             json={
@@ -54,16 +56,18 @@ class GitHubReleaseCreator(ReleaseCreator):
             headers={
                 "Authorization": f"token {token}",
                 "Accept": "application/bnd.github.v3+json",
-            }
+            },
         )
 
 
 class GitLabReleaseCreator(ReleaseCreator):
     def create_release(self, release_config: CreateReleaseConfig, tag: Tag):
         token = os.getenv("GITLAB_TOKEN")
-        release_title = release_config.title_format.replace("%M", str(tag.major)) \
-            .replace("%m", str(tag.minor)) \
+        release_title = (
+            release_config.title_format.replace("%M", str(tag.major))
+            .replace("%m", str(tag.minor))
             .replace("%p", str(tag.patch))
+        )
         requests.post(
             f"https://gitlab.com/api/v4/projects/{release_config.project}/releases",
             json={
@@ -75,5 +79,5 @@ class GitLabReleaseCreator(ReleaseCreator):
             headers={
                 "PRIVATE-TOKEN": token,
                 "Content-Type": "application/json",
-            }
+            },
         )

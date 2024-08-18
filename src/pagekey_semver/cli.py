@@ -7,7 +7,10 @@ from pathlib import Path
 
 from pagekey_semver.changelog_writer import ChangelogWriter
 from pagekey_semver.git.manager import GitManager
-from pagekey_semver.integrations.release_creator import GitHubReleaseCreator, GitLabReleaseCreator
+from pagekey_semver.integrations.release_creator import (
+    GitHubReleaseCreator,
+    GitLabReleaseCreator,
+)
 from pagekey_semver.release import SemverRelease
 from pagekey_semver.models import Tag
 from pagekey_semver.config import load_config
@@ -77,9 +80,13 @@ def cli_entrypoint(args=sys.argv[1:]):
                     f.write("semver_release_occurred=true")
             # Create releases if enabled.
             if config.integrations.github.create_release is not None:
-                GitHubReleaseCreator().create_release(config.integrations.github.create_release, next_version)
+                GitHubReleaseCreator().create_release(
+                    config.integrations.github.create_release, next_version
+                )
             if config.integrations.gitlab.create_release is not None:
-                GitLabReleaseCreator().create_release(config.integrations.github.create_release, next_version)
+                GitLabReleaseCreator().create_release(
+                    config.integrations.github.create_release, next_version
+                )
         else:
             print(f"Would apply version {next_version.name}.", flush=True)
             print("Dry run mode - not applying version.", flush=True)

@@ -9,6 +9,8 @@ from pagekey_semver.models import ReleaseType, Tag
 MODULE_UNDER_TEST = "pagekey_semver.cli"
 
 
+@patch(f"{MODULE_UNDER_TEST}.GitHubReleaseCreator")
+@patch(f"{MODULE_UNDER_TEST}.GitLabReleaseCreator")
 @patch(f"{MODULE_UNDER_TEST}.ChangelogWriter")
 @patch(f"{MODULE_UNDER_TEST}.GitManager")
 @patch(f"{MODULE_UNDER_TEST}.SemverRelease")
@@ -18,6 +20,8 @@ def test_cli_entrypoint_with_no_args_calls_all_functions(
     mock_release_cls,
     mock_git_manager_cls,
     mock_changelog_writer_cls,
+    mock_gitlab_release_cls,
+    mock_github_release_cls,
 ):
     # Arrange.
     replacer1 = MagicMock()
@@ -55,6 +59,8 @@ def test_cli_entrypoint_with_no_args_calls_all_functions(
     mock_git_manager.apply_tag.assert_called_with(tags, next_version)
     replacer1.perform_replace.assert_called_with(next_version)
     replacer2.perform_replace.assert_called_with(next_version)
+    mock_gitlab_release_cls.assert_called()
+    mock_github_release_cls.assert_called()
 
 
 @patch(f"{MODULE_UNDER_TEST}.ChangelogWriter")
