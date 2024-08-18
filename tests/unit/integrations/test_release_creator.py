@@ -43,7 +43,7 @@ class TestGitHubReleaseCreator:
                     "prerelease": False,
                 },
                 headers={
-                    "Authorization": "Bearer my-github-token",
+                    "Authorization": "token my-github-token",
                     "Accept": "application/bnd.github.v3+json",
                 },
             )
