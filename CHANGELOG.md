@@ -1,3 +1,7 @@
+## v0.3.31
+
+- fix: Add semver user/token to step running semver (778cd649)
+
 ## v0.3.30
 
 - fix: Switch auth header back to token (4cfd5a27)
