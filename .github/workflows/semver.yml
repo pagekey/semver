@@ -39,7 +39,13 @@ jobs:
         if: github.ref == 'refs/heads/main'
         run: pagekey-semver apply
         id: apply
+        env:
+          SEMVER_USER: ${{ secrets.SEMVER_USER }}
+          SEMVER_TOKEN: ${{ secrets.SEMVER_TOKEN }}
 
       - name: Run semver dry-run when not on main
         if: github.ref != 'refs/heads/main'
         run: pagekey-semver plan
+        env:
+          SEMVER_USER: ${{ secrets.SEMVER_USER }}
+          SEMVER_TOKEN: ${{ secrets.SEMVER_TOKEN }}
