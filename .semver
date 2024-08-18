@@ -3,3 +3,16 @@ file_replacers:
     name: pyproject.toml
     key: tool.poetry.version
     format: "%M.%m.%p"
+integrations:
+  github:
+    create_release:
+      project: "pagekey/semver"
+      token_variable: "GITHUB_TOKEN"
+      title_format: "%M.%m.%p"
+      body: "Auto-generated release."
+  gitlab:
+    create_release:
+      project: "60867298"
+      token_variable: "GITLAB_TOKEN"
+      title_format: "%M.%m.%p"
+      body: "Auto-generated release."
