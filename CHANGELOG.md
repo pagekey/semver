@@ -1,3 +1,7 @@
+## v0.3.30
+
+- fix: Switch auth header back to token (4cfd5a27)
+
 ## v0.3.29
 
 - fix: Trigger release (d58ca4b1)
