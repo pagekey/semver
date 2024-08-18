@@ -1,3 +1,7 @@
+## v0.3.23
+
+- fix: Add release integrations to CLI, enable (e67f3673dd5c304ea8c8adea5ac2c9e9c747a36d)
+
 ## v0.3.22
 
 - fix: Attempt prepend again (1aaa8579960bb3905ddd9db19b334e6e7449d43f)
