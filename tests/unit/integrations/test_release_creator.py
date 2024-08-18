@@ -24,7 +24,7 @@ class TestGitHubReleaseCreator:
             )
             tag = Tag("v1.0.0", 1, 0, 0)
             creator = GitHubReleaseCreator()
-            mock_os.side_effect = ["my-github-token"]
+            mock_os.getenv.side_effect = ["my-github-token"]
             
             # Act.
             creator.create_release(config, tag)
@@ -62,7 +62,7 @@ class TestGitLabReleaseCreator:
             )
             tag = Tag("v1.0.0", 1, 0, 0)
             creator = GitLabReleaseCreator()
-            mock_os.side_effect = ["my-gitlab-token"]
+            mock_os.getenv.side_effect = ["my-gitlab-token"]
             
             # Act.
             creator.create_release(config, tag)

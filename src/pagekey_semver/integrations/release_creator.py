@@ -39,18 +39,38 @@ class GitLabIntegrationConfig(BaseModel):
 class GitHubReleaseCreator(ReleaseCreator):
     def create_release(self, release_config: CreateReleaseConfig, tag: Tag):
         token = os.getenv("GITHUB_TOKEN")
+        release_title = release_config.title_format.replace("%M", str(tag.major)) \
+            .replace("%m", str(tag.minor)) \
+            .replace("%p", str(tag.patch))
+        requests.post(
+            f"https://api.github.com/repos/{release_config.project}/releases",
+            json={
+                "tag_name": tag.name,
+                "name": release_title,
+                "body": release_config.body,
+                "draft": False,
+                "prerelease": False,
+            },
+            headers={
+                "Authorization": f"token {token}",
+                "Accept": "application/bnd.github.v3+json",
+            }
+        )
 
 
 class GitLabReleaseCreator(ReleaseCreator):
     def create_release(self, release_config: CreateReleaseConfig, tag: Tag):
         token = os.getenv("GITLAB_TOKEN")
+        release_title = release_config.title_format.replace("%M", str(tag.major)) \
+            .replace("%m", str(tag.minor)) \
+            .replace("%p", str(tag.patch))
         requests.post(
             f"https://gitlab.com/api/v4/projects/{release_config.project}/releases",
             json={
-                "tag_name": "",
-                "name": "",
-                "description": "",
-                "ref": "",
+                "tag_name": tag.name,
+                "name": release_title,
+                "description": release_config.body,
+                "ref": tag.name,
             },
             headers={
                 "PRIVATE-TOKEN": token,
