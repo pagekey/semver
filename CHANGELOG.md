@@ -1,3 +1,7 @@
+## v0.3.25
+
+- fix: Print body of release request (aa857917fda6e0a6f5ba28c40e5ff64669fbfed9)
+
 ## v0.3.24
 
 - fix: Fix GL pipe, print when pub release (000e0a6844bcb92bdca93fc61d9177bd8146e18f)
