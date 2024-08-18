@@ -1,3 +1,7 @@
+## v0.3.27
+
+- fix: Use SEMVER_TOKEN for GitHub release (008a1738)
+
 ## v0.3.26
 
 - fix: Fix GitHub auth, only first 8 of hash (97192ff3)
