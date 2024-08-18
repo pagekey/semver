@@ -1,3 +1,7 @@
+## v0.3.28
+
+- fix: Turn on semver user/token secrets (b87b1905)
+
 ## v0.3.27
 
 - fix: Use SEMVER_TOKEN for GitHub release (008a1738)
