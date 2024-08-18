@@ -1,3 +1,7 @@
+## v0.3.24
+
+- fix: Fix GL pipe, print when pub release (000e0a6844bcb92bdca93fc61d9177bd8146e18f)
+
 ## v0.3.23
 
 - fix: Add release integrations to CLI, enable (e67f3673dd5c304ea8c8adea5ac2c9e9c747a36d)
