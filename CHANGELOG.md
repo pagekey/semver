@@ -1,3 +1,7 @@
+## v0.3.33
+
+- fix: Update release name format (7f35ec60)
+
 ## v0.3.32
 
 - fix: Do not hard-code release token variable (ac63888a)
