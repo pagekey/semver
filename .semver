@@ -7,7 +7,7 @@ integrations:
   github:
     create_release:
       project: "pagekey/semver"
-      token_variable: "GITHUB_TOKEN"
+      token_variable: "SEMVER_TOKEN"
       title_format: "%M.%m.%p"
       body: "Auto-generated release."
   gitlab:
