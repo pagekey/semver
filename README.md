@@ -101,7 +101,7 @@ semver:
   only: [main]
   script:
     - pip install pagekey-semver
-    - pagekey-semver plan
+    - pagekey-semver apply
 ```
 
 

@@ -44,7 +44,8 @@ class GitHubReleaseCreator(ReleaseCreator):
             .replace("%m", str(tag.minor))
             .replace("%p", str(tag.patch))
         )
-        requests.post(
+        print("POSTing GitHub release")
+        request = requests.post(
             f"https://api.github.com/repos/{release_config.project}/releases",
             json={
                 "tag_name": tag.name,
@@ -58,6 +59,7 @@ class GitHubReleaseCreator(ReleaseCreator):
                 "Accept": "application/bnd.github.v3+json",
             },
         )
+        print(f"Status: {request.status_code}")
 
 
 class GitLabReleaseCreator(ReleaseCreator):
@@ -68,7 +70,8 @@ class GitLabReleaseCreator(ReleaseCreator):
             .replace("%m", str(tag.minor))
             .replace("%p", str(tag.patch))
         )
-        requests.post(
+        print("POSTing GitLab release")
+        request = requests.post(
             f"https://gitlab.com/api/v4/projects/{release_config.project}/releases",
             json={
                 "tag_name": tag.name,
@@ -81,3 +84,4 @@ class GitLabReleaseCreator(ReleaseCreator):
                 "Content-Type": "application/json",
             },
         )
+        print(f"Status: {request.status_code}")
