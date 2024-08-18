@@ -55,7 +55,7 @@ class GitHubReleaseCreator(ReleaseCreator):
                 "prerelease": False,
             },
             headers={
-                "Authorization": f"token {token}",
+                "Authorization": f"Bearer {token}",
                 "Accept": "application/bnd.github.v3+json",
             },
         )

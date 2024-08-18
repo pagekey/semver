@@ -122,5 +122,5 @@ class DefaultChangelogWriter(ChangelogWriter):
         # Write changelog.
         changelog_file.write(f"## {version.name}\n\n")
         for commit in commits:
-            changelog_file.write(f"- {commit.message} ({commit.hash})\n")
+            changelog_file.write(f"- {commit.message} ({commit.hash[0:8]})\n")
         changelog_file.write("\n")
