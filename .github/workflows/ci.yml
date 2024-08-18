@@ -47,9 +47,9 @@ jobs:
   version:
     needs: [lint, test]
     uses: ./.github/workflows/semver.yml
-    # secrets:
-    #   SEMVER_USER: ${{ secrets.SEMVER_USER }}
-    #   SEMVER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    secrets:
+      SEMVER_USER: ${{ secrets.SEMVER_USER }}
+      SEMVER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   publish:
     runs-on: ubuntu-latest
