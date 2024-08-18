@@ -1,3 +1,7 @@
+## v0.3.32
+
+- fix: Do not hard-code release token variable (ac63888a)
+
 ## v0.3.31
 
 - fix: Add semver user/token to step running semver (778cd649)
