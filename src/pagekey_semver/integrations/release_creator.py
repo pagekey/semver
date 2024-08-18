@@ -40,7 +40,9 @@ class GitHubReleaseCreator(ReleaseCreator):
     def create_release(self, release_config: CreateReleaseConfig, tag: Tag):
         token = os.getenv(release_config.token_variable, "")
         if len(token) < 1:
-            print(f"WARNING: token {release_config.token_variable} is blank. Release creator may fail.")
+            print(
+                f"WARNING: token {release_config.token_variable} is blank. Release creator may fail."
+            )
         release_title = (
             release_config.title_format.replace("%M", str(tag.major))
             .replace("%m", str(tag.minor))
