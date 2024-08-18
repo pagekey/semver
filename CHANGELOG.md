@@ -1,3 +1,7 @@
+## v0.3.26
+
+- fix: Fix GitHub auth, only first 8 of hash (97192ff3)
+
 ## v0.3.25
 
 - fix: Print body of release request (aa857917fda6e0a6f5ba28c40e5ff64669fbfed9)
