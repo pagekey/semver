@@ -32,7 +32,7 @@ class TestGitHubReleaseCreator:
             creator.create_release(config, tag)
 
             # Assert.
-            mock_os.getenv.assert_called_with("GITHUB_TOKEN")
+            mock_os.getenv.assert_called_with("GITHUB_TOKEN", "")
             mock_requests.post.assert_called_with(
                 "https://api.github.com/repos/me/project/releases",
                 json={
@@ -44,7 +44,7 @@ class TestGitHubReleaseCreator:
                 },
                 headers={
                     "Authorization": "token my-github-token",
-                    "Accept": "application/bnd.github.v3+json",
+                    "Content-Type": "application/json",
                 },
             )
 

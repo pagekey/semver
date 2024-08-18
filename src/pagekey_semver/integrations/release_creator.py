@@ -38,7 +38,9 @@ class GitLabIntegrationConfig(BaseModel):
 
 class GitHubReleaseCreator(ReleaseCreator):
     def create_release(self, release_config: CreateReleaseConfig, tag: Tag):
-        token = os.getenv("GITHUB_TOKEN")
+        token = os.getenv(release_config.token_variable, "")
+        if len(token) < 1:
+            print(f"WARNING: token {release_config.token_variable} is blank. Release creator may fail.")
         release_title = (
             release_config.title_format.replace("%M", str(tag.major))
             .replace("%m", str(tag.minor))
@@ -56,7 +58,7 @@ class GitHubReleaseCreator(ReleaseCreator):
             },
             headers={
                 "Authorization": f"token {token}",
-                "Accept": "application/bnd.github.v3+json",
+                "Content-Type": "application/json",
             },
         )
         print(f"Status: {request.status_code}")
