@@ -94,7 +94,7 @@ def cli_entrypoint(args=sys.argv[1:]):
                 )
             if config.integrations.gitlab.create_release is not None:
                 GitLabReleaseCreator().create_release(
-                    config.integrations.github.create_release, next_version
+                    config.integrations.gitlab.create_release, next_version
                 )
         else:
             print(f"Would apply version {next_version.name}.", flush=True)
