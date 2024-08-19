@@ -157,4 +157,3 @@ This is an opinionated version of Semantic Release that loosely follows the guid
 ## Configuration
 
 See [here](./docs/config/index.md) for more information on how to configure the tool.
-
