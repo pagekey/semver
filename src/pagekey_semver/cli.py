@@ -55,6 +55,7 @@ def cli_entrypoint(args=sys.argv[1:]):
 
     # Compute tags, commits
     tags = manager.get_git_tags()
+    print(f"Found tags: {' '.join(tags)}")
     max_tag: Tag = release.get_biggest_tag(tags)
     hash = None
     if max_tag is not None:
