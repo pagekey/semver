@@ -97,7 +97,7 @@ jobs:
         uses: actions/checkout@v4
 ```
 
-To create a release on tag, use the GitHub release integration.
+To create a GitLab release, check out the docs for the [GitHub Create Release integration](./docs/config/create_release.md#github).
 
 
 ### GitLab CI/CD
@@ -128,28 +128,14 @@ semver:
     - pagekey-semver apply
 ```
 
-To create a GitLab release, add the following release job, which will run when `pagekey-semver` pushes the tag. ([source](https://docs.gitlab.com/ee/user/project/releases/release_cicd_examples.html#create-a-release-when-a-git-tag-is-created))
-
-```yaml
-release_job:
-  stage: version
-  image: registry.gitlab.com/gitlab-org/release-cli:latest
-  rules:
-    - if: $CI_COMMIT_TAG                 # Run this job when a tag is created
-  script:
-    - echo "running release_job"
-  release:                               # See https://docs.gitlab.com/ee/ci/yaml/#release for available properties
-    tag_name: '$CI_COMMIT_TAG'
-    description: '$CI_COMMIT_TAG'
-```
-
-You can also use the GitLab release integration to create the release.
+To create a GitLab release, check out the docs for the [GitLab Create Release integration](./docs/config/create_release.md#gitlab).
 
 
 ## Philosophy
 
 This is an opinionated version of Semantic Release that loosely follows the guidelines at [semver.org](https://semver.org/). It puts practicality above all theory. This differs in a few ways from more popular semantic release packages:
 
+- If there are no tags matching the specified format yet, then `v0.1.0` is used as the first version.
 - There is no special treatment of "pre-releases", versions prior to `v1.0.0`. Everything behaves the same: patch prefixes increment the third number, minor patches increment the middle number, and major prefixes increment the first number. If there are multiple prefixes, the prefix with the greatest precedence is applied. If you don't like the default settings, you can override them using the configuration format below.
 - There is currently no support for scoped commits (`fix(release): do something`) unless you add each scope to the `.semver` file as its own prefix.
 
