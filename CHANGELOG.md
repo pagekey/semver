@@ -1,3 +1,7 @@
+## v1.0.3
+
+- fix: Pull after checkout for GitLab (bd7fe65f)
+
 ## v1.0.2
 
 - fix: Do pull before checkout in GitLab (6d08ef26)
