@@ -1,3 +1,7 @@
+## v1.0.1
+
+- fix: Check out branch automatically on GitLab (84c9bfd7)
+
 ## v1.0.0
 
 - major: Trigger v1.0.0 at last (9d311f7e)
