@@ -1,3 +1,7 @@
+## v1.0.0
+
+- major: Trigger v1.0.0 at last (9d311f7e)
+
 ## v0.3.34
 
 - fix: Plan only on GitLab (c05ac532)
