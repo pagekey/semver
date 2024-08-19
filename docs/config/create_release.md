@@ -33,7 +33,7 @@ integrations:
   gitlab:
     create_release:
       project: "60867298"
-      token_variable: "GITLAB_TOKEN"
+      token_variable: "SEMVER_TOKEN"
       title_format: "v%M.%m.%p"
       body: "Auto-generated release."
 ```

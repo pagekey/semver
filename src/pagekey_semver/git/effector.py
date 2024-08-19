@@ -46,6 +46,13 @@ class GitEffector(abc.ABC):
             ref: Which commit, branch, or tag to push.
         """
 
+    def checkout(self, ref: str) -> None:
+        """Check out a ref.
+
+        Args:
+            ref: Which commit, branch, or tag to checkout.
+        """
+
 
 class CommandGitEffector(GitEffector):
     """Use the Git CLI to make changes to Git."""
@@ -67,3 +74,6 @@ class CommandGitEffector(GitEffector):
 
     def push(self, remote: str, ref: str) -> None:
         self._runner.run(f"git push {remote} {ref}")
+
+    def checkout(self, ref: str) -> None:
+        self._runner.run(f"git checkout {ref}")
