@@ -64,7 +64,7 @@ If you want to trigger another workflow only when a tag has been created, you ca
 ```yaml
 jobs:
   # ...
-  # omitting inclusion of semver.yml shown above
+  # omitting "version" job shown above
   # ...
 
   publish:
@@ -75,6 +75,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 ```
+
+To create a release on tag, use the GitHub release integration.
+
 
 ### GitLab CI/CD
 
@@ -103,6 +106,23 @@ semver:
     - pip install pagekey-semver
     - pagekey-semver apply
 ```
+
+To create a GitLab release, add the following release job, which will run when `pagekey-semver` pushes the tag. ([source](https://docs.gitlab.com/ee/user/project/releases/release_cicd_examples.html#create-a-release-when-a-git-tag-is-created))
+
+```yaml
+release_job:
+  stage: version
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  rules:
+    - if: $CI_COMMIT_TAG                 # Run this job when a tag is created
+  script:
+    - echo "running release_job"
+  release:                               # See https://docs.gitlab.com/ee/ci/yaml/#release for available properties
+    tag_name: '$CI_COMMIT_TAG'
+    description: '$CI_COMMIT_TAG'
+```
+
+You can also use the GitLab release integration to create the release.
 
 
 ## Philosophy

@@ -9,6 +9,7 @@ Contents:
 - [Prefixes](#prefixes)
 - [Replace Files](#replace-files)
 - [Tag Format](#tag-format)
+- [Integrations](#integrations)
 
 
 ## Changelog Path
@@ -164,3 +165,7 @@ format: "v%M-%m-%p
 ### Environment Variable Override
 
 You can override this config item by setting the `SEMVER_tag_format` variable.
+
+## Integrations
+
+These features integrate with something outside of the Git repository. So far, the only integration supported is the [Create Release integration](./create_release.md), which sends a request to the GitHub/GitLab API to create a new release when a new tag is created.
