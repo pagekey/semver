@@ -1,3 +1,7 @@
+## v1.0.2
+
+- fix: Do pull before checkout in GitLab (6d08ef26)
+
 ## v1.0.1
 
 - fix: Check out branch automatically on GitLab (84c9bfd7)
