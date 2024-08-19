@@ -1,3 +1,7 @@
+## v0.3.34
+
+- fix: Plan only on GitLab (c05ac532)
+
 ## v0.3.33
 
 - fix: Update release name format (7f35ec60)
