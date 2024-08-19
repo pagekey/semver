@@ -53,6 +53,9 @@ class GitEffector(abc.ABC):
             ref: Which commit, branch, or tag to checkout.
         """
 
+    def pull_all(self) -> None:
+        """Pull all by running `git pull`."""
+
 
 class CommandGitEffector(GitEffector):
     """Use the Git CLI to make changes to Git."""
@@ -77,3 +80,6 @@ class CommandGitEffector(GitEffector):
 
     def checkout(self, ref: str) -> None:
         self._runner.run(f"git checkout {ref}")
+
+    def pull_all(self) -> None:
+        self._runner.run("git pull")
