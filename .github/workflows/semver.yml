@@ -32,8 +32,7 @@ jobs:
           python-version: '3.x'
       
       - name: Install semver
-        # run: pip3 install pagekey-semver # TODO uncomment
-        run: pip3 install . # TODO remove
+        run: pip3 install pagekey-semver
 
       - name: Run semver live when on main
         if: github.ref == 'refs/heads/main'
