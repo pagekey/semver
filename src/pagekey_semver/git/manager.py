@@ -87,13 +87,6 @@ class GitManager:
             new_tag: Tag to be added, if it does not already exist.
         """
         if new_tag not in existing_tags:
-            # Check out branch on GitLab
-            gitlab_branch = os.getenv("CI_COMMIT_BRANCH", "")
-            if len(gitlab_branch) > 0:
-                print(f"Checking out CI_COMMIT_BRANCH={gitlab_branch}")
-                self._effector.checkout(gitlab_branch)
-                self._effector.pull_all()
-
             print(f"Tagging/pushing new tag: {new_tag}", flush=True)
             original_git_config = self.get_existing_git_info()
 

@@ -45,6 +45,14 @@ def cli_entrypoint(args=sys.argv[1:]):
     release = SemverRelease(config)
     writer = ChangelogWriter.from_config(config)
 
+    # Check out branch on GitLab
+    gitlab_branch = os.getenv("CI_COMMIT_BRANCH", "")
+    if len(gitlab_branch) > 0:
+        print(f"Checking out CI_COMMIT_BRANCH={gitlab_branch}")
+        # Yeah, yeah, bad form to use a private var this way. Too bad.
+        manager._effector.checkout(gitlab_branch)
+        manager._effector.pull_all()
+
     # Compute tags, commits
     tags = manager.get_git_tags()
     max_tag: Tag = release.get_biggest_tag(tags)
