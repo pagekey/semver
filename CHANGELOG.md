@@ -1,3 +1,7 @@
+## v1.0.4
+
+- fix: Move GitLab logic before tag creation (e32e2de0)
+
 ## v1.0.3
 
 - fix: Pull after checkout for GitLab (bd7fe65f)
