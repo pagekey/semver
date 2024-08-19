@@ -1,3 +1,7 @@
+## v1.0.7
+
+- fix: Do not pass GitHub config to GitLab (c50b2984)
+
 ## v1.0.6
 
 - fix: Use fetch tags instead of pull for GitLab (680c4f6e)
