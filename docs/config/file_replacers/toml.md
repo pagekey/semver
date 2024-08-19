@@ -11,6 +11,7 @@ replace_files:
   - type: toml
     name: Cargo.toml
     key: version
+    format: "v%M.%m.%p"
 ```
 
 Given the following contents for `Cargo.toml`:
@@ -38,6 +39,7 @@ replace_files:
   - type: toml
     name: Cargo.toml
     key: project.metadata.version
+    format: "v%M.%m.%p"
 ```
 
 Given the following contents for `Cargo.toml`:

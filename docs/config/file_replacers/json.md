@@ -11,6 +11,7 @@ replace_files:
   - type: json
     name: package.json
     key: version
+    format: "v%M.%m.%p"
 ```
 
 Given the following contents for `package.json`:
@@ -42,6 +43,7 @@ replace_files:
   - type: json
     name: package.json
     key: project.metadata.version
+    format: "v%M.%m.%p"
 ```
 
 Given the following contents for `package.json`:

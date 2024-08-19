@@ -11,6 +11,7 @@ replace_files:
   - type: yaml
     name: package.yaml
     key: version
+    format: "v%M.%m.%p"
 ```
 
 Given the following contents for `package.yaml`:
@@ -38,6 +39,7 @@ replace_files:
   - type: json
     name: package.json
     key: project.metadata.version
+    format: "v%M.%m.%p"
 ```
 
 Given the following contents for `package.yaml`:
