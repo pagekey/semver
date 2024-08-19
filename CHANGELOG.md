@@ -1,3 +1,7 @@
+## v1.0.8
+
+- fix: Pretty-print JSON file replacer (f6d91a2c)
+
 ## v1.0.7
 
 - fix: Do not pass GitHub config to GitLab (c50b2984)
