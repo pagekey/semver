@@ -1,3 +1,7 @@
+## v1.0.5
+
+- fix: Print which tags are found (4cdedda8)
+
 ## v1.0.4
 
 - fix: Move GitLab logic before tag creation (e32e2de0)
