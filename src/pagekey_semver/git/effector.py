@@ -53,8 +53,8 @@ class GitEffector(abc.ABC):
             ref: Which commit, branch, or tag to checkout.
         """
 
-    def pull_all(self) -> None:
-        """Pull all by running `git pull`."""
+    def fetch_tags(self) -> None:
+        """Fetch tags from all remotes."""
 
 
 class CommandGitEffector(GitEffector):
@@ -81,5 +81,5 @@ class CommandGitEffector(GitEffector):
     def checkout(self, ref: str) -> None:
         self._runner.run(f"git checkout {ref}")
 
-    def pull_all(self) -> None:
-        self._runner.run("git pull")
+    def fetch_tags(self) -> None:
+        self._runner.run("git fetch --tags")

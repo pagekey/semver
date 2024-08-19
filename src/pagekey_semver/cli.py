@@ -51,7 +51,7 @@ def cli_entrypoint(args=sys.argv[1:]):
         print(f"Checking out CI_COMMIT_BRANCH={gitlab_branch}")
         # Yeah, yeah, bad form to use a private var this way. Too bad.
         manager._effector.checkout(gitlab_branch)
-        manager._effector.pull_all()
+        manager._effector.fetch_tags()
 
     # Compute tags, commits
     tags = manager.get_git_tags()
