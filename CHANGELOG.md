@@ -1,3 +1,7 @@
+## v1.0.6
+
+- fix: Use fetch tags instead of pull for GitLab (680c4f6e)
+
 ## v1.0.5
 
 - fix: Print which tags are found (4cdedda8)
