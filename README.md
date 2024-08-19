@@ -1,8 +1,9 @@
 # pagekey-semver
 
-This is a simple, opinionated semantic versioning tool.
+Simple automated version tagging for any Git-based software project.
 
-Check out the docs site (coming soon) or the [docs site source](./docs/index.md) to learn more.
+Check out the [docs](./docs/index.md) to learn more.
+
 
 ## Getting Started
 
@@ -24,9 +25,29 @@ pagekey-semver plan
 pagekey-semver apply
 ```
 
+
+## Requirements / Assumptions
+
+This tool requires that the following software is installed on the system running it:
+
+- Python 3
+- [`bash`](https://linux.die.net/man/1/bash)
+- [`sed`](https://linux.die.net/man/1/sed), if using the [`sed` file replacer](./docs/config/file_replacers/sed.md).
+- [`which`](https://linux.die.net/man/1/which), to check if `sed` is installed and raise a human-friendly error if not.
+
+
 ## Usage
 
-As you'll see below, it's highly recommended to set the `SEMVER_TOKEN` variable to your push credential, as well as `SEMVER_USER` if applicable for your Git hosting platform.
+To use this package, you'll need to start prefixing commits with `major:`, `minor:`, and `patch:`. If you don't like these prefixes, you can customize them in the [config file](./docs/config/index.md). Here's a brief description of what each one means:
+
+- `major`: If you put this prefix on a commit, it means that if people update to this version of your code, they will need to change their code or else things will break. In other words, you've made a breaking change to your API / software interface. This increments the first number of the version: `v1.0.0` would go to `v2.0.0`.
+- `minor`: This means you've added something new, such as a feature (`feat` is another common prefix for this type). If people auto-update to this version, your old code will still work, but new features will be available, too. It's backwards compatible. This increments the second number of the version: `v1.0.0` would go to `v1.1.0`.
+- `patch`: Similarly, this does not break anything. Instead of adding a feature, you're just fixing a bug or doing something small that doesn't affect the user's experience much. This increments the third number of the version: `v1.0.0` would go to `v1.0.1`.
+
+You can run this package locally as shown in "Getting Started" above, but most people will want to run this in CI/CD so that everything is automated and you don't have to thing about versioning anymore - just use properly prefixed commits, and you'll be good to go.
+
+As you'll see below, it's highly recommended to set the `SEMVER_TOKEN` variable to your push credential, as well as `SEMVER_USER` if applicable for your Git hosting platform. For GitHub, use `GITHUB_TOKEN` or any other PAT secret you've created. For GitLab, you must create your own secret - `GITLAB_TOKEN` is a common name for it.
+
 
 ### GitHub Actions
 
@@ -127,9 +148,10 @@ You can also use the GitLab release integration to create the release.
 
 ## Philosophy
 
-This is an opinionated version of Semantic Release that loosely follows the guidelines at [semver.org](https://semver.org/). It puts practicality above all theory. There is no special treatment of "pre-releases", versions prior to `v1.0.0`. Everything behaves the same: patch prefixes increment the third number, minor patches increment the middle number, and major prefixes increment the first number. If there are multiple prefixes, the prefix with the greatest precedence is applied. If you don't like the default settings, you can override them using the configuration format below.
+This is an opinionated version of Semantic Release that loosely follows the guidelines at [semver.org](https://semver.org/). It puts practicality above all theory. This differs in a few ways from more popular semantic release packages:
 
-This package is intended to run on a Linux system with the `bash` shell installed.
+- There is no special treatment of "pre-releases", versions prior to `v1.0.0`. Everything behaves the same: patch prefixes increment the third number, minor patches increment the middle number, and major prefixes increment the first number. If there are multiple prefixes, the prefix with the greatest precedence is applied. If you don't like the default settings, you can override them using the configuration format below.
+- There is currently no support for scoped commits (`fix(release): do something`) unless you add each scope to the `.semver` file as its own prefix.
 
 
 ## Configuration
