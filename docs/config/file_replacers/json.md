@@ -1,13 +1,13 @@
-# JSON Replace File
+# JSON File Replacer
 
-If you specify a JSON Replace File, it will parse the JSON file specified and replace the key with the new version. Nested keys are supported using `.`.
+If you specify a JSON File Replacer, it will parse the JSON file specified and replace the key with the new version. Nested keys are supported using `.`.
 
 ## Example 1: package.json
 
 If you specify the following in your `.semver` config file:
 
 ```yaml
-replace_files:
+file_replacers:
   - type: json
     name: package.json
     key: version
@@ -39,7 +39,7 @@ Note that the value will always be replaced with the `format` you specified in t
 If you specify the following in your `.semver` config file:
 
 ```yaml
-replace_files:
+file_replacers:
   - type: json
     name: package.json
     key: project.metadata.version

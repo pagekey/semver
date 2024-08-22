@@ -1,13 +1,13 @@
-# YAML Replace File
+# YAML File Replacer
 
-If you specify a YAML Replace File, it will parse the YAML file specified and replace the key with the new version. Nested keys are supported using `.`.
+If you specify a YAML File Replacer, it will parse the YAML file specified and replace the key with the new version. Nested keys are supported using `.`.
 
 ## Example 1: package.yaml
 
 If you specify the following in your `.semver` config file:
 
 ```yaml
-replace_files:
+file_replacers:
   - type: yaml
     name: package.yaml
     key: version
@@ -35,7 +35,7 @@ Note that the value will always be replaced with the `format` you specified in t
 If you specify the following in your `.semver` config file:
 
 ```yaml
-replace_files:
+file_replacers:
   - type: json
     name: package.json
     key: project.metadata.version

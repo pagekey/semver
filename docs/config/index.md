@@ -7,7 +7,7 @@ Contents:
 - [Changelog Path](#changelog-path)
 - [Changelog Writer](#changelog-writer)
 - [Prefixes](#prefixes)
-- [Replace Files](#replace-files)
+- [File Replacers](#file-replacers)
 - [Tag Format](#tag-format)
 - [Integrations](#integrations)
 
@@ -100,9 +100,9 @@ You can add additional prefixes using environment variables. To do this, set the
 When using this method, your additional prefixes are added onto the existing prefixes, which are either the default values or overridden by a config file.
 
 
-## Replace Files
+## File Replacers
 
-You can specify "replace files," which PageKey Semver will process and replace the text you specify with the new version. There are four types of Replace Files: JSON, YAML, SED, and TOML.
+You can specify file replacers, which will open specific files, process them, and replace the text you specify with the new version. There are four types of File Replacers: JSON, YAML, SED, and TOML.
 
 You can provide a list of any number of files you need to replace in the config. By default, none are specified:
 
@@ -110,19 +110,19 @@ You can provide a list of any number of files you need to replace in the config.
 file_replacers: []
 ```
 
-Documentation and examples are available for each type of replace file:
+Documentation and examples are available for each type of file replacer:
 
-- [JSON Replace File](./file_replacers/json.md)
-- [SED Replace File](./file_replacers/sed.md)
-- [TOML Replace File](./file_replacers/toml.md)
-- [YAML Replace File](./file_replacers/yaml.md)
+- [JSON File Replacer](./file_replacers/json.md)
+- [SED File Replacer](./file_replacers/sed.md)
+- [TOML File Replacer](./file_replacers/toml.md)
+- [YAML File Replacer](./file_replacers/yaml.md)
 
 
 ### Environment Variable Override
 
-You can use environment variables to set additional replace files. To do so, you **must** set **multiple** environment variables per replace file (`name`, `type`, and any additional fields required for that particular replacer). Setting only one or two fields will result in an error - you must set all of them.
+You can use environment variables to set additional file replacers. To do so, you **must** set **multiple** environment variables per file replacer (`name`, `type`, and any additional fields required for that particular replacer). Setting only one or two fields will result in an error - you must set all of them.
 
-You must create an arbitrary index for your replace file. This is used only when parsing environment variables, then it is discarded. This can be any string or even an index number. The example below uses index `0`.
+You must create an arbitrary index for your file replacer. This is used only when parsing environment variables, then it is discarded. This can be any string or even an index number. The example below uses index `0`.
 
 If you set the following three environment variables:
 
@@ -131,7 +131,7 @@ If you set the following three environment variables:
 - `SEMVER_file_replacers__0__key=version`
 - `SEMVER_file_replacers__0__format=%M.%m.%p`
 
-Setting these variables will add the following replace file to your configuration:
+Setting these variables will add the following file replacer to your configuration:
 
 ```yaml
   - name: my_file.json
@@ -139,7 +139,7 @@ Setting these variables will add the following replace file to your configuratio
     key: version
 ```
 
-Refer to the docs for each specific type of replace file to ensure that you're including the required fields.
+Refer to the docs for each specific type of file replacer to ensure that you're including the required fields.
 
 
 ## Tag Format

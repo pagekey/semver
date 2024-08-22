@@ -76,7 +76,7 @@ def cli_entrypoint(args=sys.argv[1:]):
             print(f"Applying version {next_version.name}.")
             # Write to changelog.
             writer.update_changelog(next_version, commits)
-            # Replace files
+            # File Replacers
             print("Running file replacers.")
             for file_replacer in config.file_replacers:
                 print(f"  {file_replacer.name}")

@@ -1,13 +1,13 @@
-# TOML Replace File
+# TOML File Replacer
 
-If you specify a TOML Replace File, it will parse the TOML file specified and replace the key with the new version. Nested keys are supported using `.`.
+If you specify a TOML File Replacer, it will parse the TOML file specified and replace the key with the new version. Nested keys are supported using `.`.
 
 ## Example 1: Cargo.toml
 
 If you specify the following in your `.semver` config file:
 
 ```yaml
-replace_files:
+file_replacers:
   - type: toml
     name: Cargo.toml
     key: version
@@ -35,7 +35,7 @@ Note that the value will always be replaced with the `format` you specified in t
 If you specify the following in your `.semver` config file:
 
 ```yaml
-replace_files:
+file_replacers:
   - type: toml
     name: Cargo.toml
     key: project.metadata.version

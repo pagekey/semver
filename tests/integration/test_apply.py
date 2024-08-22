@@ -267,7 +267,7 @@ def test_env_overrides(tmp_path):
         "SEMVER_git__name": "my name",
         # Prefix
         "SEMVER_prefixes__custom": "minor",
-        # Replace File
+        # File Replacer
         "SEMVER_file_replacers__0__name": "test.json",
         "SEMVER_file_replacers__0__type": "json",
         "SEMVER_file_replacers__0__key": "version",
