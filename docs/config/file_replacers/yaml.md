@@ -36,8 +36,8 @@ If you specify the following in your `.semver` config file:
 
 ```yaml
 file_replacers:
-  - type: json
-    name: package.json
+  - type: yaml
+    name: config.yaml
     key: project.metadata.version
     format: "v%M.%m.%p"
 ```
