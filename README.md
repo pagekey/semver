@@ -4,6 +4,7 @@ Simple automated version tagging for any Git-based software project.
 
 Check out the [docs](./docs/index.md) to learn more.
 
+[![PageKey Semver: Simple automated versioning](./docs/img/pksv_yt_thumb.jpg)](https://www.youtube.com/watch?v=D86N9txOZBY)
 
 ## Getting Started
 
