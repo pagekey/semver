@@ -1,3 +1,7 @@
+## v2.0.0
+
+- major: Upgrade pydantic syntax, pin to Py3.10+ (#1) (8fd3ee42)
+
 ## v1.0.8
 
 - fix: Pretty-print JSON file replacer (f6d91a2c)
