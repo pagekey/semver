@@ -1,3 +1,7 @@
+## v2.0.1
+
+- fix: Use latest pypi version for reusable pipeline (bff958f2)
+
 ## v2.0.0
 
 - major: Upgrade pydantic syntax, pin to Py3.10+ (#1) (8fd3ee42)

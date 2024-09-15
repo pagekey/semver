@@ -5,7 +5,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry]
 name = "pagekey-semver"
 description = "Simple, opinionated semantic versioning package."
-version = "2.0.0"
+version = "2.0.1"
 authors = [ "steve",]
 readme = "README.md"
 [[tool.poetry.packages]]
