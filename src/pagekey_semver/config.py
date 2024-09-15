@@ -30,7 +30,9 @@ class IntegrationsConfig(BaseModel):
     gitlab: GitLabIntegrationConfig = GitLabIntegrationConfig()
 
 
-FileReplacersUnion = JsonFileReplacer | SedFileReplacer | TomlFileReplacer | YamlFileReplacer
+FileReplacersUnion = (
+    JsonFileReplacer | SedFileReplacer | TomlFileReplacer | YamlFileReplacer
+)
 
 
 class SemverConfig(BaseModel):
