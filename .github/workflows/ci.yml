@@ -73,6 +73,7 @@ jobs:
           poetry publish --build --username __token__ --password $PYPI_TOKEN
 
   mirror:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     needs: [lint, test, version]
     steps:
@@ -87,4 +88,4 @@ jobs:
         run: |
           git remote add gitlab https://$GITLAB_USER:$GITLAB_TOKEN@gitlab.com/pagekey/semver.git
           git remote remove origin
-          git push --mirror gitlab
+          git push gitlab main
