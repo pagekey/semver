@@ -2,7 +2,7 @@
 
 import os
 from pathlib import Path
-from typing import List, Union
+from typing import Annotated
 
 from pydantic import BaseModel, Field
 import yaml
@@ -30,9 +30,7 @@ class IntegrationsConfig(BaseModel):
     gitlab: GitLabIntegrationConfig = GitLabIntegrationConfig()
 
 
-FileReplacersUnion = Union[
-    JsonFileReplacer, SedFileReplacer, TomlFileReplacer, YamlFileReplacer
-]
+FileReplacersUnion = JsonFileReplacer | SedFileReplacer | TomlFileReplacer | YamlFileReplacer
 
 
 class SemverConfig(BaseModel):
@@ -42,8 +40,8 @@ class SemverConfig(BaseModel):
     changelog_writer: str
     format: str
     git: GitConfig
-    prefixes: List[Prefix]
-    file_replacers: List[FileReplacersUnion] = Field(discriminator="type")
+    prefixes: list[Prefix]
+    file_replacers: list[Annotated[FileReplacersUnion, Field(discriminator="type")]]
     integrations: IntegrationsConfig = IntegrationsConfig()
 
 

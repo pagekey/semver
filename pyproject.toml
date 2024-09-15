@@ -8,13 +8,14 @@ description = "Simple, opinionated semantic versioning package."
 version = "1.0.8"
 authors = [ "steve",]
 readme = "README.md"
+packages = [{ include = "pagekey_semver", from="src" }]
 
 [tool.poetry.scripts]
 pagekey-semver = "pagekey_semver.cli:cli_entrypoint"
 
 [tool.poetry.dependencies]
-python = ">=3.8"
-pydantic = "<=2.8.2"
+python = ">=3.10"
+pydantic = "^2.9.1"
 pyyaml = "^6.0.1"
 toml = "^0.10.2"
 requests = "^2.32.3"
