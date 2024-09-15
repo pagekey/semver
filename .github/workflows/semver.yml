@@ -32,7 +32,7 @@ jobs:
           python-version: '3.x'
       
       - name: Install semver
-        run: pip3 install pagekey-semver
+        run: pip3 install -e .
 
       - name: Run semver live when on main
         if: github.ref == 'refs/heads/main'
